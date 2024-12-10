@@ -51,7 +51,7 @@ const Home = () => {
                         </svg>
                         <h6 className="text-xl leading-8 font-semibold text-gray-900">December 2024</h6>
                     </div>
-                    <div className="flex items-center gap-1 rounded-lg bg-gray-200 p-1">
+                    <div className="flex items-center gap-1 rounded-xl bg-gray-200 p-1">
                         <button className={`w-16 rounded-lg py-2.5 text-sm font-medium transition-all duration-300 hover:bg-white hover:text-indigo-600 active:opacity-70 ${buttonCSS[0]}`}
                         onClick={()=>updateCalendarType(0)}>
                             Day
@@ -76,7 +76,7 @@ const Home = () => {
                     showNavigation={false}
                     formatDay={(locale, date) => null}
                     tileContent={tileContent}
-                    tileClassName={"flex flex-col h-24 items-center py-2 border-r border-t border-gray-200 text-sm font-semibold text-gray-400 duration-300 transition-all hover:bg-gray-200 active:bg-gray-300"}
+                    tileClassName={"flex flex-col h-28 items-center py-2 border-t border-gray-200 text-sm font-semibold text-gray-400 duration-300 transition-all hover:bg-gray-200 active:bg-gray-300"}
                     onChange={setDateValue}
                     value={dateValue} />
                 }
