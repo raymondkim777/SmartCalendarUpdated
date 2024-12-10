@@ -1,10 +1,11 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
 
 const CalendarDay = () => (
-    <div className="flex flex-row w-full h-fit border-t border-b">
+    <div className='flex flex-col w-full h-fit border-t border-b'>
+        <div className="h-12 flex items-center justify-center  border-gray-200 text-sm font-medium  text-indigo-600 ">Dec 10</div>
+        <div className="flex flex-row w-full h-fit">
         {/* Times */}
         <div className="flex flex-col w-1/12 min-w-16 h-fit divide-y">
-            <div className="h-12 flex items-center justify-center  border-gray-200 text-sm font-medium  text-gray-900 "></div>
             <div className="h-32 lg:h-28 p-0.5  border-gray-200 flex items-end ">
                 <span className="text-xs font-semibold text-gray-400">07:00 am</span>
             </div>
@@ -48,7 +49,6 @@ const CalendarDay = () => (
 
         {/* Column */}
         <div className="flex flex-col grow h-fit group divide-y">
-            <div className="h-12 flex items-center justify-center  border-gray-200 text-sm font-medium  text-indigo-600 ">Dec 10</div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 ">
                 <div className="rounded p-1.5 border-l-2 border-green-600 bg-green-50">
                 <p className="text-xs font-normal text-gray-900 mb-px">Workout and Yoga Session</p>
@@ -73,8 +73,9 @@ const CalendarDay = () => (
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 "></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 "></div>
         </div>
-
+        </div>
     </div>
+    
 )
 
 export default CalendarDay;
