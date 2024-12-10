@@ -1,5 +1,5 @@
 const Header = () => (
-    <div className="flex flex-row w-full h-20 items-center justify-center bg-stone-50 border-b border-neutral-400 font-[family-name:var(--font-geist-sans)]">
+    <div className="flex flex-row flex-shrink-0 w-full h-20 items-center justify-center bg-stone-50 border-b border-neutral-400 font-[family-name:var(--font-geist-sans)]">
         <div className='flex flex-row w-full max-w-7xl h-full px-6 items-center'>
             {/* Title */}
             <div className='flex w-fit h-full items-center'>

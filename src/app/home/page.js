@@ -40,9 +40,9 @@ const Home = () => {
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
         <Header />
         {/* Calendar */}
-        <main className="flex flex-col w-full h-fit items-center pt-4 overflow-y-auto">
-        <section className="relative bg-stone-50 py-4 w-full max-w-7xl">
-            <div className="w-full mx-auto px-6 lg:px-8 overflow-x-auto">
+        <main className="flex flex-col w-full h-full items-center pt-5 overflow-y-scroll">
+        <section className="bg-stone-50 w-full max-w-7xl">
+            <div className="w-full mx-auto px-8">
                 {/* Buttons */}
                 <div className="flex flex-col md:flex-row max-md:gap-3 items-center justify-between mb-5">
                     <div className="flex items-center gap-4">
@@ -66,7 +66,7 @@ const Home = () => {
                         </button>
                     </div>
                 </div>
-
+                <div className="w-full h-fit pb-8">
                 {
                     calendarTypeIdx == 0 ? null :
                     calendarTypeIdx == 1 ? <CalendarWeek /> : 
@@ -80,6 +80,7 @@ const Home = () => {
                     onChange={setDateValue}
                     value={dateValue} />
                 }
+                </div>
             </div>
         </section>
         </main>

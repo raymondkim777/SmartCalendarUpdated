@@ -1,7 +1,7 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
 
 const CalendarWeek1 = () => (
-    <div className="flex flex-row w-full h-fit border-t">
+    <div className="flex flex-row w-full h-fit border-t border-b">
         {/* Times */}
         <div className="flex flex-col w-[14.2857%] h-fit divide-y">
             <div className="h-12 flex items-center justify-center  border-gray-200 text-sm font-medium  text-gray-900 transition-all duration-300"></div>
@@ -21,7 +21,28 @@ const CalendarWeek1 = () => (
                 <span className="text-xs font-semibold text-gray-400">11:00 am</span>
             </div>
             <div className="h-32 lg:h-28 p-0.5  border-gray-200 flex items-end transition-all duration-300">
-                <span className="text-xs font-semibold text-gray-400">12:00 am</span>
+                <span className="text-xs font-semibold text-gray-400">12:00 pm</span>
+            </div>
+            <div className="h-32 lg:h-28 p-0.5  border-gray-200 flex items-end transition-all duration-300">
+                <span className="text-xs font-semibold text-gray-400">01:00 pm</span>
+            </div>
+            <div className="h-32 lg:h-28 p-0.5  border-gray-200 flex items-end transition-all duration-300">
+                <span className="text-xs font-semibold text-gray-400">02:00 pm</span>
+            </div>
+            <div className="h-32 lg:h-28 p-0.5  border-gray-200 flex items-end transition-all duration-300">
+                <span className="text-xs font-semibold text-gray-400">03:00 pm</span>
+            </div>
+            <div className="h-32 lg:h-28 p-0.5  border-gray-200 flex items-end transition-all duration-300">
+                <span className="text-xs font-semibold text-gray-400">04:00 pm</span>
+            </div>
+            <div className="h-32 lg:h-28 p-0.5  border-gray-200 flex items-end transition-all duration-300">
+                <span className="text-xs font-semibold text-gray-400">05:00 pm</span>
+            </div>
+            <div className="h-32 lg:h-28 p-0.5  border-gray-200 flex items-end transition-all duration-300">
+                <span className="text-xs font-semibold text-gray-400">06:00 pm</span>
+            </div>
+            <div className="h-32 lg:h-28 p-0.5  border-gray-200 flex items-end transition-all duration-300">
+                <span className="text-xs font-semibold text-gray-400">07:00 pm</span>
             </div>
         </div>
 
@@ -42,6 +63,13 @@ const CalendarWeek1 = () => (
                 <p className="text-xs font-semibold text-green-600">09:30 - 10:00</p>
                 </div>
             </div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
         </div>
@@ -65,6 +93,13 @@ const CalendarWeek1 = () => (
                 <p className="text-xs font-semibold text-blue-600">11:00 - 12:30</p>
                 </div>
             </div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
         </div>
 
         {/* Column 3 */}
@@ -86,6 +121,13 @@ const CalendarWeek1 = () => (
                 </div>
             </div>
             <div className="h-32 lg:h-28 p-0.5  border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
         </div>
 
         {/* Column 4 */}
@@ -98,6 +140,13 @@ const CalendarWeek1 = () => (
                 <p className="text-xs font-semibold text-blue-600">08:00 - 08:25</p>
                 </div>
             </div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
@@ -118,6 +167,13 @@ const CalendarWeek1 = () => (
             </div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
         </div>
 
         {/* Column 6 */}
@@ -130,6 +186,13 @@ const CalendarWeek1 = () => (
                 <p className="text-xs font-semibold text-yellow-600">07:30 - 08:00</p>
                 </div>
             </div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
+            <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
             <div className="h-32 lg:h-28 p-0.5     border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300"></div>
