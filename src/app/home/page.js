@@ -35,16 +35,16 @@ const Home = () => {
                         </svg>
                         <h6 className="text-xl leading-8 font-semibold text-gray-900">January 2024</h6>
                     </div>
-                    <div className="flex items-center gap-px rounded-lg bg-gray-100 p-1">
-                        <button className={`rounded-lg py-2.5 px-5 text-sm font-medium transition-all duration-300 hover:bg-white hover:text-indigo-600 active:opacity-70 ${buttonCSS[0]}`}
+                    <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1">
+                        <button className={`w-16 rounded-lg py-2.5 text-sm font-medium transition-all duration-300 hover:bg-white hover:text-indigo-600 active:opacity-70 ${buttonCSS[0]}`}
                         onClick={()=>updateCalendarType(0)}>
                             Day
                         </button>
-                        <button className={`rounded-lg py-2.5 px-5 text-sm font-medium transition-all duration-300 hover:bg-white hover:text-indigo-600 active:opacity-70 ${buttonCSS[1]}`}
+                        <button className={`w-16 rounded-lg py-2.5 text-sm font-medium transition-all duration-300 hover:bg-white hover:text-indigo-600 active:opacity-70 ${buttonCSS[1]}`}
                         onClick={()=>updateCalendarType(1)}>
                             Week
                         </button>
-                        <button className={`rounded-lg py-2.5 px-5 text-sm font-medium transition-all duration-300 hover:bg-white hover:text-indigo-600 active:opacity-70 ${buttonCSS[2]}`}
+                        <button className={`w-16 rounded-lg py-2.5 text-sm font-medium transition-all duration-300 hover:bg-white hover:text-indigo-600 active:opacity-70 ${buttonCSS[2]}`}
                         onClick={()=>updateCalendarType(2)}>
                             Month
                         </button>
