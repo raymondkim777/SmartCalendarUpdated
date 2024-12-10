@@ -5,6 +5,7 @@ import Calendar from 'react-calendar';
 
 import Header from "../header";
 import CalendarWeek from "../calendarweek";
+import CalendarWeek2 from '../calendarweek2';
 import CalendarDay from '../calendarday';
 
 const Home = () => {
@@ -74,7 +75,7 @@ const Home = () => {
                 <div className="w-full pb-8">
                 {
                     calendarTypeIdx == 0 ? <CalendarDay /> :
-                    calendarTypeIdx == 1 ? <CalendarWeek /> : 
+                    calendarTypeIdx == 1 ? <CalendarWeek2 /> : 
                     <Calendar className="text-sm font-medium text-gray-900 text-center" 
                     calendarType={"gregory"}
                     view={"month"}
