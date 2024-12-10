@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import Calendar from 'react-calendar';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 import Header from "../header";
 import CalendarWeek from "../calendarweek";
@@ -38,6 +36,10 @@ const Home = () => {
             )
         }
     }
+
+    // dates
+    var today = new Date();
+
 
     return (
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
