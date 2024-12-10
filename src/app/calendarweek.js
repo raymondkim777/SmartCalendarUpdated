@@ -1,6 +1,6 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
 
-const CalendarWeek1 = () => (
+const CalendarWeek = () => (
     <div className="flex flex-row w-full h-fit border-t border-b">
         {/* Times */}
         <div className="flex flex-col w-[14.2857%] h-fit divide-y">
@@ -202,4 +202,4 @@ const CalendarWeek1 = () => (
     </div>
 )
 
-export default CalendarWeek1;
+export default CalendarWeek;

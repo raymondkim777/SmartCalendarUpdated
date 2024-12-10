@@ -5,6 +5,7 @@ import Calendar from 'react-calendar';
 
 import Header from "../header";
 import CalendarWeek from "../calendarweek";
+import CalendarDay from '../calendarday';
 
 const Home = () => {
     // Calendar
@@ -40,8 +41,8 @@ const Home = () => {
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
         <Header />
         {/* Calendar */}
-        <main className="flex flex-col w-full h-full items-center pt-5 overflow-y-scroll">
-        <section className="bg-stone-50 w-full max-w-7xl">
+        <main className="flex flex-col w-full h-full items-center pt-5">
+        <section className="bg-stone-50 w-full max-w-7xl overflow-y-scroll">
             <div className="w-full mx-auto px-8">
                 {/* Buttons */}
                 <div className="flex flex-col md:flex-row max-md:gap-3 items-center justify-between mb-5">
@@ -66,9 +67,9 @@ const Home = () => {
                         </button>
                     </div>
                 </div>
-                <div className="w-full h-fit pb-8">
+                <div className="w-full pb-8">
                 {
-                    calendarTypeIdx == 0 ? null :
+                    calendarTypeIdx == 0 ? <CalendarDay /> :
                     calendarTypeIdx == 1 ? <CalendarWeek /> : 
                     <Calendar className="text-sm font-medium text-gray-900 text-center" 
                     calendarType={"gregory"}
