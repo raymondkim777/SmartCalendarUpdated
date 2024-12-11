@@ -49,7 +49,7 @@ const Header = () => {
                 </div>
 
                 {/* Account Modal - Not Logged In */}
-                <div className={`flex flex-col items-center ${showAccountModal && !loggedIn ? '' : 'hidden'} absolute top-24 right-2 w-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50`}>
+                <div className={`flex flex-col items-center z-10 ${showAccountModal && !loggedIn ? '' : 'hidden'} absolute top-24 right-2 w-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50`}>
                     <div className='flex flex-row w-full h-10 items-center justify-between pl-4 pr-2'>
                         <h1 className="text-base leading-6 text-gray-600 font-normal">Not Logged In</h1>
                         <div onClick={()=>setShowAccountModal(false)} className='flex items-center justify-center w-9 h-9 rounded-full hover:cursor-pointer hover:bg-gray-200 active:bg-gray-300 transition-all duration-300'>
@@ -65,7 +65,7 @@ const Header = () => {
                 </div>
 
                 {/* Account Modal - Logged In */}
-                <div className={`flex flex-col items-center ${showAccountModal && loggedIn ? '' : 'hidden'} absolute top-24 right-2 w-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50`}>
+                <div className={`flex flex-col items-center z-10 ${showAccountModal && loggedIn ? '' : 'hidden'} absolute top-24 right-2 w-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50`}>
                     <div className='flex flex-row w-full h-10 items-center justify-between pl-4 pr-2 space-x-3'>
                         <h1 className="text-base leading-6 text-gray-600 font-normal">Your Name Here</h1>
                         <div onClick={()=>setShowAccountModal(false)} className='flex items-center justify-center w-9 h-9 rounded-full hover:cursor-pointer hover:bg-gray-200 active:bg-gray-300 transition-all duration-300'>

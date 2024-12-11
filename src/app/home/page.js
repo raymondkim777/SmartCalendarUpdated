@@ -78,72 +78,72 @@ const Home = () => {
     // event: {startFull, date, start, end, title, location}
     let events = [ 
         new Map([
-            ['startFull', new Date('Dec 8, 2024 10:00:00')],
-            ['date', new Date('Dec 8, 2024')],
+            ['startFull', new Date('Dec 9, 2024 10:00:00')],
+            ['date', new Date('Dec 9, 2024')],
             ['start', 1000],
             ['end', 1100],
             ['title', 'Daily Standup Meeting'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 9, 2024 8:00:00')],
-            ['date', new Date('Dec 9, 2024')],
+            ['startFull', new Date('Dec 10, 2024 8:00:00')],
+            ['date', new Date('Dec 10, 2024')],
             ['start', 800],
             ['end', 900],
             ['title', 'Breakfast with Friend'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 9, 2024 9:30:00')],
-            ['date', new Date('Dec 9, 2024')],
+            ['startFull', new Date('Dec 10, 2024 9:30:00')],
+            ['date', new Date('Dec 10, 2024')],
             ['start', 930],
             ['end', 1000],
             ['title', 'Badminton Class'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 10, 2024 6:00:00')],
-            ['date', new Date('Dec 10, 2024')],
+            ['startFull', new Date('Dec 11, 2024 6:00:00')],
+            ['date', new Date('Dec 11, 2024')],
             ['start', 600],
             ['end', 730],
             ['title', 'Pickup Family'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 10, 2024 11:00:00')],
-            ['date', new Date('Dec 10, 2024')],
+            ['startFull', new Date('Dec 11, 2024 11:00:00')],
+            ['date', new Date('Dec 11, 2024')],
             ['start', 1100],
             ['end', 1230],
             ['title', 'Meeting with Project Manager'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 11, 2024 6:00:00')],
-            ['date', new Date('Dec 11, 2024')],
+            ['startFull', new Date('Dec 12, 2024 6:00:00')],
+            ['date', new Date('Dec 12, 2024')],
             ['start', 600],
             ['end', 755],
             ['title', 'Workout and Yoga Seesion'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 11, 2024 10:00:00')],
-            ['date', new Date('Dec 11, 2024')],
+            ['startFull', new Date('Dec 12, 2024 10:00:00')],
+            ['date', new Date('Dec 12, 2024')],
             ['start', 1000],
             ['end', 1145],
             ['title', 'School Friend Birthday Party'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 12, 2024 8:00:00')],
-            ['date', new Date('Dec 12, 2024')],
+            ['startFull', new Date('Dec 13, 2024 8:00:00')],
+            ['date', new Date('Dec 13, 2024')],
             ['start', 800],
             ['end', 825],
             ['title', 'Project Task Review'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 13, 2024 9:00:00')],
-            ['date', new Date('Dec 13, 2024')],
+            ['startFull', new Date('Dec 14, 2024 9:00:00')],
+            ['date', new Date('Dec 14, 2024')],
             ['start', 900],
             ['end', 1045],
             ['title', 'Doctor Appointment'],
