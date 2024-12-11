@@ -128,7 +128,7 @@ const Home = () => {
             ['startFull', new Date('Dec 12, 2024 10:00:00')],
             ['date', new Date('Dec 12, 2024')],
             ['start', 1000],
-            ['end', 1145],
+            ['end', 1345],
             ['title', 'School Friend Birthday Party'],
             ['location', 'Some Random Place']
         ]),

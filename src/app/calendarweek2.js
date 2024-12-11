@@ -46,11 +46,16 @@ const CalendarWeek2 = ({ clickedDay, days, times, cells }) => {
                     {times.map((subItem, subIndex) => (
                         <div key={`cell-${subIndex}`} className="h-32 lg:h-28 px-0.5 border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300 hover:cursor-pointer">
                             {cells[index][subIndex].map((cellEvent, eIdx) => (
-                                <div key={`box-event-${index}-${subIndex}-${eIdx}`} className={`rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')}`}>
-                                    <p key={`title-event-${index}-${subIndex}-${eIdx}`} className="text-xs font-normal text-gray-900 mb-px">{cellEvent.get('title')}</p>
-                                    <p key={`time-event-${index}-${subIndex}-${eIdx}`} className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
-                                        {Math.floor(cellEvent.get('start') / 100).toString().length < 2 ? '0' : ''}{Math.floor(cellEvent.get('start') / 100)}:{(cellEvent.get('start') % 100).toString().length < 2 ? '0' : ''}{cellEvent.get('start') % 100} - {Math.floor(cellEvent.get('end') / 100).toString().length < 2 ? '0' : ''}{Math.floor(cellEvent.get('end') / 100)}:{(cellEvent.get('end') % 100).toString().length < 2 ? '0' : ''}{(cellEvent.get('end') % 100)}
-                                    </p>
+                                <div key={`box-event-${index}-${subIndex}-${eIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')}`}>
+                                    {
+                                        cellEvent.get('upContinue') ? null : 
+                                        <div className='flex flex-col w-full h-fit'>
+                                            <p key={`title-event-${index}-${subIndex}-${eIdx}`} className="text-xs font-normal text-gray-900 mb-px">{cellEvent.get('title')}</p>
+                                            <p key={`time-event-${index}-${subIndex}-${eIdx}`} className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
+                                                {Math.floor(cellEvent.get('start') / 100).toString().length < 2 ? '0' : ''}{Math.floor(cellEvent.get('start') / 100)}:{(cellEvent.get('start') % 100).toString().length < 2 ? '0' : ''}{cellEvent.get('start') % 100} - {Math.floor(cellEvent.get('end') / 100).toString().length < 2 ? '0' : ''}{Math.floor(cellEvent.get('end') / 100)}:{(cellEvent.get('end') % 100).toString().length < 2 ? '0' : ''}{(cellEvent.get('end') % 100)}
+                                            </p>
+                                        </div>
+                                    }
                                 </div>
                             ))}
                         </div>
