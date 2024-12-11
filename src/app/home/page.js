@@ -10,7 +10,7 @@ import CalendarDay from '../calendarday';
 import CalendarDay2 from '../calendarday2';
 
 const Home = () => {
-    // Calendar
+    // Calendar CSS
     const [calendarTypeIdx, setCalendarTypeIdx] = useState(1);
     const [buttonCSS, setButtonCSS] = useState(
         new Array(calendarTypeIdx).fill('text-gray-500').concat(
@@ -25,37 +25,46 @@ const Home = () => {
         new_css[index] = 'bg-white text-indigo-600';
         setButtonCSS(new_css);
     }
-
-    const [dateValue, setDateValue] = useState(new Date());
-
-    function tileContent({ date, view }) {
-        // Add class to tiles in month view only
-        if (view === 'month') {
-            return (
-                <div id="date_circle" className="flex w-10 h-10 rounded-full items-center justify-center">
-                    {date.getDate()}
-                </div>
-            )
-        }
-    }
-
-    // Calendar Setup
+    
+    // Content Setup
     const times = new Array();
     const start = 7;
     const end = 19;
     for (let hour = start; hour <= end; hour++)
         times.push(hour);
 
-    const days = new Array();
     const dayCnt = 6;
     const leftDayCnt = Math.floor((dayCnt - 1)/2);
     const rightDayCnt = Math.ceil((dayCnt - 1)/2);
-
+    
     let todayDate = new Date(new Date().toDateString());
+    let tempDays = new Array();
     for (let diff = -leftDayCnt; diff <= rightDayCnt; diff++) {
         let temp = new Date(new Date().toDateString());
         temp.setDate(todayDate.getDate() + diff);
-        days.push(temp);
+        tempDays.push(temp);
+    }
+
+       
+    // Date Indices
+    const [dayIndex, setDayIndex] = useState(Math.floor((dayCnt - 1) / 2));
+    const clickedDay = (index) => {
+        setDayIndex(index);
+        updateCalendarType(0);
+    }
+
+    const [days, setDays] = useState(tempDays);
+    const updateDays = (givenDate) => {
+        const givenDateNoTime = new Date(givenDate.toDateString());
+        let tempDays = new Array();
+        for (let diff = -leftDayCnt; diff <= rightDayCnt; diff++) {
+            let temp = new Date(new Date().toDateString());
+            temp.setDate(givenDateNoTime.getDate() + diff);
+            tempDays.push(temp);
+        }
+        setDays(tempDays);
+        updateCalendarType(0);
+        setDayIndex(Math.floor((dayCnt - 1) / 2));
     }
     
     // Calendar Events
@@ -167,6 +176,17 @@ const Home = () => {
         }
     }
 
+    // React Calendar Setup
+    function tileContent({ date, view }) {
+        // Add class to tiles in month view only
+        if (view === 'month')
+            return (
+                <div id="date_circle" className="flex w-10 h-10 rounded-full items-center justify-center">
+                    {date.getDate()}
+                </div>
+            )
+    }
+
     return (
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
         <Header />
@@ -199,8 +219,8 @@ const Home = () => {
                 </div>
                 <div className="w-full pb-8">
                 {
-                    calendarTypeIdx == 0 ? <CalendarDay2 index={2} days={days} times={times} events={events} cells={cells} /> :
-                    calendarTypeIdx == 1 ? <CalendarWeek2 days={days} times={times} events={events} cells={cells} /> : 
+                    calendarTypeIdx == 0 ? <CalendarDay2 index={dayIndex} days={days} times={times} events={events} cells={cells} /> :
+                    calendarTypeIdx == 1 ? <CalendarWeek2 clickedDay={clickedDay} days={days} times={times} events={events} cells={cells} /> : 
                     <Calendar className="text-sm font-medium text-gray-900 text-center" 
                     calendarType={"gregory"}
                     view={"month"}
@@ -208,8 +228,8 @@ const Home = () => {
                     formatDay={(locale, date) => null}
                     tileContent={tileContent}
                     tileClassName={"flex flex-col h-28 items-center py-2 border-t border-gray-200 text-sm font-semibold text-gray-400 duration-300 transition-all hover:bg-gray-200 active:bg-gray-300"}
-                    onChange={setDateValue}
-                    value={dateValue} />
+                    onChange={(value, event) => updateDays(value)}
+                    />
                 }
                 </div>
             </div>

@@ -1,14 +1,14 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
 
-const CalendarWeek2 = ({ days, times, events, cells }) => {
-    const leftDayCnt = Math.floor((days.length - 1)/2);
-    const rightDayCnt = Math.ceil((days.length - 1)/2);
+const CalendarWeek2 = ({ clickedDay, days, times, events, cells }) => {
+    const todayDate = new Date(new Date().toDateString());
 
-    const dayCSS = new Array(leftDayCnt).fill('text-gray-900').concat(
-        ['text-indigo-600'].concat(
-            new Array(rightDayCnt).fill('text-gray-900')
-        )
-    );
+    const dayCSS = new Array();
+    for (let i = 0; i < days.length; i++) {
+        if (days[i].getTime() == todayDate.getTime())
+            dayCSS.push('text-indigo-600');
+        else dayCSS.push('text-gray-900');
+    }
     
     // Calendar Event Colors
     const eventColors = ['border-yellow-600 bg-yellow-50', 'border-green-600 bg-green-50', 'border-purple-600 bg-purple-50', 'border-blue-600 bg-blue-50'];
@@ -31,7 +31,7 @@ const CalendarWeek2 = ({ days, times, events, cells }) => {
                 ))}
             </div>
             {days.map((item, index) => (
-                <div key={`col-${index}`} style={{width: 1 / (days.length + 1) * 100 + '%'}} className={`flex flex-col h-fit group divide-y`}>
+                <div key={`col-${index}`} style={{width: 1 / (days.length + 1) * 100 + '%'}} onClick={()=>clickedDay(index)} className={`flex flex-col h-fit group divide-y`}>
                     <div key={`day-${index}`} className={`${dayCSS[index]} h-12 flex items-center justify-center border-gray-200 text-sm font-medium transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300 hover:cursor-pointer`}>
                         {item.toLocaleString('default', { month: 'short' })} {item.getDate()}
                     </div>

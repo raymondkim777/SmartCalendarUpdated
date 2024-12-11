@@ -1,7 +1,8 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
 
 const CalendarDay2 = ({ index, days, times, events, cells }) => {
-    let dayCSS = index == Math.floor((days.length - 1) / 2) ? 'text-indigo-600' : 'text-gray-900';
+    const todayDate = new Date(new Date().toDateString());
+    let dayCSS = days[index].getTime() == todayDate.getTime() ? 'text-indigo-600' : 'text-gray-900';
 
     // Calendar Event Colors
     const eventColors = ['border-yellow-600 bg-yellow-50', 'border-green-600 bg-green-50', 'border-purple-600 bg-purple-50', 'border-blue-600 bg-blue-50'];
