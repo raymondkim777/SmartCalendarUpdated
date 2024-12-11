@@ -7,6 +7,7 @@ import Header from "../header";
 import CalendarWeek from "../calendarweek";
 import CalendarWeek2 from '../calendarweek2';
 import CalendarDay from '../calendarday';
+import CalendarDay2 from '../calendarday2';
 
 const Home = () => {
     // Calendar
@@ -38,9 +39,133 @@ const Home = () => {
         }
     }
 
-    // dates
-    var today = new Date();
+    // Calendar Setup
+    const times = new Array();
+    const start = 7;
+    const end = 19;
+    for (let hour = start; hour <= end; hour++)
+        times.push(hour);
 
+    const days = new Array();
+    const dayCnt = 6;
+    const leftDayCnt = Math.floor((dayCnt - 1)/2);
+    const rightDayCnt = Math.ceil((dayCnt - 1)/2);
+
+    let todayDate = new Date(new Date().toDateString());
+    for (let diff = -leftDayCnt; diff <= rightDayCnt; diff++) {
+        let temp = new Date(new Date().toDateString());
+        temp.setDate(todayDate.getDate() + diff);
+        days.push(temp);
+    }
+    
+    // Calendar Events
+    // event: {startFull, date, start, end, title, location}
+    let events = [ 
+        new Map([
+            ['startFull', new Date('Dec 8, 2024 10:00:00')],
+            ['date', new Date('Dec 8, 2024')],
+            ['start', 1000],
+            ['end', 1100],
+            ['title', 'Daily Standup Meeting'],
+            ['location', 'Some Random Place']
+        ]),
+        new Map([
+            ['startFull', new Date('Dec 9, 2024 8:00:00')],
+            ['date', new Date('Dec 9, 2024')],
+            ['start', 800],
+            ['end', 900],
+            ['title', 'Breakfast with Friend'],
+            ['location', 'Some Random Place']
+        ]),
+        new Map([
+            ['startFull', new Date('Dec 9, 2024 9:30:00')],
+            ['date', new Date('Dec 9, 2024')],
+            ['start', 930],
+            ['end', 1000],
+            ['title', 'Badminton Class'],
+            ['location', 'Some Random Place']
+        ]),
+        new Map([
+            ['startFull', new Date('Dec 10, 2024 6:00:00')],
+            ['date', new Date('Dec 10, 2024')],
+            ['start', 600],
+            ['end', 730],
+            ['title', 'Pickup Family'],
+            ['location', 'Some Random Place']
+        ]),
+        new Map([
+            ['startFull', new Date('Dec 10, 2024 11:00:00')],
+            ['date', new Date('Dec 10, 2024')],
+            ['start', 1100],
+            ['end', 1230],
+            ['title', 'Meeting with Project Manager'],
+            ['location', 'Some Random Place']
+        ]),
+        new Map([
+            ['startFull', new Date('Dec 11, 2024 6:00:00')],
+            ['date', new Date('Dec 11, 2024')],
+            ['start', 600],
+            ['end', 755],
+            ['title', 'Workout and Yoga Seesion'],
+            ['location', 'Some Random Place']
+        ]),
+        new Map([
+            ['startFull', new Date('Dec 11, 2024 10:00:00')],
+            ['date', new Date('Dec 11, 2024')],
+            ['start', 1000],
+            ['end', 1145],
+            ['title', 'School Friend Birthday Party'],
+            ['location', 'Some Random Place']
+        ]),
+        new Map([
+            ['startFull', new Date('Dec 12, 2024 8:00:00')],
+            ['date', new Date('Dec 12, 2024')],
+            ['start', 800],
+            ['end', 825],
+            ['title', 'Project Task Review'],
+            ['location', 'Some Random Place']
+        ]),
+        new Map([
+            ['startFull', new Date('Dec 13, 2024 9:00:00')],
+            ['date', new Date('Dec 13, 2024')],
+            ['start', 900],
+            ['end', 1045],
+            ['title', 'Doctor Appointment'],
+            ['location', 'Some Random Place']
+        ]),
+    ]
+    const cells = new Array(dayCnt);
+    for (let i = 0; i < cells.length; i++) {
+        cells[i] = new Array(times.length);
+        for (let j = 0; j < cells[i].length; j++) {
+            cells[i][j] = [];
+        }
+    }
+
+    events.sort(function(a, b) {
+        if (a.startFull < b.startFull) return -1;
+        if (a.startFull > b.startFull) return 1;
+        return 0;
+    });
+
+    // Filling cells array
+    let eventIdx = 0;
+    for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
+        while (eventIdx < events.length && events[eventIdx].get('date') < days[curDayIdx]) {
+            eventIdx++;
+        }
+        if (eventIdx >= events.length) break;
+
+        let timeIdx = 0;
+        while (eventIdx < events.length && events[eventIdx].get('date').getTime() == days[curDayIdx].getTime()) {
+            while (timeIdx < times.length && times[timeIdx] * 100 < events[eventIdx].get('start'))
+                timeIdx++;
+            if (timeIdx >= times.length) break;
+
+            cells[curDayIdx][timeIdx].push(events[eventIdx]);
+            eventIdx++;
+        }
+    }
 
     return (
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
@@ -74,8 +199,8 @@ const Home = () => {
                 </div>
                 <div className="w-full pb-8">
                 {
-                    calendarTypeIdx == 0 ? <CalendarDay /> :
-                    calendarTypeIdx == 1 ? <CalendarWeek2 /> : 
+                    calendarTypeIdx == 0 ? <CalendarDay2 index={2} days={days} times={times} events={events} cells={cells} /> :
+                    calendarTypeIdx == 1 ? <CalendarWeek2 days={days} times={times} events={events} cells={cells} /> : 
                     <Calendar className="text-sm font-medium text-gray-900 text-center" 
                     calendarType={"gregory"}
                     view={"month"}
