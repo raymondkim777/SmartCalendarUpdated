@@ -15,7 +15,9 @@
     "next": "15.0.4",
     "react": "^19.0.0",
     "react-calendar": "^5.1.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "rsuite": "^5.75.0",
+    "tailgrids": "^2.2.7"
   },
   "devDependencies": {
     "eslint": "^8",
