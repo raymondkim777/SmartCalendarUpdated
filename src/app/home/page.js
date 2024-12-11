@@ -229,6 +229,8 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Calendar */}
                 <div className="w-full pb-8">
                 {
                     calendarTypeIdx == 0 ? <CalendarDay2 index={dayIndex} days={days} times={times} events={events} cells={cells} /> :

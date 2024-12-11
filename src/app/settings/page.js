@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react';
-import Header from "../header";
 import { Toggle } from 'rsuite';
 import 'rsuite/Toggle/styles/index.css';
+
+import Header from "../header";
 
 
 const Settings = () => {
