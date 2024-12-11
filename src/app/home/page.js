@@ -252,7 +252,7 @@ const Home = () => {
                 {/* Calendar */}
                 <div className="w-full pb-8">
                 {
-                    calendarTypeIdx == 0 ? <CalendarDay2 index={dayIndex} days={days} times={times} events={events} cells={cells} /> :
+                    calendarTypeIdx == 0 ? <CalendarDay2 index={dayIndex} days={days} times={times} cells={cells} /> :
                     calendarTypeIdx == 1 ? <CalendarWeek2 clickedDay={clickedDay} days={days} times={times} cells={cells} /> : 
                     <Calendar className="text-sm font-medium text-gray-900 text-center" 
                     calendarType={"gregory"}
