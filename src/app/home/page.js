@@ -64,7 +64,7 @@ const Home = () => {
         console.log(tempDays);
         setDays(tempDays);
         setDayIndex(Math.floor((dayCnt - 1) / 2));
-        updateCalendarType(0);
+        updateCalendarType(1);
     }
 
     // Clicking Week Calendar Day
@@ -239,7 +239,7 @@ const Home = () => {
                             </button>
                             <button className={`w-16 rounded-lg py-2.5 text-sm font-medium transition-all duration-300 hover:bg-white hover:text-indigo-600 active:opacity-70 ${buttonCSS[1]}`}
                             onClick={()=>updateCalendarType(1)}>
-                                Week
+                                Group
                             </button>
                             <button className={`w-16 rounded-lg py-2.5 text-sm font-medium transition-all duration-300 hover:bg-white hover:text-indigo-600 active:opacity-70 ${buttonCSS[2]}`}
                             onClick={()=>updateCalendarType(2)}>
