@@ -44,7 +44,6 @@ const Home = () => {
         temp.setDate(todayDate.getDate() + diff);
         tempDays.push(temp);
     }
-
        
     // Date Indices
     const [dayIndex, setDayIndex] = useState(Math.floor((dayCnt - 1) / 2));
@@ -159,27 +158,47 @@ const Home = () => {
     }
 
     events.sort(function(a, b) {
-        if (a.startFull < b.startFull) return -1;
-        if (a.startFull > b.startFull) return 1;
+        if (a.get('startFull') < b.get('startFull')) return -1;
+        if (a.get('startFull') > b.get('startFull')) return 1;
         return 0;
     });
 
     // Filling cells array
     let eventIdx = 0;
     for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
-        while (eventIdx < events.length && events[eventIdx].get('date') < days[curDayIdx]) {
+        // find index of first event within day
+        while (eventIdx < events.length && events[eventIdx].get('date') < days[curDayIdx])
             eventIdx++;
-        }
+
+        // if no events left, break
         if (eventIdx >= events.length) break;
 
-        let timeIdx = 0;
-        while (eventIdx < events.length && events[eventIdx].get('date').getTime() == days[curDayIdx].getTime()) {
-            while (timeIdx < times.length && times[timeIdx] * 100 < events[eventIdx].get('start'))
-                timeIdx++;
-            if (timeIdx >= times.length) break;
+        for (let timeIdx = 0; timeIdx < times.length; timeIdx++) {
+            // check if current event is within day
+            if (events[eventIdx].get('date') > days[curDayIdx]) break;
+            
+            // if event starts before/within time cell
+            if (times[timeIdx] * 100 > events[eventIdx].get('start')) {
+                let cellEvent = new Map(events[eventIdx]);
+                cellEvent.set('index', eventIdx);
+                cellEvent.set('upContinue', false);
+                cellEvent.set('downContinue', false);
 
-            cells[curDayIdx][timeIdx].push(events[eventIdx]);
-            eventIdx++;
+                // if event is continuing from previous cell
+                if ((times[timeIdx] - 1) * 100 > cellEvent.get('start')) {
+                    cellEvent.set('upContinue', true);
+                }
+                // if event should continue to next cell
+                if (times[timeIdx] * 100 < cellEvent.get('end')) {
+                    cellEvent.set('downContinue', true);
+                }
+                else {
+                    eventIdx++;
+                    
+                }
+                cells[curDayIdx][timeIdx].push(cellEvent);
+                if (eventIdx >= events.length) break;
+            }
         }
     }
 
@@ -234,7 +253,7 @@ const Home = () => {
                 <div className="w-full pb-8">
                 {
                     calendarTypeIdx == 0 ? <CalendarDay2 index={dayIndex} days={days} times={times} events={events} cells={cells} /> :
-                    calendarTypeIdx == 1 ? <CalendarWeek2 clickedDay={clickedDay} days={days} times={times} events={events} cells={cells} /> : 
+                    calendarTypeIdx == 1 ? <CalendarWeek2 clickedDay={clickedDay} days={days} times={times} cells={cells} /> : 
                     <Calendar className="text-sm font-medium text-gray-900 text-center" 
                     calendarType={"gregory"}
                     view={"month"}

@@ -1,6 +1,6 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
 
-const CalendarWeek2 = ({ clickedDay, days, times, events, cells }) => {
+const CalendarWeek2 = ({ clickedDay, days, times, cells }) => {
     const todayDate = new Date(new Date().toDateString());
 
     const dayCSS = new Array();
@@ -14,9 +14,17 @@ const CalendarWeek2 = ({ clickedDay, days, times, events, cells }) => {
     const eventColors = ['border-yellow-600 bg-yellow-50', 'border-green-600 bg-green-50', 'border-purple-600 bg-purple-50', 'border-blue-600 bg-blue-50'];
     const titleColors = ['text-yellow-600', 'text-green-600', 'text-purple-600', 'text-blue-600'];
 
-    for (let i = 0; i < events.length; i++) {
-        events[i].set('boxCSS', eventColors[i % eventColors.length]);
-        events[i].set('textCSS', titleColors[i % titleColors.length]);
+    for (let i = 0; i < cells.length; i++) {
+        for (let j = 0; j < cells[i].length; j++) {
+            for (let k = 0; k < cells[i][j].length; k++) {
+                cells[i][j][k].set('boxCSS', eventColors[cells[i][j][k].get('index') % eventColors.length]);
+                cells[i][j][k].set('textCSS', titleColors[cells[i][j][k].get('index') % titleColors.length]);
+                // if continuing from top
+                cells[i][j][k].set('topCSS', cells[i][j][k].get('upContinue') ? 'rounded-t-none': '');
+                // if continuing to bottom
+                cells[i][j][k].set('downCSS', cells[i][j][k].get('downContinue') ? 'rounded-b-none h-full': '');
+            }
+        }
     }
 
     return(
@@ -36,12 +44,12 @@ const CalendarWeek2 = ({ clickedDay, days, times, events, cells }) => {
                         {item.toLocaleString('default', { month: 'short' })} {item.getDate()}
                     </div>
                     {times.map((subItem, subIndex) => (
-                        <div key={`cell-${subIndex}`} className="h-32 lg:h-28 p-0.5 border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300 hover:cursor-pointer">
-                            {cells[index][subIndex].map((event, eIdx) => (
-                                <div key={`box-event-${index}-${subIndex}-${eIdx}`} className={`rounded p-1.5 border-l-2 ${event.get('boxCSS')}`}>
-                                    <p key={`title-event-${index}-${subIndex}-${eIdx}`} className="text-xs font-normal text-gray-900 mb-px">{event.get('title')}</p>
-                                    <p key={`time-event-${index}-${subIndex}-${eIdx}`} className={`text-xs font-semibold ${event.get('textCSS')}`}>
-                                        {Math.floor(event.get('start') / 100).toString().length < 2 ? '0' : ''}{Math.floor(event.get('start') / 100)}:{(event.get('start') % 100).toString().length < 2 ? '0' : ''}{event.get('start') % 100} - {Math.floor(event.get('end') / 100).toString().length < 2 ? '0' : ''}{Math.floor(event.get('end') / 100)}:{(event.get('end') % 100).toString().length < 2 ? '0' : ''}{(event.get('end') % 100)}
+                        <div key={`cell-${subIndex}`} className="h-32 lg:h-28 px-0.5 border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300 hover:cursor-pointer">
+                            {cells[index][subIndex].map((cellEvent, eIdx) => (
+                                <div key={`box-event-${index}-${subIndex}-${eIdx}`} className={`rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')}`}>
+                                    <p key={`title-event-${index}-${subIndex}-${eIdx}`} className="text-xs font-normal text-gray-900 mb-px">{cellEvent.get('title')}</p>
+                                    <p key={`time-event-${index}-${subIndex}-${eIdx}`} className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
+                                        {Math.floor(cellEvent.get('start') / 100).toString().length < 2 ? '0' : ''}{Math.floor(cellEvent.get('start') / 100)}:{(cellEvent.get('start') % 100).toString().length < 2 ? '0' : ''}{cellEvent.get('start') % 100} - {Math.floor(cellEvent.get('end') / 100).toString().length < 2 ? '0' : ''}{Math.floor(cellEvent.get('end') / 100)}:{(cellEvent.get('end') % 100).toString().length < 2 ? '0' : ''}{(cellEvent.get('end') % 100)}
                                     </p>
                                 </div>
                             ))}
