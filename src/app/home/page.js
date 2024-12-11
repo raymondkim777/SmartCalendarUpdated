@@ -1,12 +1,10 @@
-'use client'
+"use client"
 
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 
 import Header from "../header";
-import CalendarWeek from "../calendarweek";
 import CalendarWeek2 from '../calendarweek2';
-import CalendarDay from '../calendarday';
 import CalendarDay2 from '../calendarday2';
 
 const Home = () => {
@@ -44,7 +42,7 @@ const Home = () => {
         temp.setDate(todayDate.getDate() + diff);
         tempDays.push(temp);
     }
-       
+    
     // Date Indices
     const [dayIndex, setDayIndex] = useState(Math.floor((dayCnt - 1) / 2));
     const [days, setDays] = useState(tempDays);
