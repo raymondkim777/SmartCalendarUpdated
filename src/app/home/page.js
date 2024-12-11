@@ -48,11 +48,8 @@ const Home = () => {
        
     // Date Indices
     const [dayIndex, setDayIndex] = useState(Math.floor((dayCnt - 1) / 2));
-    const clickedDay = (index) => {
-        setDayIndex(index);
-        updateCalendarType(0);
-    }
 
+    // Clicking Month Calendar Day
     const [days, setDays] = useState(tempDays);
     const updateDays = (givenDate) => {
         const givenDateNoTime = new Date(givenDate.toDateString());
@@ -63,8 +60,14 @@ const Home = () => {
             tempDays.push(temp);
         }
         setDays(tempDays);
-        updateCalendarType(0);
         setDayIndex(Math.floor((dayCnt - 1) / 2));
+        updateCalendarType(0);
+    }
+
+    // Clicking Week Calendar Day
+    const clickedDay = (index) => {
+        updateDays(days[index]);
+        updateCalendarType(0);
     }
     
     // Calendar Events
