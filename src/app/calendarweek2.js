@@ -26,7 +26,7 @@ const CalendarWeek2 = ({ clickedDay, days, times, events, cells }) => {
                 <div className="h-12 flex items-center justify-center border-gray-200 text-sm font-medium text-gray-900 transition-all duration-300"/>
                 {times.map((hour, index) => (
                     <div key={`time-${index}`} className="h-32 lg:h-28 p-0.5 border-gray-200 flex items-end transition-all duration-300">
-                        <span key={index} className="text-xs font-semibold text-gray-400">{`${hour}:00 ${hour >=12 ? 'pm' : 'am'}`}</span>
+                        <span key={index} className="text-xs font-semibold text-gray-400">{`${hour == 12 || hour == 0 ? hour : hour % 12}:00 ${hour >=12 ? 'pm' : 'am'}`}</span>
                     </div>
                 ))}
             </div>
