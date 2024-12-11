@@ -52,13 +52,17 @@ const Home = () => {
 
     // Clicking Month Calendar Day
     const updateDays = (givenDate) => {
+        console.log(givenDate);
         const givenDateNoTime = new Date(givenDate.toDateString());
+        console.log(givenDateNoTime.getMonth());
         let tempDays = new Array();
         for (let diff = -leftDayCnt; diff <= rightDayCnt; diff++) {
-            let temp = new Date(new Date().toDateString());
+            let temp = new Date(givenDateNoTime.getTime());
             temp.setDate(givenDateNoTime.getDate() + diff);
+            console.log("temp" + temp);
             tempDays.push(temp);
         }
+        console.log(tempDays);
         setDays(tempDays);
         setDayIndex(Math.floor((dayCnt - 1) / 2));
         updateCalendarType(0);
