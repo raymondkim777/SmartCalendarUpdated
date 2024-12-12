@@ -5,7 +5,7 @@ import { SettingsContext } from '../contexts/SettingsContext';
 import { Toggle } from 'rsuite';
 import 'rsuite/Toggle/styles/index.css';
 
-import Header from "../home/header";
+import Header from "../header";
 
 const Settings = () => {
     const { notifEnabled, setNotifEnabled } = useContext(SettingsContext);
