@@ -16,7 +16,7 @@ const EventModal = ({ closeEvent, eventDetails }) => {
     }
 
     return(
-        <div className={`flex flex-col items-center z-10 absolute inset-x-1/3 top-60 min-w-80 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50`}>
+        <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute w-96 lg:w-[32rem] xl:w-[36rem] object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50`}>
             <div className='flex flex-row w-full h-10 items-center justify-between pl-4 pr-2 space-x-3'>
                 <h1 className="text-lg text-nowrap truncate leading-6 text-gray-600 font-semibold">{eventDetails.get('title')}</h1>
                 <div onClick={closeEvent} className='flex items-center justify-center w-9 h-9 rounded-full hover:cursor-pointer hover:bg-gray-200 active:bg-gray-300 transition-all duration-300'>
@@ -25,7 +25,7 @@ const EventModal = ({ closeEvent, eventDetails }) => {
                     </svg>
                 </div>
             </div>
-            <div className='flex flex-col w-full h-fit max-h-[36rem] items-center justify-start py-4 px-4 space-y-4 overflow-y-auto'>
+            <div className='flex flex-col w-full h-fit max-h-64 lg:max-h-[32rem] xl:max-h-[40rem] items-center justify-start py-4 px-4 space-y-4 overflow-y-auto'>
                 {/* Times */}
                 <div className='flex flex-row w-full h-12 items-center justify-start space-x-4 px-2'>
                     <div className='flex flex-col w-fit h-fit items-start justify-center'>
