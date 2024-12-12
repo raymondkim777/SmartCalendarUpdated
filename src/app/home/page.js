@@ -5,7 +5,7 @@ import Calendar from 'react-calendar';
 
 import Header from "../header";
 import CalendarWeek from '../calendarweek';
-import CalendarDay from '../calendarday';
+import CalendarDay from './calendarday';
 
 const Home = () => {
     // Calendar CSS
@@ -295,7 +295,7 @@ const Home = () => {
                     formatDay={(locale, date) => null}
                     tileContent={tileContent}
                     tileClassName={"flex flex-col h-28 items-center py-2 border-t border-gray-200 font-semibold text-gray-400 duration-300 transition-all hover:bg-gray-200 active:bg-gray-300"}
-                    onChange={(value, event) => updateDays(value, 2)}
+                    onChange={(value, event) => updateDays(value, 1)}
                     activeStartDate={curCalendarDay}
                     />
                 }

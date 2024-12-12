@@ -13,6 +13,9 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
     // Calendar Event Colors
     const eventColors = ['border-yellow-600 bg-yellow-50', 'border-green-600 bg-green-50', 'border-purple-600 bg-purple-50', 'border-blue-600 bg-blue-50'];
     const titleColors = ['text-yellow-600', 'text-green-600', 'text-purple-600', 'text-blue-600'];
+    const hoverColors = ['hover:bg-yellow-100', 'hover:bg-green-100', 'hover:bg-purple-100', 'hover:bg-blue-100'];
+    const activeColors = ['border-yellow-600 bg-yellow-50', 'border-green-600 bg-green-50', 'border-purple-600 bg-purple-50', 'border-blue-600 bg-blue-50'];
+    
 
     for (let i = 0; i < cells.length; i++) {
         for (let j = 0; j < cells[i].length; j++) {
@@ -23,9 +26,11 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
                 cells[i][j][k].set('topCSS', cells[i][j][k].get('upContinue') ? 'rounded-t-none': '');
                 // if continuing to bottom
                 cells[i][j][k].set('downCSS', cells[i][j][k].get('downContinue') ? 'rounded-b-none h-full': '');
+                cells[i][j][k].set('hoverCSS', hoverColors[cells[i][j][k].get('index') % hoverColors.length]);
             }
         }
     }
+    console.log(cells);
 
     // Time Format
     const formatTime = (time) => {
@@ -54,7 +59,7 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
                     {times.map((subItem, subIndex) => (
                         <div key={`cell-${subIndex}`} className="h-24 lg:h-20 px-0.5 border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300 hover:cursor-pointer">
                             {cells[index][subIndex].map((cellEvent, eIdx) => (
-                                <div key={`box-event-${index}-${subIndex}-${eIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')}`}>
+                                <div key={`box-event-${index}-${subIndex}-${eIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')} ${cellEvent.get('hoverCSS')} transition-all duration-150`}>
                                     {
                                         subIndex != 0 && cellEvent.get('upContinue') ? null : 
                                         <div className='flex flex-col w-full h-fit'>
@@ -70,6 +75,8 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
                     ))}
                 </div>
             ))}
+
+            {/* Event Modal */}
         </div>
     )
 }
