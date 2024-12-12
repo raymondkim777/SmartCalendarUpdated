@@ -1,6 +1,6 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
 
-const CalendarDay2 = ({ index, days, times, cells }) => {
+const CalendarDay = ({ index, days, times, cells }) => {
     const todayDate = new Date(new Date().toDateString());
     let dayCSS = days[index].getTime() == todayDate.getTime() ? 'text-indigo-600' : 'text-gray-900';
 
@@ -59,4 +59,4 @@ const CalendarDay2 = ({ index, days, times, cells }) => {
     )
 }
 
-export default CalendarDay2;
+export default CalendarDay;

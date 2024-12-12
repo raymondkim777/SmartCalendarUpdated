@@ -1,6 +1,6 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
 
-const CalendarWeek2 = ({ clickedDay, days, times, cells }) => {
+const CalendarWeek = ({ clickedDay, days, times, cells }) => {
     const todayDate = new Date(new Date().toDateString());
 
     const dayCSS = new Array();
@@ -66,4 +66,4 @@ const CalendarWeek2 = ({ clickedDay, days, times, cells }) => {
     )
 }
 
-export default CalendarWeek2;
+export default CalendarWeek;

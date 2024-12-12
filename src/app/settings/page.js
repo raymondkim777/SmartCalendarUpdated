@@ -1,17 +1,25 @@
 'use client'
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { SettingsContext } from '../contexts/SettingsContext';
 import { Toggle } from 'rsuite';
 import 'rsuite/Toggle/styles/index.css';
 
 import Header from "../header";
 
-
 const Settings = () => {
-    const [notifChecked, setNotifChecked] = useState(false);
-    const clickToggle = () => {
-        setNotifChecked(!notifChecked);
+    const { notifEnabled, setNotifEnabled } = useContext(SettingsContext);
+    const [ localNotifEnabled, setLocalNotifEnabled ] = useState(notifEnabled);
+    const [ showSaveMsg, setShowSaveMsg ] = useState(false);
+    
+    const toggleNotif = () => {
+        setLocalNotifEnabled(()=>!localNotifEnabled);
     } 
+
+    const saveSettings = () => {
+        setNotifEnabled(localNotifEnabled);
+        setShowSaveMsg(true);
+    }
 
     return(
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
@@ -29,8 +37,18 @@ const Settings = () => {
                             and notify users which methods of transportation to take and when to 
                             begin travels in order to arrive on time. 
                         </span>
-                        <Toggle size="lg" checked={notifChecked} onChange={clickToggle}></Toggle>
+                        <Toggle size="lg" checked={localNotifEnabled} onChange={toggleNotif}></Toggle>
                     </div> 
+                </div>
+                <div className='flex flex-col w-full h-fit items-center justify-center mt-8'>
+                    <div onClick={saveSettings} className='group flex flex-row w-fit h-fit py-3 px-4 rounded bg-gray-200 hover:bg-gray-300 hover:cursor-pointer active:bg-gray-400 transition-all duration-300'>
+                        <h1 className='w-fit h-fit text-center text-lg font-semibold text-gray-900 group-hover:text-[#4587ED] group-hover:cursor-pointer transition-all duration-300'>Save Settings</h1>
+                    </div>
+                    {showSaveMsg && 
+                        <div className='w-fit h-fit py-3'>
+                            <span className='w-fit h-fit text-center text-lg leading-6 font-normal text-[#4587ED]'>Settings saved!</span>
+                        </div>
+                    }
                 </div>
             </div>
         </section>
