@@ -7,6 +7,8 @@ import Header from "../header";
 import CalendarWeek from './calendarweek';
 import CalendarDay from './calendarday';
 
+import { BUS_INDEX, SUB_INDEX, CAR_INDEX, LEG_INDEX } from '../transportation.js';
+
 const Home = () => {
     // Calendar CSS
     const [calendarTypeIdx, setCalendarTypeIdx] = useState(1);
@@ -99,9 +101,10 @@ const Home = () => {
     }
     
     // Calendar Events
-    // event: {startFull, date, start, end, title, location}
-    let events = [ 
+    // event: { moveType, startFull, date, start, end, title, location }
+    const events = [ 
         new Map([
+            ['moveType', false],
             ['start', new Date('Dec 10, 2024 10:00:00')],
             ['end', new Date('Dec 10, 2024 11:00:00')],
             ['title', 'Daily Standup Meeting'],
@@ -109,13 +112,15 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
         new Map([
-            ['start', new Date('Dec 11, 2024 8:00:00')],
-            ['end', new Date('Dec 11, 2024 9:00:00')],
+            ['moveType', false],
+            ['start', new Date('Dec 11, 2024 9:00:00')],
+            ['end', new Date('Dec 11, 2024 9:30:00')],
             ['title', 'Breakfast with Friend'],
             ['location', 'Some Random Place'],
             ['description', 'Some Description'],
         ]),
         new Map([
+            ['moveType', false],
             ['start', new Date('Dec 11, 2024 9:30:00')],
             ['end', new Date('Dec 11, 2024 10:00:00')],
             ['title', 'Badminton Class'],
@@ -123,13 +128,7 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
         new Map([
-            ['start', new Date('Dec 11, 2024 17:00:00')],
-            ['end', new Date('Dec 12, 2024 3:00:00')],
-            ['title', 'Pickup Family'],
-            ['location', 'Some Random Place'],
-            ['description', 'Some Description'],
-        ]),
-        new Map([
+            ['moveType', false],
             ['start', new Date('Dec 11, 2024 10:00:00')],
             ['end', new Date('Dec 11, 2024 11:00:00')],
             ['title', 'Eat Lunch'],
@@ -137,6 +136,7 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
         new Map([
+            ['moveType', false],
             ['start', new Date('Dec 11, 2024 11:00:00')],
             ['end', new Date('Dec 11, 2024 13:00:00')],
             ['title', 'Stare at a Dog'],
@@ -144,6 +144,15 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
         new Map([
+            ['moveType', false],
+            ['start', new Date('Dec 11, 2024 17:00:00')],
+            ['end', new Date('Dec 12, 2024 3:00:00')],
+            ['title', 'Pickup Family'],
+            ['location', 'Some Random Place'],
+            ['description', 'Some Description'],
+        ]),
+        new Map([
+            ['moveType', false],
             ['start', new Date('Dec 12, 2024 11:00:00')],
             ['end', new Date('Dec 12, 2024 12:30:00')],
             ['title', 'Meeting with Project Manager Long Title Very Long Ooooooh'],
@@ -151,6 +160,7 @@ const Home = () => {
             ['description', 'Some Description Thats Very Long Wooooow Will This Break As Well I Really Hope Not and Oh Look At That It Broke'],
         ]),
         new Map([
+            ['moveType', false],
             ['start', new Date('Dec 13, 2024 6:00:00')],
             ['end', new Date('Dec 13, 2024 7:55:00')],
             ['title', 'Workout and Yoga Session'],
@@ -158,6 +168,7 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
         new Map([
+            ['moveType', false],
             ['start', new Date('Dec 13, 2024 10:00:00')],
             ['end', new Date('Dec 13, 2024 13:45:00')],
             ['title', 'School Friend Birthday Party'],
@@ -165,6 +176,7 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
         new Map([
+            ['moveType', false],
             ['start', new Date('Dec 14, 2024 8:00:00')],
             ['end', new Date('Dec 14, 2024 8:25:00')],
             ['title', 'Project Task Review'],
@@ -172,6 +184,7 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
         new Map([
+            ['moveType', false],
             ['start', new Date('Dec 15, 2024 9:00:00')],
             ['end', new Date('Dec 15, 2024 10:45:00')],
             ['title', 'Doctor Appointment'],
@@ -179,6 +192,13 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
     ]
+
+    events.sort(function(a, b) {
+        if (a.get('start') < b.get('start')) return -1;
+        if (a.get('start') > b.get('start')) return 1;
+        return 0;
+    });
+
     const cells = new Array(dayCnt);
     for (let i = 0; i < cells.length; i++) {
         cells[i] = new Array(times.length);
@@ -187,56 +207,181 @@ const Home = () => {
         }
     }
 
-    events.sort(function(a, b) {
-        if (a.get('start') < b.get('start')) return -1;
-        if (a.get('start') > b.get('start')) return 1;
-        return 0;
-    });
-
     // Filling cells array
     let eventIdx = 0;
     for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
 
         for (let timeIdx = 0; timeIdx < times.length; timeIdx++) {
-            let addEvent = true;
-
-            // if no events left, break
-            if (eventIdx >= events.length) break;
-            
-            // if event starts before/within time cell
-            let prevCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx] - 1));
-            let curCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx]));
-
-            let startTime = events[eventIdx].get('start');
-            let endTime = events[eventIdx].get('end')
-
-            if (startTime < curCellTime) {
-                let cellEvent = new Map(events[eventIdx]);
-                cellEvent.set('index', eventIdx);
-                cellEvent.set('upContinue', false);
-                cellEvent.set('downContinue', false);
-
-                // if event is continuing from previous cell
-                if (prevCellTime > startTime) {
-                    if (prevCellTime <= endTime) {
-                        cellEvent.set('upContinue', true);
-                    } else {
-                        eventIdx++;
-                        addEvent = false;
+            while (true) {
+                // if no events left, break
+                if (eventIdx >= events.length) break;
+                
+                // if event starts before/within time cell
+                let prevCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx] - 1));
+                let curCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx]));
+    
+                let startTime = events[eventIdx].get('start');
+                let endTime = events[eventIdx].get('end')
+    
+                if (startTime < curCellTime) {
+                    let cellEvent = new Map(events[eventIdx]);
+                    cellEvent.set('index', eventIdx);
+                    cellEvent.set('upContinue', false);
+                    cellEvent.set('downContinue', false);
+    
+                    if (startTime < prevCellTime) {
+                        // if event is continuing from previous cell
+                        if (endTime >= prevCellTime) {
+                            cellEvent.set('upContinue', true);
+                        } 
+                        // event has passed
+                        else {
+                            eventIdx++;
+                            continue;
+                        }
                     }
+                    // if event should continue to next cell
+                    if (endTime > curCellTime) {
+                        cellEvent.set('downContinue', true);
+                        cells[curDayIdx][timeIdx].push(cellEvent);
+                        break;
+                    }
+                    // if event ends here
+                    else {
+                        eventIdx++;
+                    }
+                    cells[curDayIdx][timeIdx].push(cellEvent);
+                } else {
+                    break;
                 }
-
-                // if event should continue to next cell
-                if (curCellTime < endTime) {
-                    cellEvent.set('downContinue', true);
-                }
-                else {
-                    eventIdx++;
-                }
-                addEvent && cells[curDayIdx][timeIdx].push(cellEvent);
             }
         }
     }
+
+    // Transportation Events
+    // moveEvent: { moveType, start, end, type, name, locations, locatione, description }
+    const moveEvents = [
+        new Map([
+            ['moveType', true],
+            ['start', new Date('Dec 10, 2024 11:05:00')],
+            ['end', new Date('Dec 10, 2024 11:14:00')],
+            ['type', LEG_INDEX],
+            ['name', 'Walk'],
+            ['locations', 'Hudson-Bergen Light Rail HQ'],
+            ['locatione', 'Pacific Ave at Communipaw Ave'],
+            ['description', 'About 9 min, 0.4 mi'],
+        ]),
+        new Map([
+            ['moveType', true],
+            ['start', new Date('Dec 10, 2024 11:14:00')],
+            ['end', new Date('Dec 10, 2024 11:22:00')],
+            ['type', CAR_INDEX],
+            ['name', '1 Jersey City Exchange PI via River Terminal'],
+            ['locations', 'Pacific Ave at Communipaw Ave'],
+            ['locatione', 'C Columbus Drive at Hudon St'],
+            ['description', 'Service run by Nj Transit Bus'],
+        ]),
+        new Map([
+            ['moveType', true],
+            ['start', new Date('Dec 10, 2024 11:22:00')],
+            ['end', new Date('Dec 10, 2024 11:23:00')],
+            ['type', LEG_INDEX],
+            ['name', 'Walk'],
+            ['locations', 'C Columbus Drive at Hudon St'],
+            ['locatione', 'Exchange Place'],
+            ['description', 'About 1 min'],
+        ]),
+        new Map([
+            ['moveType', true],
+            ['start', new Date('Dec 10, 2024 11:40:00')],
+            ['end', new Date('Dec 10, 2024 11:45:00')],
+            ['type', SUB_INDEX],
+            ['name', 'World Trade Center'],
+            ['locations', 'Exchange Place'],
+            ['locatione', 'World Trade Center'],
+            ['description', 'Service run by Port Authority Trans-Hudson Corporation'],
+        ]),
+        new Map([
+            ['moveType', true],
+            ['start', new Date('Dec 10, 2024 11:45:00')],
+            ['end', new Date('Dec 10, 2024 11:49:00')],
+            ['type', LEG_INDEX],
+            ['name', 'Walk'],
+            ['locations', 'World Trade Center'],
+            ['locatione', 'Woolworth Bldg'],
+            ['description', 'About 4 min, 0.2 mi'],
+        ]),
+    ];
+    const allEvents = moveEvents.concat(events);
+
+    allEvents.sort(function(a, b) {
+        if (a.get('start') < b.get('start')) return -1;
+        if (a.get('start') > b.get('start')) return 1;
+        return 0;
+    });
+
+    const moveCells = new Array(dayCnt);
+    for (let i = 0; i < moveCells.length; i++) {
+        moveCells[i] = new Array(times.length);
+        for (let j = 0; j < moveCells[i].length; j++) {
+            moveCells[i][j] = [];
+        }
+    }
+
+    // Filling moveCells array
+    let allEventIdx = 0;
+    for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
+
+        for (let timeIdx = 0; timeIdx < times.length; timeIdx++) {
+            while (true) {
+                // if no events left, break
+                if (allEventIdx >= allEvents.length) break;
+                
+                // if event starts before/within time cell
+                let prevCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx] - 1));
+                let curCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx]));
+    
+                let startTime = allEvents[allEventIdx].get('start');
+                let endTime = allEvents[allEventIdx].get('end')
+    
+                if (startTime < curCellTime) {
+                    let cellEvent = new Map(allEvents[allEventIdx]);
+                    cellEvent.set('index', allEventIdx);
+                    cellEvent.set('upContinue', false);
+                    cellEvent.set('downContinue', false);
+    
+                    if (startTime < prevCellTime) {
+                        // if event is continuing from previous cell
+                        if (endTime >= prevCellTime) {
+                            cellEvent.set('upContinue', true);
+                        } 
+                        // event has passed
+                        else {
+                            allEventIdx++;
+                            continue;
+                        }
+                    }
+                    // if event should continue to next cell
+                    if (endTime > curCellTime) {
+                        cellEvent.set('downContinue', true);
+                        moveCells[curDayIdx][timeIdx].push(cellEvent);
+                        break;
+                    }
+                    // if event ends here
+                    else {
+                        allEventIdx++;
+                    }
+                    moveCells[curDayIdx][timeIdx].push(cellEvent);
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    console.log(cells);
+    console.log(allEvents);
+    console.log(moveCells[0]);
 
     // React Calendar Setup
     const circleColors = ['bg-yellow-600', 'bg-green-600', 'bg-purple-600', 'bg-blue-600'];
