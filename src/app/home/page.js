@@ -378,11 +378,7 @@ const Home = () => {
             }
         }
     }
-
-    console.log(cells);
-    console.log(allEvents);
-    console.log(moveCells[0]);
-
+    
     // React Calendar Setup
     const circleColors = ['bg-yellow-600', 'bg-green-600', 'bg-purple-600', 'bg-blue-600'];
 
@@ -467,8 +463,8 @@ const Home = () => {
                 {/* Calendar */}
                 <div className="w-full pb-8">
                 {
-                    calendarTypeIdx == 0 ? <CalendarDay index={dayIndex} days={days} times={times} cells={cells} /> :
-                    calendarTypeIdx == 1 ? <CalendarWeek clickedDay={clickedDay} days={days} times={times} cells={cells} /> : 
+                    calendarTypeIdx == 0 ? <CalendarDay index={dayIndex} days={days} times={times} cells={moveCells} /> :
+                    calendarTypeIdx == 1 ? <CalendarWeek clickedDay={clickedDay} days={days} times={times} cells={moveCells} /> : 
                     <Calendar className="text-sm font-medium text-gray-900 text-center" 
                     calendarType={"gregory"}
                     view={"month"}
