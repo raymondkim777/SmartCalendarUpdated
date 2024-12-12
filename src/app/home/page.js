@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 
-import Header from "../header";
-import CalendarWeek from '../calendarweek';
+import Header from "./header";
+import CalendarWeek from './calendarweek';
 import CalendarDay from './calendarday';
 
 const Home = () => {
