@@ -68,14 +68,14 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
                 ))}
             </div>
             {days.map((item, index) => (
-                <div key={`col-${index}`} style={{width: 1 / (days.length + 1) * 100 + '%'}} className={`flex flex-col h-fit group divide-y`}>
-                    <div key={`day-${index}`} className={`${dayCSS[index]} h-12 flex items-center justify-center border-gray-200 text-sm font-medium transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300 hover:cursor-pointer`}>
+                <div onClick={()=>clickedDay(index)} key={`col-${index}`} style={{width: 1 / (days.length + 1) * 100 + '%'}} className={`flex flex-col h-fit group divide-y`}>
+                    <div key={`day-${index}`} className={`${dayCSS[index]} h-12 flex items-center justify-center border-gray-200 text-sm font-medium transition-all group-hover:bg-gray-200 group-active:bg-gray-300 duration-300 hover:cursor-pointer`}>
                         {item.toLocaleString('default', { month: 'short' })} {item.getDate()}
                     </div>
                     {times.map((subItem, subIndex) => (
-                        <div key={`cell-${subIndex}`} className="h-24 lg:h-20 px-0.5 border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300 hover:cursor-pointer">
+                        <div key={`cell-${subIndex}`} className="h-24 lg:h-20 px-0.5 border-gray-200 transition-all group-hover:bg-gray-200 hover:cursor-pointer group-active:bg-gray-300 group-active:border-gray-300 duration-300">
                             {cells[index][subIndex].map((cellEvent, eIdx) => (
-                                <div onClick={()=>expandEvent(cellEvent)} key={`box-event-${index}-${subIndex}-${eIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')} ${cellEvent.get('hoverCSS')} ${cellEvent.get('activeCSS')} transition-all duration-150`}>
+                                <div onClick={(event)=>{event.stopPropagation(); expandEvent(cellEvent)}} key={`box-event-${index}-${subIndex}-${eIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')} ${cellEvent.get('hoverCSS')} ${cellEvent.get('activeCSS')} hover:cursor-pointer transition-all duration-150`}>
                                     {
                                         subIndex != 0 && cellEvent.get('upContinue') ? null : 
                                         <div className='flex flex-col w-full h-fit'>

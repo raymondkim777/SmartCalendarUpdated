@@ -130,6 +130,20 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
         new Map([
+            ['start', new Date('Dec 10, 2024 10:00:00')],
+            ['end', new Date('Dec 10, 2024 11:00:00')],
+            ['title', 'Eat Lunch'],
+            ['location', 'Some Random Place'],
+            ['description', 'Some Description'],
+        ]),
+        new Map([
+            ['start', new Date('Dec 10, 2024 11:00:00')],
+            ['end', new Date('Dec 10, 2024 13:00:00')],
+            ['title', 'Stare at a Dog'],
+            ['location', 'Some Random Place'],
+            ['description', 'Some Description'],
+        ]),
+        new Map([
             ['start', new Date('Dec 11, 2024 11:00:00')],
             ['end', new Date('Dec 11, 2024 12:30:00')],
             ['title', 'Meeting with Project Manager Long Title Very Long Ooooooh'],
@@ -184,6 +198,8 @@ const Home = () => {
     for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
 
         for (let timeIdx = 0; timeIdx < times.length; timeIdx++) {
+            let addEvent = true;
+
             // if no events left, break
             if (eventIdx >= events.length) break;
             
@@ -194,7 +210,7 @@ const Home = () => {
             let startTime = events[eventIdx].get('start');
             let endTime = events[eventIdx].get('end')
 
-            if (curCellTime > startTime) {
+            if (startTime < curCellTime) {
                 let cellEvent = new Map(events[eventIdx]);
                 cellEvent.set('index', eventIdx);
                 cellEvent.set('upContinue', false);
@@ -202,7 +218,12 @@ const Home = () => {
 
                 // if event is continuing from previous cell
                 if (prevCellTime > startTime) {
-                    cellEvent.set('upContinue', true);
+                    if (prevCellTime <= endTime) {
+                        cellEvent.set('upContinue', true);
+                    } else {
+                        eventIdx++;
+                        addEvent = false;
+                    }
                 }
 
                 // if event should continue to next cell
@@ -212,7 +233,7 @@ const Home = () => {
                 else {
                     eventIdx++;
                 }
-                cells[curDayIdx][timeIdx].push(cellEvent);
+                addEvent && cells[curDayIdx][timeIdx].push(cellEvent);
             }
         }
     }
@@ -232,14 +253,16 @@ const Home = () => {
             }
 
             return (
-                <div className='flex flex-col w-fit h-fit items-center justify-center space-y-3'>
+                <div className='flex flex-col w-full h-full items-center justify-center pb-4 space-y-2'>
                     <div id="date_circle" className="flex w-10 h-10 rounded-full items-center justify-center">
                         {date.getDate()}
                     </div>
-                    <div className='flex flex-row items-center justify-center space-x-2'>
-                        {tempEventList.map((value, index)=>(
-                            <div key={`circ-${value}`} className={`w-2 h-2 rounded-full ${circleColors[value % circleColors.length]}`}></div>
-                        ))}
+                    <div className='flex flex-col grow items-center justify-center'>
+                        <div className='flex flex-row flex-wrap justify-center gap-x-2 gap-y-1'>
+                            {tempEventList.map((value, index)=>(
+                                <div key={`circ-${value}`} className={`w-2 h-2 rounded-full ${circleColors[value % circleColors.length]}`}></div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )
