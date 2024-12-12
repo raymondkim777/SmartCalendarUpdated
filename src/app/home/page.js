@@ -27,8 +27,8 @@ const Home = () => {
     
     // Content Setup
     const times = new Array();
-    const start = 7;
-    const end = 20;
+    const start = 1;
+    const end = 24;
     for (let hour = start; hour <= end; hour++)
         times.push(hour);
 
@@ -103,74 +103,56 @@ const Home = () => {
     // event: {startFull, date, start, end, title, location}
     let events = [ 
         new Map([
-            ['startFull', new Date('Dec 9, 2024 10:00:00')],
-            ['date', new Date('Dec 9, 2024')],
-            ['start', 1000],
-            ['end', 1100],
+            ['start', new Date('Dec 9, 2024 10:00:00')],
+            ['end', new Date('Dec 9, 2024 11:00:00')],
             ['title', 'Daily Standup Meeting'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 10, 2024 8:00:00')],
-            ['date', new Date('Dec 10, 2024')],
-            ['start', 800],
-            ['end', 900],
+            ['start', new Date('Dec 10, 2024 8:00:00')],
+            ['end', new Date('Dec 10, 2024 9:00:00')],
             ['title', 'Breakfast with Friend'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 10, 2024 9:30:00')],
-            ['date', new Date('Dec 10, 2024')],
-            ['start', 930],
-            ['end', 1000],
+            ['start', new Date('Dec 10, 2024 9:30:00')],
+            ['end', new Date('Dec 10, 2024 10:00:00')],
             ['title', 'Badminton Class'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 11, 2024 6:00:00')],
-            ['date', new Date('Dec 11, 2024')],
-            ['start', 600],
-            ['end', 730],
+            ['start', new Date('Dec 10, 2024 17:00:00')],
+            ['end', new Date('Dec 11, 2024 3:00:00')],
             ['title', 'Pickup Family'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 11, 2024 11:00:00')],
-            ['date', new Date('Dec 11, 2024')],
-            ['start', 1100],
-            ['end', 1230],
+            ['start', new Date('Dec 11, 2024 11:00:00')],
+            ['end', new Date('Dec 11, 2024 12:30:00')],
             ['title', 'Meeting with Project Manager'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 12, 2024 6:00:00')],
-            ['date', new Date('Dec 12, 2024')],
-            ['start', 600],
-            ['end', 755],
+            ['start', new Date('Dec 12, 2024 6:00:00')],
+            ['end', new Date('Dec 12, 2024 7:55:00')],
             ['title', 'Workout and Yoga Seesion'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 12, 2024 10:00:00')],
-            ['date', new Date('Dec 12, 2024')],
-            ['start', 1000],
-            ['end', 1345],
+            ['start', new Date('Dec 12, 2024 10:00:00')],
+            ['end', new Date('Dec 12, 2024 13:45:00')],
             ['title', 'School Friend Birthday Party'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 13, 2024 8:00:00')],
-            ['date', new Date('Dec 13, 2024')],
-            ['start', 800],
-            ['end', 825],
+            ['start', new Date('Dec 13, 2024 8:00:00')],
+            ['end', new Date('Dec 13, 2024 8:25:00')],
             ['title', 'Project Task Review'],
             ['location', 'Some Random Place']
         ]),
         new Map([
-            ['startFull', new Date('Dec 14, 2024 9:00:00')],
-            ['date', new Date('Dec 14, 2024')],
-            ['start', 900],
-            ['end', 1045],
+            ['start', new Date('Dec 14, 2024 9:00:00')],
+            ['end', new Date('Dec 14, 2024 10:45:00')],
             ['title', 'Doctor Appointment'],
             ['location', 'Some Random Place']
         ]),
@@ -184,59 +166,61 @@ const Home = () => {
     }
 
     events.sort(function(a, b) {
-        if (a.get('startFull') < b.get('startFull')) return -1;
-        if (a.get('startFull') > b.get('startFull')) return 1;
+        if (a.get('start') < b.get('start')) return -1;
+        if (a.get('start') > b.get('start')) return 1;
         return 0;
     });
 
     // Filling cells array
     let eventIdx = 0;
     for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
-        // find index of first event within day
-        while (eventIdx < events.length && events[eventIdx].get('date') < days[curDayIdx])
-            eventIdx++;
-
-        // if no events left, break
-        if (eventIdx >= events.length) break;
 
         for (let timeIdx = 0; timeIdx < times.length; timeIdx++) {
-            // check if current event is within day
-            if (events[eventIdx].get('date') > days[curDayIdx]) break;
+            // if no events left, break
+            if (eventIdx >= events.length) break;
             
             // if event starts before/within time cell
-            if (times[timeIdx] * 100 > events[eventIdx].get('start')) {
+            let prevCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx] - 1));
+            let curCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx]));
+
+            let startTime = events[eventIdx].get('start');
+            let endTime = events[eventIdx].get('end')
+
+            if (curCellTime > startTime) {
                 let cellEvent = new Map(events[eventIdx]);
                 cellEvent.set('index', eventIdx);
                 cellEvent.set('upContinue', false);
                 cellEvent.set('downContinue', false);
 
                 // if event is continuing from previous cell
-                if ((times[timeIdx] - 1) * 100 > cellEvent.get('start')) {
+                if (prevCellTime > startTime) {
                     cellEvent.set('upContinue', true);
                 }
+
                 // if event should continue to next cell
-                if (times[timeIdx] * 100 < cellEvent.get('end')) {
+                if (curCellTime < endTime) {
                     cellEvent.set('downContinue', true);
                 }
                 else {
                     eventIdx++;
-                    
                 }
                 cells[curDayIdx][timeIdx].push(cellEvent);
-                if (eventIdx >= events.length) break;
             }
         }
     }
 
+    console.log(cells);
+
     // React Calendar Setup
     function tileContent({ date, view }) {
         // Add class to tiles in month view only
-        if (view === 'month')
+        if (view === 'month') {
             return (
                 <div id="date_circle" className="flex w-10 h-10 rounded-full items-center justify-center">
                     {date.getDate()}
                 </div>
             )
+        }
     }
 
     return (

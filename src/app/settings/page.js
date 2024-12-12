@@ -34,7 +34,7 @@ const Settings = () => {
                         <span className='w-full h-fit mt-4 text-start text-lg leading-6 font-normal text-gray-900'>
                             Do you wish to receive notifications? 
                             Notifications will remind users about their upcoming events, 
-                            and notify users which methods of transportation to take and when to 
+                            and specify which methods of transportation to take and when to 
                             begin travels in order to arrive on time. 
                         </span>
                         <Toggle size="lg" checked={localNotifEnabled} onChange={toggleNotif}></Toggle>

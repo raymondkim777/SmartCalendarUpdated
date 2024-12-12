@@ -33,8 +33,8 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
             <div style={{width: 1 / (days.length + 1) * 100 + '%'}} className={`flex flex-col h-fit divide-y`}>
                 <div className="h-12 flex items-center justify-center border-gray-200 text-sm font-medium text-gray-900 transition-all duration-300"/>
                 {times.map((hour, index) => (
-                    <div key={`time-${index}`} className="h-32 lg:h-28 p-0.5 border-gray-200 flex items-end transition-all duration-300">
-                        <span key={index} className="text-xs font-semibold text-gray-400">{`${hour == 12 || hour == 0 ? hour : hour % 12}:00 ${hour >=12 ? 'pm' : 'am'}`}</span>
+                    <div key={`time-${index}`} className="h-24 lg:h-20 p-0.5 border-gray-200 flex items-end transition-all duration-300">
+                        <span key={index} className="text-xs font-semibold text-gray-400">{`${hour % 12 == 0 ? 12 : hour % 12}:00 ${hour >=12 ? 'pm' : 'am'}`}</span>
                     </div>
                 ))}
             </div>
@@ -44,7 +44,7 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
                         {item.toLocaleString('default', { month: 'short' })} {item.getDate()}
                     </div>
                     {times.map((subItem, subIndex) => (
-                        <div key={`cell-${subIndex}`} className="h-32 lg:h-28 px-0.5 border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300 hover:cursor-pointer">
+                        <div key={`cell-${subIndex}`} className="h-24 lg:h-20 px-0.5 border-gray-200 transition-all group-hover:bg-gray-200 group-active:bg-gray-300 group-active:border-gray-300 duration-300 hover:cursor-pointer">
                             {cells[index][subIndex].map((cellEvent, eIdx) => (
                                 <div key={`box-event-${index}-${subIndex}-${eIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')}`}>
                                     {

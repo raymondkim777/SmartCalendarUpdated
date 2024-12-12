@@ -30,14 +30,14 @@ const CalendarDay = ({ index, days, times, cells }) => {
                 {/* Times */}
                 <div className="flex flex-col w-1/12 min-w-16 h-fit divide-y">
                     {times.map((hour, index) => (
-                        <div key={`time-${index}`} className="h-32 lg:h-28 p-0.5 border-gray-200 flex items-end">
-                            <span key={index} className="text-xs font-semibold text-gray-400">{`${hour == 12 || hour == 0 ? hour : hour % 12}:00 ${hour >=12 ? 'pm' : 'am'}`}</span>
+                        <div key={`time-${index}`} className="h-24 lg:h-20 p-0.5 border-gray-200 flex items-end">
+                            <span key={index} className="text-xs font-semibold text-gray-400">{`${hour % 12 == 0 ? 12 : hour % 12}:00 ${hour >=12 ? 'pm' : 'am'}`}</span>
                         </div>
                     ))}
                 </div>
                 <div className="flex flex-col grow h-fit group divide-y">
                     {times.map((item, timeIdx) => (
-                        <div key={`cell-${timeIdx}`} className="h-32 lg:h-28 px-0.5 border-gray-200">
+                        <div key={`cell-${timeIdx}`} className="h-24 lg:h-20 px-0.5 border-gray-200">
                             {cells[index][timeIdx].map((cellEvent, eventIdx) => (
                                 <div key={`box-event-${index}-${eventIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')}`}>
                                     {
