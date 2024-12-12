@@ -79,7 +79,7 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
                                     {
                                         subIndex != 0 && cellEvent.get('upContinue') ? null : 
                                         <div className='flex flex-col w-full h-fit'>
-                                            <p key={`title-event-${index}-${subIndex}-${eIdx}`} className="text-xs font-normal text-gray-900 mb-px">{cellEvent.get('title')}</p>
+                                            <p key={`title-event-${index}-${subIndex}-${eIdx}`} className="text-xs font-normal text-ellipsis text-gray-900 mb-px">{cellEvent.get('title')}</p>
                                             <p key={`time-event-${index}-${subIndex}-${eIdx}`} className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
                                                 {formatTime(cellEvent.get('start').getHours())}:{formatTime(cellEvent.get('start').getMinutes())} - {formatTime(cellEvent.get('end').getHours())}:{formatTime(cellEvent.get('end').getMinutes())}
                                             </p>

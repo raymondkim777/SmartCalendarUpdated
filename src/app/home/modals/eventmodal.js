@@ -41,7 +41,7 @@ const EventModal = ({ closeEvent, eventDetails }) => {
                     eventDetails.get('description') != '' && 
                     <div className='flex flex-row w-full h-fit items-center justify-start space-x-4 px-2'>
                         <span className='text-base leading-6 text-gray-600 font-normal'>Description: </span>
-                        <span className='text-base leading-6 text-gray-600 font-normal'>{eventDetails.get('description')}: </span>
+                        <span className='text-base leading-6 text-gray-600 font-normal'>{eventDetails.get('description')} </span>
                     </div>
                 }
                 {/* Location */}
