@@ -6,7 +6,6 @@ import Calendar from 'react-calendar';
 import Header from "../header";
 import CalendarWeek from '../calendarweek';
 import CalendarDay from '../calendarday';
-import { calendar } from 'googleapis/build/src/apis/calendar';
 
 const Home = () => {
     // Calendar CSS
@@ -210,12 +209,29 @@ const Home = () => {
     }
 
     // React Calendar Setup
+    const circleColors = ['bg-yellow-600', 'bg-green-600', 'bg-purple-600', 'bg-blue-600'];
+
     function tileContent({ date, view }) {
         // Add class to tiles in month view only
         if (view === 'month') {
+            let tempEventList = [];
+            for (let eventIdx = 0; eventIdx < events.length; eventIdx++) {
+                if (!(events[eventIdx].get('start') > new Date(new Date(date.toDateString()).setDate(date.getDate() + 1))) 
+                && !(events[eventIdx].get('end') < new Date(date.toDateString()))) {
+                    tempEventList.push(eventIdx);
+                }
+            }
+
             return (
-                <div id="date_circle" className="flex w-10 h-10 rounded-full items-center justify-center">
-                    {date.getDate()}
+                <div className='flex flex-col w-fit h-fit items-center justify-center space-y-3'>
+                    <div id="date_circle" className="flex w-10 h-10 rounded-full items-center justify-center">
+                        {date.getDate()}
+                    </div>
+                    <div className='flex flex-row items-center justify-center space-x-2'>
+                        {tempEventList.map((value, index)=>(
+                            <div key={`circ-${value}`} className={`w-2 h-2 rounded-full ${circleColors[value % circleColors.length]}`}></div>
+                        ))}
+                    </div>
                 </div>
             )
         }
@@ -278,7 +294,7 @@ const Home = () => {
                     showNavigation={false}
                     formatDay={(locale, date) => null}
                     tileContent={tileContent}
-                    tileClassName={"flex flex-col h-28 items-center py-2 border-t border-gray-200 text-sm font-semibold text-gray-400 duration-300 transition-all hover:bg-gray-200 active:bg-gray-300"}
+                    tileClassName={"flex flex-col h-28 items-center py-2 border-t border-gray-200 font-semibold text-gray-400 duration-300 transition-all hover:bg-gray-200 active:bg-gray-300"}
                     onChange={(value, event) => updateDays(value, 2)}
                     activeStartDate={curCalendarDay}
                     />

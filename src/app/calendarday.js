@@ -49,7 +49,7 @@ const CalendarDay = ({ index, days, times, cells }) => {
                             {cells[index][timeIdx].map((cellEvent, eventIdx) => (
                                 <div key={`box-event-${index}-${eventIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')}`}>
                                     {
-                                        cellEvent.get('upContinue') ? null : 
+                                        timeIdx != 0 && cellEvent.get('upContinue') ? null : 
                                         <div className='flex flex-col w-full h-fit'>
                                             <p key={`title-event-${index}-${eventIdx}`} className="text-xs font-normal text-gray-900 mb-px">{cellEvent.get('title')}</p>
                                             <p key={`time-event-${index}-${eventIdx}`} className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
