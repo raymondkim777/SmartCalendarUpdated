@@ -293,7 +293,7 @@ const Home = () => {
                             <button onClick={()=>updateDays(todayDate, 1)} className="hidden md:flex px-4 h-10 items-center justify-center rounded-lg bg-gray-50 border border-gray-300 gap-1.5 text-sm font-medium text-gray-900 transition-all duration-100 hover:bg-gray-200 active:bg-gray-300">
                                 Today
                             </button>
-                            <button onClick={()=>clickRight()} className='flex w-7 h-7 items-center justify-center rounded-xl hover:bg-gray-200 active:bg-gray-300 transition-all duration-100'>
+                            <button onClick={()=>clickRight()} className='hidden md:flex w-7 h-7 items-center justify-center rounded-xl hover:bg-gray-200 active:bg-gray-300 transition-all duration-100'>
                                 {/* Right Arrow */}
                                 <svg width="16" height="16" fill="#111827" transform="translate(1)" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
                             </button>
@@ -312,6 +312,10 @@ const Home = () => {
                                 Month
                             </button>
                         </div>
+                        <button onClick={()=>clickRight()} className='flex md:hidden w-7 h-7 items-center justify-center rounded-xl hover:bg-gray-200 active:bg-gray-300 transition-all duration-100'>
+                            {/* Right Arrow */}
+                            <svg width="16" height="16" fill="#111827" transform="translate(1)" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
+                        </button>
                     </div>
                 </div>
 
