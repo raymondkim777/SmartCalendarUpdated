@@ -153,7 +153,7 @@ const Home = () => {
         new Map([
             ['start', new Date('Dec 12, 2024 6:00:00')],
             ['end', new Date('Dec 12, 2024 7:55:00')],
-            ['title', 'Workout and Yoga Seesion'],
+            ['title', 'Workout and Yoga Session'],
             ['location', 'Some Random Place'],
             ['description', 'Some Description'],
         ]),

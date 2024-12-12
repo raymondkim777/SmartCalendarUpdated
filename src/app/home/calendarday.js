@@ -1,4 +1,7 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
+"use client"
+import { useState } from "react";
+import EventModal from "./modals/eventmodal";
 
 const CalendarDay = ({ index, days, times, cells }) => {
     const todayDate = new Date(new Date().toDateString());
@@ -7,6 +10,8 @@ const CalendarDay = ({ index, days, times, cells }) => {
     // Calendar Event Colors
     const eventColors = ['border-yellow-600 bg-yellow-50', 'border-green-600 bg-green-50', 'border-purple-600 bg-purple-50', 'border-blue-600 bg-blue-50'];
     const titleColors = ['text-yellow-600', 'text-green-600', 'text-purple-600', 'text-blue-600'];
+    const hoverColors = ['hover:bg-yellow-100', 'hover:bg-green-100', 'hover:bg-purple-100', 'hover:bg-blue-100'];
+    const activeColors = ['active:bg-yellow-200', 'active:bg-green-200', 'active:bg-purple-200', 'active:bg-blue-200'];
 
     for (let i = 0; i < cells.length; i++) {
         for (let j = 0; j < cells[i].length; j++) {
@@ -17,6 +22,8 @@ const CalendarDay = ({ index, days, times, cells }) => {
                 cells[i][j][k].set('topCSS', cells[i][j][k].get('upContinue') ? 'rounded-t-none': '');
                 // if continuing to bottom
                 cells[i][j][k].set('downCSS', cells[i][j][k].get('downContinue') ? 'rounded-b-none h-full': '');
+                cells[i][j][k].set('hoverCSS', hoverColors[cells[i][j][k].get('index') % hoverColors.length]);
+                cells[i][j][k].set('activeCSS', activeColors[cells[i][j][k].get('index') % activeColors.length]);
             }
         }
     }
@@ -27,6 +34,20 @@ const CalendarDay = ({ index, days, times, cells }) => {
         if (time.toString().length < 2) 
             msg = '0' + msg;
         return msg;
+    }
+
+    // Modals
+    const [showEventModal, setShowEventModal] = useState(false);
+    const [eventDetails, setEventDetails] = useState(null);
+
+    const expandEvent = (chosenEvent) => {
+        setEventDetails(chosenEvent);
+        setShowEventModal(true);
+    }
+
+    const closeEvent = () => {
+        setEventDetails(null);
+        setShowEventModal(false);
     }
 
     return(
@@ -47,7 +68,7 @@ const CalendarDay = ({ index, days, times, cells }) => {
                     {times.map((item, timeIdx) => (
                         <div key={`cell-${timeIdx}`} className="h-24 lg:h-20 px-0.5 border-gray-200">
                             {cells[index][timeIdx].map((cellEvent, eventIdx) => (
-                                <div key={`box-event-${index}-${eventIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')}`}>
+                                <div onClick={()=>expandEvent(cellEvent)} key={`box-event-${index}-${eventIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')} ${cellEvent.get('hoverCSS')} ${cellEvent.get('activeCSS')} hover:cursor-pointer transition-all duration-150`}>
                                     {
                                         timeIdx != 0 && cellEvent.get('upContinue') ? null : 
                                         <div className='flex flex-col w-full h-fit'>
@@ -63,6 +84,14 @@ const CalendarDay = ({ index, days, times, cells }) => {
                     ))}
                 </div>
             </div>
+
+            {/* Event Modal */}
+            {
+                showEventModal && 
+                <EventModal 
+                closeEvent={closeEvent} 
+                eventDetails={eventDetails} />
+            }
         </div>
     )
 }
