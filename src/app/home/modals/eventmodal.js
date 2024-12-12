@@ -6,7 +6,7 @@ const EventModal = ({ closeEvent, eventDetails }) => {
             msg = '0' + msg;
         return msg;
     }
-// {`${hour % 12 == 0 ? 12 : hour % 12}:00 ${hour >=12 ? 'pm' : 'am'}`}
+    
     const formatDate = (date) => {
         let hours = formatTime(date.getHours() % 12 == 0 ? 12 : date.getHours() % 12);
         let minutes = formatTime(date.getMinutes());
