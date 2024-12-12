@@ -209,8 +209,6 @@ const Home = () => {
         }
     }
 
-    console.log(cells);
-
     // React Calendar Setup
     function tileContent({ date, view }) {
         // Add class to tiles in month view only
