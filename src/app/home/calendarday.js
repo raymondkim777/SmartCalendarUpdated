@@ -94,7 +94,7 @@ const CalendarDay = ({ index, days, times, cells }) => {
                     {times.map((item, timeIdx) => (
                         <div key={`cell-${timeIdx}`} className={`${altCellHeights[maxEventsInCell[timeIdx] - 1]} ${cellHeights[maxEventsInCell[timeIdx] - 1]} px-0.5 border-gray-200`}>
                             {cells[index][timeIdx].map((cellEvent, eventIdx) => (
-                                <DayCellContent key={`cell-${index}-${eventIdx}`} cellEvent={cellEvent} timeIdx={timeIdx} expandEvent={expandEvent} expandMove={expandMove} />
+                                <DayCellContent key={`cell-${index}-${eventIdx}`} cellEvent={cellEvent} timeIdx={timeIdx} expandEvent={expandEvent} expandMove={expandMove}>{console.log(cellEvent)}</DayCellContent>
                             ))}
                         </div>
                     ))}
