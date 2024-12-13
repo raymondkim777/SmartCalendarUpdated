@@ -199,64 +199,67 @@ const Home = () => {
         return 0;
     });
 
-    const cells = new Array(dayCnt);
-    for (let i = 0; i < cells.length; i++) {
-        cells[i] = new Array(times.length);
-        for (let j = 0; j < cells[i].length; j++) {
-            cells[i][j] = [];
-        }
-    }
+    for (let i = 0; i < events.length; i++)
+        events[i].set('index', i);
+
+    // const cells = new Array(dayCnt);
+    // for (let i = 0; i < cells.length; i++) {
+    //     cells[i] = new Array(times.length);
+    //     for (let j = 0; j < cells[i].length; j++) {
+    //         cells[i][j] = [];
+    //     }
+    // }
 
     // Filling cells array
-    let eventIdx = 0;
-    for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
+    // let eventIdx = 0;
+    // for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
 
-        for (let timeIdx = 0; timeIdx < times.length; timeIdx++) {
-            while (true) {
-                // if no events left, break
-                if (eventIdx >= events.length) break;
+    //     for (let timeIdx = 0; timeIdx < times.length; timeIdx++) {
+    //         while (true) {
+    //             // if no events left, break
+    //             if (eventIdx >= events.length) break;
                 
-                // if event starts before/within time cell
-                let prevCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx] - 1));
-                let curCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx]));
+    //             // if event starts before/within time cell
+    //             let prevCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx] - 1));
+    //             let curCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx]));
     
-                let startTime = events[eventIdx].get('start');
-                let endTime = events[eventIdx].get('end')
+    //             let startTime = events[eventIdx].get('start');
+    //             let endTime = events[eventIdx].get('end')
     
-                if (startTime < curCellTime) {
-                    let cellEvent = new Map(events[eventIdx]);
-                    cellEvent.set('index', eventIdx);
-                    cellEvent.set('upContinue', false);
-                    cellEvent.set('downContinue', false);
+    //             if (startTime < curCellTime) {
+    //                 let cellEvent = new Map(events[eventIdx]);
+    //                 cellEvent.set('index', eventIdx);
+    //                 cellEvent.set('upContinue', false);
+    //                 cellEvent.set('downContinue', false);
     
-                    if (startTime < prevCellTime) {
-                        // if event is continuing from previous cell
-                        if (endTime >= prevCellTime) {
-                            cellEvent.set('upContinue', true);
-                        } 
-                        // event has passed
-                        else {
-                            eventIdx++;
-                            continue;
-                        }
-                    }
-                    // if event should continue to next cell
-                    if (endTime > curCellTime) {
-                        cellEvent.set('downContinue', true);
-                        cells[curDayIdx][timeIdx].push(cellEvent);
-                        break;
-                    }
-                    // if event ends here
-                    else {
-                        eventIdx++;
-                    }
-                    cells[curDayIdx][timeIdx].push(cellEvent);
-                } else {
-                    break;
-                }
-            }
-        }
-    }
+    //                 if (startTime < prevCellTime) {
+    //                     // if event is continuing from previous cell
+    //                     if (endTime >= prevCellTime) {
+    //                         cellEvent.set('upContinue', true);
+    //                     } 
+    //                     // event has passed
+    //                     else {
+    //                         eventIdx++;
+    //                         continue;
+    //                     }
+    //                 }
+    //                 // if event should continue to next cell
+    //                 if (endTime > curCellTime) {
+    //                     cellEvent.set('downContinue', true);
+    //                     cells[curDayIdx][timeIdx].push(cellEvent);
+    //                     break;
+    //                 }
+    //                 // if event ends here
+    //                 else {
+    //                     eventIdx++;
+    //                 }
+    //                 cells[curDayIdx][timeIdx].push(cellEvent);
+    //             } else {
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
 
     // Transportation Events
     // moveEvent: { moveType, start, end, type, name, locations, locatione, description }
@@ -358,10 +361,8 @@ const Home = () => {
 
                 if (startTime < curCellTime) {
                     let cellEvent = new Map(allEvents[allEventIdx]);
-                    cellEvent.set('index', allEventIdx);
                     cellEvent.set('upContinue', false);
                     cellEvent.set('downContinue', false);
-
                     if (startTime < prevCellTime) {
                         // if event is continuing from previous cell
                         if (endTime >= prevCellTime) {
