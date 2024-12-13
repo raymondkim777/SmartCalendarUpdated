@@ -202,65 +202,6 @@ const Home = () => {
     for (let i = 0; i < events.length; i++)
         events[i].set('index', i);
 
-    // const cells = new Array(dayCnt);
-    // for (let i = 0; i < cells.length; i++) {
-    //     cells[i] = new Array(times.length);
-    //     for (let j = 0; j < cells[i].length; j++) {
-    //         cells[i][j] = [];
-    //     }
-    // }
-
-    // Filling cells array
-    // let eventIdx = 0;
-    // for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
-
-    //     for (let timeIdx = 0; timeIdx < times.length; timeIdx++) {
-    //         while (true) {
-    //             // if no events left, break
-    //             if (eventIdx >= events.length) break;
-                
-    //             // if event starts before/within time cell
-    //             let prevCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx] - 1));
-    //             let curCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx]));
-    
-    //             let startTime = events[eventIdx].get('start');
-    //             let endTime = events[eventIdx].get('end')
-    
-    //             if (startTime < curCellTime) {
-    //                 let cellEvent = new Map(events[eventIdx]);
-    //                 cellEvent.set('index', eventIdx);
-    //                 cellEvent.set('upContinue', false);
-    //                 cellEvent.set('downContinue', false);
-    
-    //                 if (startTime < prevCellTime) {
-    //                     // if event is continuing from previous cell
-    //                     if (endTime >= prevCellTime) {
-    //                         cellEvent.set('upContinue', true);
-    //                     } 
-    //                     // event has passed
-    //                     else {
-    //                         eventIdx++;
-    //                         continue;
-    //                     }
-    //                 }
-    //                 // if event should continue to next cell
-    //                 if (endTime > curCellTime) {
-    //                     cellEvent.set('downContinue', true);
-    //                     cells[curDayIdx][timeIdx].push(cellEvent);
-    //                     break;
-    //                 }
-    //                 // if event ends here
-    //                 else {
-    //                     eventIdx++;
-    //                 }
-    //                 cells[curDayIdx][timeIdx].push(cellEvent);
-    //             } else {
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
-
     // Transportation Events
     // moveEvent: { moveType, start, end, type, name, locations, locatione, description }
     const moveRoutes = [  // each item is list of transportation methods b/w two events
@@ -397,30 +338,30 @@ const Home = () => {
 
     function tileContent({ date, view }) {
         // Add class to tiles in month view only
-        if (view === 'month') {
-            let tempEventList = [];
-            for (let eventIdx = 0; eventIdx < events.length; eventIdx++) {
-                if (!(events[eventIdx].get('start') > new Date(new Date(date.toDateString()).setDate(date.getDate() + 1))) 
-                && !(events[eventIdx].get('end') < new Date(date.toDateString()))) {
-                    tempEventList.push(eventIdx);
-                }
+        if (!(view === 'month')) return;
+        
+        let tempEventList = [];
+        for (let eventIdx = 0; eventIdx < events.length; eventIdx++) {
+            if (!(events[eventIdx].get('start') > new Date(new Date(date.toDateString()).setDate(date.getDate() + 1))) 
+            && !(events[eventIdx].get('end') < new Date(date.toDateString()))) {
+                tempEventList.push(eventIdx);
             }
+        }
 
-            return (
-                <div className='flex flex-col w-full h-full items-center justify-center pb-4 space-y-2'>
-                    <div id="date_circle" className="flex w-10 h-10 rounded-full items-center justify-center">
-                        {date.getDate()}
-                    </div>
-                    <div className='flex flex-col grow items-center justify-center'>
-                        <div className='flex flex-row flex-wrap justify-center gap-x-2 gap-y-1'>
-                            {tempEventList.map((value, index)=>(
-                                <div key={`circ-${value}`} className={`w-2 h-2 rounded-full ${circleColors[value % circleColors.length]}`}></div>
-                            ))}
-                        </div>
+        return (
+            <div className='flex flex-col w-full h-full items-center justify-center pb-4 space-y-2'>
+                <div id="date_circle" className="flex w-10 h-10 rounded-full items-center justify-center">
+                    {date.getDate()}
+                </div>
+                <div className='flex flex-col grow items-center justify-center'>
+                    <div className='flex flex-row flex-wrap justify-center gap-x-2 gap-y-1'>
+                        {tempEventList.map((value, index)=>(
+                            <div key={`circ-${value}`} className={`w-2 h-2 rounded-full ${circleColors[value % circleColors.length]}`}></div>
+                        ))}
                     </div>
                 </div>
-            )
-        }
+            </div>
+        )
     }
 
     return (
