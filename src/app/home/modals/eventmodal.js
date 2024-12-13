@@ -1,20 +1,19 @@
-const EventModal = ({ closeEvent, eventDetails }) => {
-    // Time Format
-    const formatTimeDigit = (time) => {
-        let msg = time.toString();
-        if (time.toString().length < 2) 
-            msg = '0' + msg;
-        return msg;
-    }
-    
-    const formatDate = (date) => {
-        let hours = formatTimeDigit(date.getHours() % 12 == 0 ? 12 : date.getHours() % 12);
-        let minutes = formatTimeDigit(date.getMinutes());
-        let apm = date.getHours() >= 12 ? 'pm' : 'am';
-        let msg = `${hours}:${minutes} ${apm} (${date.toDateString()})`
-        return msg;
-    }
+const formatTimeDigit = (time) => {
+    let msg = time.toString();
+    if (time.toString().length < 2) 
+        msg = '0' + msg;
+    return msg;
+}
 
+const formatDate = (date) => {
+    let hours = formatTimeDigit(date.getHours() % 12 == 0 ? 12 : date.getHours() % 12);
+    let minutes = formatTimeDigit(date.getMinutes());
+    let apm = date.getHours() >= 12 ? 'pm' : 'am';
+    let msg = `${hours}:${minutes} ${apm} (${date.toDateString()})`
+    return msg;
+}
+
+const EventModal = ({ closeEvent, eventDetails }) => {
     return(
         <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute w-96 lg:w-[32rem] xl:w-[36rem] object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50`}>
             <div className='flex flex-row w-full h-10 items-center justify-between pl-4 pr-2 space-x-3'>
