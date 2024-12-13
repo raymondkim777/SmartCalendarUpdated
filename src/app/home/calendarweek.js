@@ -4,6 +4,37 @@ import { useState } from "react";
 import EventModal from "./modals/eventmodal";
 import MoveModal from "./modals/movemodal";
 
+const CellContent = ({ cellEvent, subIndex, expandEvent, expandMove }) => {
+    const formatTime = (time) => {
+        let msg = time.toString();
+        if (time.toString().length < 2) 
+            msg = '0' + msg;
+        return msg;
+    }
+    return (
+        <div onClick={(event)=>{event.stopPropagation(); cellEvent.get('moveType') ? expandMove(cellEvent) : expandEvent(cellEvent)}} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')} ${cellEvent.get('hoverCSS')} ${cellEvent.get('activeCSS')} hover:cursor-pointer transition-all duration-150`}>
+            {
+                subIndex != 0 && cellEvent.get('upContinue') ? null : 
+                (
+                    cellEvent.get('moveType') ? 
+                    <div className='flex flex-col w-full h-fit pr-2'>
+                        <p className="text-xs font-semibold truncate underline text-gray-900 mb-px">{cellEvent.get('title')}: {cellEvent.get('elapsedTime')} min</p>
+                        <p className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
+                            {formatTime(cellEvent.get('start').getHours())}:{formatTime(cellEvent.get('start').getMinutes())} - {formatTime(cellEvent.get('end').getHours())}:{formatTime(cellEvent.get('end').getMinutes())}
+                        </p>
+                    </div> : 
+                    <div className='flex flex-col w-full h-fit'>
+                        <p className="text-xs font-normal truncate text-gray-900 mb-px">{cellEvent.get('title')}</p>
+                        <p className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
+                            {formatTime(cellEvent.get('start').getHours())}:{formatTime(cellEvent.get('start').getMinutes())} - {formatTime(cellEvent.get('end').getHours())}:{formatTime(cellEvent.get('end').getMinutes())}
+                        </p>
+                    </div>
+                )
+            }
+        </div>
+    )
+}
+
 const CalendarWeek = ({ clickedDay, days, times, cells }) => {
     const todayDate = new Date(new Date().toDateString());
 
@@ -56,16 +87,6 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
     const cellHeights = ['lg:h-12', 'lg:h-24', 'lg:h-36', 'lg:h-48', 'lg:h-60', 'lg:h-72'];
     const altCellHeights = ['h-16', 'h-28', 'h-40', 'h-56', 'h-64', 'h-80'];
 
-    // Cell Content
-    const methodList = ['Walking', 'Car', 'Subway', 'Bus'];
-
-    const formatTime = (time) => {
-        let msg = time.toString();
-        if (time.toString().length < 2) 
-            msg = '0' + msg;
-        return msg;
-    }
-
     // Modals
     const [showEventModal, setShowEventModal] = useState(false);
     const [eventDetails, setEventDetails] = useState(null);
@@ -74,7 +95,6 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
         setEventDetails(chosenEvent);
         setShowEventModal(true);
     }
-
     const closeEvent = () => {
         setEventDetails(null);
         setShowEventModal(false);
@@ -87,7 +107,6 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
         setMoveDetails(chosenMove);
         setShowMoveModal(true);
     }
-
     const closeMove = () => {
         setMoveDetails(null);
         setShowMoveModal(false);
@@ -112,26 +131,7 @@ const CalendarWeek = ({ clickedDay, days, times, cells }) => {
                     {times.map((subItem, subIndex) => (
                         <div key={`cell-${subIndex}`} className={`${altCellHeights[maxEventsInCell[subIndex] - 1]} ${cellHeights[maxEventsInCell[subIndex] - 1]} px-0.5 border-gray-200 transition-all group-hover:bg-gray-200 hover:cursor-pointer group-active:bg-gray-300 group-active:border-gray-300 duration-300`}>
                             {cells[index][subIndex].map((cellEvent, eIdx) => (
-                                <div onClick={(event)=>{event.stopPropagation(); cellEvent.get('moveType') ? expandMove(cellEvent) : expandEvent(cellEvent)}} key={`box-event-${index}-${subIndex}-${eIdx}`} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')} ${cellEvent.get('hoverCSS')} ${cellEvent.get('activeCSS')} hover:cursor-pointer transition-all duration-150`}>
-                                    {
-                                        subIndex != 0 && cellEvent.get('upContinue') ? null : 
-                                        (
-                                            cellEvent.get('moveType') ? 
-                                            <div className='flex flex-col w-full h-fit pr-2'>
-                                                <p key={`title-event-${index}-${subIndex}-${eIdx}`} className="text-xs font-semibold truncate underline text-gray-900 mb-px">({methodList[cellEvent.get('type')]}) {cellEvent.get('name')}</p>
-                                                <p key={`time-event-${index}-${subIndex}-${eIdx}`} className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
-                                                    {formatTime(cellEvent.get('start').getHours())}:{formatTime(cellEvent.get('start').getMinutes())} - {formatTime(cellEvent.get('end').getHours())}:{formatTime(cellEvent.get('end').getMinutes())}
-                                                </p>
-                                            </div> : 
-                                            <div className='flex flex-col w-full h-fit'>
-                                                <p key={`title-event-${index}-${subIndex}-${eIdx}`} className="text-xs font-normal truncate text-gray-900 mb-px">{cellEvent.get('title')}</p>
-                                                <p key={`time-event-${index}-${subIndex}-${eIdx}`} className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
-                                                    {formatTime(cellEvent.get('start').getHours())}:{formatTime(cellEvent.get('start').getMinutes())} - {formatTime(cellEvent.get('end').getHours())}:{formatTime(cellEvent.get('end').getMinutes())}
-                                                </p>
-                                            </div>
-                                        )
-                                    }
-                                </div>
+                                <CellContent key={`cell-${index}-${subIndex}-${eIdx}`} cellEvent={cellEvent} subIndex={subIndex} expandEvent={expandEvent} expandMove={expandMove} />
                             ))}
                         </div>
                     ))}

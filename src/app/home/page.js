@@ -260,58 +260,70 @@ const Home = () => {
 
     // Transportation Events
     // moveEvent: { moveType, start, end, type, name, locations, locatione, description }
-    const moveEvents = [
-        new Map([
-            ['moveType', true],
-            ['start', new Date('Dec 10, 2024 11:05:00')],
-            ['end', new Date('Dec 10, 2024 11:14:00')],
-            ['type', LEG_INDEX],
-            ['name', 'Walk'],
-            ['locations', 'Hudson-Bergen Light Rail HQ'],
-            ['locatione', 'Pacific Ave at Communipaw Ave'],
-            ['description', 'About 9 min, 0.4 mi'],
-        ]),
-        new Map([
-            ['moveType', true],
-            ['start', new Date('Dec 10, 2024 11:14:00')],
-            ['end', new Date('Dec 10, 2024 11:22:00')],
-            ['type', CAR_INDEX],
-            ['name', '1 Jersey City Exchange PI via River Terminal'],
-            ['locations', 'Pacific Ave at Communipaw Ave'],
-            ['locatione', 'C Columbus Drive at Hudon St'],
-            ['description', 'Service run by Nj Transit Bus'],
-        ]),
-        new Map([
-            ['moveType', true],
-            ['start', new Date('Dec 10, 2024 11:22:00')],
-            ['end', new Date('Dec 10, 2024 11:23:00')],
-            ['type', LEG_INDEX],
-            ['name', 'Walk'],
-            ['locations', 'C Columbus Drive at Hudon St'],
-            ['locatione', 'Exchange Place'],
-            ['description', 'About 1 min'],
-        ]),
-        new Map([
-            ['moveType', true],
-            ['start', new Date('Dec 10, 2024 11:40:00')],
-            ['end', new Date('Dec 10, 2024 11:45:00')],
-            ['type', SUB_INDEX],
-            ['name', 'World Trade Center'],
-            ['locations', 'Exchange Place'],
-            ['locatione', 'World Trade Center'],
-            ['description', 'Service run by Port Authority Trans-Hudson Corporation'],
-        ]),
-        new Map([
-            ['moveType', true],
-            ['start', new Date('Dec 10, 2024 11:45:00')],
-            ['end', new Date('Dec 10, 2024 11:49:00')],
-            ['type', LEG_INDEX],
-            ['name', 'Walk'],
-            ['locations', 'World Trade Center'],
-            ['locatione', 'Woolworth Bldg'],
-            ['description', 'About 4 min, 0.2 mi'],
-        ]),
+    const moveRoutes = [  // each item is list of transportation methods b/w two events
+        [
+            new Map([
+                ['start', new Date('Dec 10, 2024 11:05:00')],
+                ['end', new Date('Dec 10, 2024 11:14:00')],
+                ['type', LEG_INDEX],
+                ['name', 'Walk'],
+                ['locations', 'Hudson-Bergen Light Rail HQ'],
+                ['locatione', 'Pacific Ave at Communipaw Ave'],
+                ['description', 'About 9 min, 0.4 mi'],
+            ]),
+            new Map([
+                ['start', new Date('Dec 10, 2024 11:14:00')],
+                ['end', new Date('Dec 10, 2024 11:22:00')],
+                ['type', CAR_INDEX],
+                ['name', '1 Jersey City Exchange PI via River Terminal'],
+                ['locations', 'Pacific Ave at Communipaw Ave'],
+                ['locatione', 'C Columbus Drive at Hudon St'],
+                ['description', 'Service run by Nj Transit Bus'],
+            ]),
+            new Map([
+                ['start', new Date('Dec 10, 2024 11:22:00')],
+                ['end', new Date('Dec 10, 2024 11:23:00')],
+                ['type', LEG_INDEX],
+                ['name', 'Walk'],
+                ['locations', 'C Columbus Drive at Hudon St'],
+                ['locatione', 'Exchange Place'],
+                ['description', 'About 1 min'],
+            ]),
+            new Map([
+                ['start', new Date('Dec 10, 2024 11:40:00')],
+                ['end', new Date('Dec 10, 2024 11:45:00')],
+                ['type', SUB_INDEX],
+                ['name', 'World Trade Center'],
+                ['locations', 'Exchange Place'],
+                ['locatione', 'World Trade Center'],
+                ['description', 'Service run by Port Authority Trans-Hudson Corporation'],
+            ]),
+            new Map([
+                ['start', new Date('Dec 10, 2024 11:45:00')],
+                ['end', new Date('Dec 10, 2024 11:49:00')],
+                ['type', LEG_INDEX],
+                ['name', 'Walk'],
+                ['locations', 'World Trade Center'],
+                ['locatione', 'Woolworth Bldg'],
+                ['description', 'About 4 min, 0.2 mi'],
+            ]),
+        ]
     ];
+    const moveEvents = []
+    for (let i = 0; i < moveRoutes.length; i++) {
+        let startTime = moveRoutes[i][0].get('start');
+        let endTime = moveRoutes[i][moveRoutes[i].length - 1].get('end');
+        let elapsedTime = (endTime - startTime) / (1000 * 60)  //  minutes
+        let tempMap = new Map([
+            ['moveType', true],
+            ['start', startTime],
+            ['end', endTime],
+            ['title', 'Travel Time'],
+            ['elapsedTime', elapsedTime],
+            ['route', moveRoutes[i]],
+        ]);
+        moveEvents.push(tempMap);
+    }
     const allEvents = moveEvents.concat(events);
 
     allEvents.sort(function(a, b) {
@@ -320,15 +332,15 @@ const Home = () => {
         return 0;
     });
 
-    const moveCells = new Array(dayCnt);
-    for (let i = 0; i < moveCells.length; i++) {
-        moveCells[i] = new Array(times.length);
-        for (let j = 0; j < moveCells[i].length; j++) {
-            moveCells[i][j] = [];
+    const allCells = new Array(dayCnt);
+    for (let i = 0; i < allCells.length; i++) {
+        allCells[i] = new Array(times.length);
+        for (let j = 0; j < allCells[i].length; j++) {
+            allCells[i][j] = [];
         }
     }
 
-    // Filling moveCells array
+    // Filling cells array
     let allEventIdx = 0;
     for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
 
@@ -340,16 +352,16 @@ const Home = () => {
                 // if event starts before/within time cell
                 let prevCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx] - 1));
                 let curCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx]));
-    
+
                 let startTime = allEvents[allEventIdx].get('start');
                 let endTime = allEvents[allEventIdx].get('end')
-    
+
                 if (startTime < curCellTime) {
                     let cellEvent = new Map(allEvents[allEventIdx]);
                     cellEvent.set('index', allEventIdx);
                     cellEvent.set('upContinue', false);
                     cellEvent.set('downContinue', false);
-    
+
                     if (startTime < prevCellTime) {
                         // if event is continuing from previous cell
                         if (endTime >= prevCellTime) {
@@ -364,21 +376,21 @@ const Home = () => {
                     // if event should continue to next cell
                     if (endTime > curCellTime) {
                         cellEvent.set('downContinue', true);
-                        moveCells[curDayIdx][timeIdx].push(cellEvent);
+                        allCells[curDayIdx][timeIdx].push(cellEvent);
                         break;
                     }
                     // if event ends here
                     else {
                         allEventIdx++;
                     }
-                    moveCells[curDayIdx][timeIdx].push(cellEvent);
+                    allCells[curDayIdx][timeIdx].push(cellEvent);
                 } else {
                     break;
                 }
             }
         }
     }
-    
+
     // React Calendar Setup
     const circleColors = ['bg-yellow-600', 'bg-green-600', 'bg-purple-600', 'bg-blue-600'];
 
@@ -463,8 +475,8 @@ const Home = () => {
                 {/* Calendar */}
                 <div className="w-full pb-8">
                 {
-                    calendarTypeIdx == 0 ? <CalendarDay index={dayIndex} days={days} times={times} cells={moveCells} /> :
-                    calendarTypeIdx == 1 ? <CalendarWeek clickedDay={clickedDay} days={days} times={times} cells={moveCells} /> : 
+                    calendarTypeIdx == 0 ? <CalendarDay index={dayIndex} days={days} times={times} cells={allCells} /> :
+                    calendarTypeIdx == 1 ? <CalendarWeek clickedDay={clickedDay} days={days} times={times} cells={allCells} /> : 
                     <Calendar className="text-sm font-medium text-gray-900 text-center" 
                     calendarType={"gregory"}
                     view={"month"}
