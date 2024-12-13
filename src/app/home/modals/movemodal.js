@@ -25,10 +25,16 @@ const MoveModal = ({ closeMove, moveDetails }) => {
     for (let i = 0; i < moveDetails.get('route').length; i++)
         placeDetails.push(moveDetails.get('route')[i].get('locatione'));
 
+    const widthCSS = ['w-96 lg:w-[28rem] xl:w-[32rem]', 'w-96 md:w-[48rem] lg:w-[56rem] xl:w-[64rem]'];
     const [showDetails, setShowDetails] = useState(false);
-
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const showEventDetails = (clickedEvent) => {
+        setShowDetails(true);
+        setSelectedEvent(clickedEvent);
+    } 
+    
     return(
-        <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute w-96 lg:w-[28rem] xl:w-[32rem] object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50`}>
+        <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute ${widthCSS[Number(showDetails)]} object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50 transition-all duration-300`}>
             <div className='flex flex-row w-full h-10 items-center justify-between pl-4 pr-2 space-x-3'>
                 <h1 className="text-lg text-nowrap truncate leading-6 text-gray-600 font-semibold">{moveDetails.get('title')}: {moveDetails.get('elapsedTime')} min</h1>
                 <div onClick={closeMove} className='flex items-center justify-center w-9 h-9 rounded-full hover:cursor-pointer hover:bg-gray-200 active:bg-gray-300 transition-all duration-300'>
@@ -37,9 +43,9 @@ const MoveModal = ({ closeMove, moveDetails }) => {
                     </svg>
                 </div>
             </div>
-            <div className="flex flex-row w-full h-fit max-h-64 lg:max-h-[32rem] xl:max-h-[42rem] items-center justify-center">
+            <div className="flex flex-row w-full h-fit max-h-80 md:max-h-96 lg:max-h-[32rem] xl:max-h-[42rem] items-center justify-center">
                 {/* Route */}
-                <div className='flex flex-col w-full h-fit max-h-64 lg:max-h-[32rem] xl:max-h-[42rem] items-center justify-start pt-2 pb-4 px-4 space-y-4 overflow-y-auto'>
+                <div className='flex flex-col w-full h-fit max-h-80 md:max-h-96 lg:max-h-[32rem] xl:max-h-[42rem] items-center justify-start pt-2 pb-4 px-4 space-y-4 overflow-y-auto no-scrollbar'>
                     {/* Times */}
                     <div className='flex flex-row w-full h-12 items-center justify-start space-x-4 px-2'>
                         <div className='flex flex-col w-fit h-fit items-start justify-center'>
@@ -56,15 +62,34 @@ const MoveModal = ({ closeMove, moveDetails }) => {
                     <div className='flex flex-col w-full h-fit items-center justify-start'>
                         {moveDetails.get('route').map((route, index)=>(
                             <div key={`route-${index}`} className='flex flex-col w-full h-fit items-center justify-center'>
-                                <PlaceCard place={placeDetails[index]} description={route.get('start')} type={index == 0 ? 'nodeStart' : 'node'}/>
-                                <TransportationCard move={route}/>
+                                <PlaceCard showModal={showEventDetails} place={placeDetails[index]} description={route.get('start')} type={index == 0 ? 'nodeStart' : 'node'}/>
+                                <TransportationCard showModal={showEventDetails} move={route}/>
                             </div>
                         ))}
-                        <PlaceCard place={placeDetails[placeDetails.length - 1]} description={moveDetails.get('route')[moveDetails.get('route').length - 1].get('end')} type={'nodeEnd'} />
+                        <PlaceCard showModal={showEventDetails} place={placeDetails[placeDetails.length - 1]} description={moveDetails.get('route')[moveDetails.get('route').length - 1].get('end')} type={'nodeEnd'} />
                     </div>
                 </div>
 
                 {/* Specific */}
+                {
+                    showDetails && 
+                    <div className={`hidden md:flex flex-col w-2/3 h-fit max-h-96 lg:max-h-[32rem] xl:max-h-[42rem] items-center justify-start`}>
+                    {
+                        typeof(selectedEvent) == "string" ? 
+                        <div className="flex flex-col w-full items-center justify-center p-4 space-y-4">
+                            <h1 className="text-lg text-center line-clamp-1 leading-6 text-gray-600 font-semibold">{selectedEvent}</h1>
+                            <div className='w-full h-60 lg:h-80 xl:h-96 bg-gray-200 rounded-lg'></div>
+                        </div>: 
+                        <div className="flex flex-col w-full items-center justify-center p-4 space-y-4">
+                            <h1 className="text-lg text-center line-clamp-2 leading-6 text-gray-600 font-semibold">{selectedEvent.get('name')}</h1>
+                            <div className='w-full h-60 lg:h-80 xl:h-96 bg-gray-200 rounded-lg'></div>
+                        </div>
+                    }
+
+                        <div onClick={()=>setShowDetails(false)} className="flex w-32 h-10 items-center justify-center rounded-lg text-gray-600 font-normal bg-gray-200 hover:bg-gray-300 hover:cursor-pointer active:bg-gray-400 transition-all duration-150">Close</div>
+                    </div>
+                }
+                
 
             </div>
 
