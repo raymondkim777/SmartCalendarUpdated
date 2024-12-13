@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Calendar from 'react-calendar';
-
+import { getUserInfo } from '../lib/userinfo';
 import Header from "../header";
 import CalendarWeek from './calendarweek';
 import CalendarDay from './calendarday';
@@ -10,6 +10,23 @@ import CalendarDay from './calendarday';
 import { BUS_INDEX, SUB_INDEX, CAR_INDEX, LEG_INDEX } from '../transportation.js';
 
 const Home = () => {
+    const emptyUserInfo = {
+        id: 0,
+        email:'None',
+        name:'None',
+        notification: false,
+    }
+
+    const [currentUserInfo, setCurrentUserInfo] = useState(emptyUserInfo);
+    const fetchUser = async () => {
+        try {
+            const getDataValue = await getUserInfo();
+            setCurrentUserInfo(getDataValue);
+        } catch (error) {
+            console.error('Failed to fetch user data', error);
+        }
+    };
+
     // Calendar CSS
     const [calendarTypeIdx, setCalendarTypeIdx] = useState(1);
     const [buttonCSS, setButtonCSS] = useState(
