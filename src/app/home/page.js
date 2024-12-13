@@ -7,7 +7,7 @@ import Header from "../header";
 import CalendarWeek from './calendarweek';
 import CalendarDay from './calendarday';
 
-import { BUS_INDEX, SUB_INDEX, CAR_INDEX, LEG_INDEX } from '../transportation.js';
+import { WALK_INDEX, CAR_INDEX, SUB_INDEX, RAIL_INDEX, BUS_INDEX } from '../transportation';
 
 const Home = () => {
     // Calendar CSS
@@ -192,7 +192,6 @@ const Home = () => {
             ['description', 'Some Description'],
         ]),
     ]
-
     events.sort(function(a, b) {
         if (a.get('start') < b.get('start')) return -1;
         if (a.get('start') > b.get('start')) return 1;
@@ -265,7 +264,7 @@ const Home = () => {
             new Map([
                 ['start', new Date('Dec 10, 2024 11:05:00')],
                 ['end', new Date('Dec 10, 2024 11:14:00')],
-                ['type', LEG_INDEX],
+                ['type', WALK_INDEX],
                 ['name', 'Walk'],
                 ['locations', 'Hudson-Bergen Light Rail HQ'],
                 ['locatione', 'Pacific Ave at Communipaw Ave'],
@@ -283,7 +282,7 @@ const Home = () => {
             new Map([
                 ['start', new Date('Dec 10, 2024 11:22:00')],
                 ['end', new Date('Dec 10, 2024 11:23:00')],
-                ['type', LEG_INDEX],
+                ['type', WALK_INDEX],
                 ['name', 'Walk'],
                 ['locations', 'C Columbus Drive at Hudon St'],
                 ['locatione', 'Exchange Place'],
@@ -301,7 +300,7 @@ const Home = () => {
             new Map([
                 ['start', new Date('Dec 10, 2024 11:45:00')],
                 ['end', new Date('Dec 10, 2024 11:49:00')],
-                ['type', LEG_INDEX],
+                ['type', WALK_INDEX],
                 ['name', 'Walk'],
                 ['locations', 'World Trade Center'],
                 ['locatione', 'Woolworth Bldg'],
