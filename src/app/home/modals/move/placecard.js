@@ -1,18 +1,5 @@
 import LineDiagram from "./linediagram";
-
-const formatTimeDigit = (time) => {
-    let msg = time.toString();
-    if (time.toString().length < 2) 
-        msg = '0' + msg;
-    return msg;
-}
-
-const formatTime = (date) => {
-    let hours = formatTimeDigit(date.getHours() % 12 == 0 ? 12 : date.getHours() % 12);
-    let minutes = formatTimeDigit(date.getMinutes());
-    let apm = date.getHours() >= 12 ? 'pm' : 'am';
-    return `${hours}:${minutes} ${apm}`
-}
+import { formatTime } from "@/app/timeformat";
 
 const PlaceCard = ({ showModal, place, description, type }) => (
     <div className="flex flex-row w-full h-8 items-center justify-center">
