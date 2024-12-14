@@ -1,55 +1,24 @@
 // Inspiration: https://pagedone.io/blocks/application/calendar
 "use client"
 import { useState } from "react";
+import DayCellContent from "./caldaycomponents/daycellcontent";
 import EventModal from "./modals/eventmodal";
 import MoveModal from "./modals/movemodal";
 
-const CellContent = ({ cellEvent, timeIdx, expandEvent, expandMove }) => {
-    const formatTime = (time) => {
-        let msg = time.toString();
-        if (time.toString().length < 2) 
-            msg = '0' + msg;
-        return msg;
-    }
-
-    return(
-        <div onClick={()=>cellEvent.get('moveType') ? expandMove(cellEvent) : expandEvent(cellEvent)} className={`min-h-8 rounded p-1.5 border-l-2 ${cellEvent.get('boxCSS')} ${cellEvent.get('topCSS')} ${cellEvent.get('downCSS')} ${cellEvent.get('hoverCSS')} ${cellEvent.get('activeCSS')} hover:cursor-pointer transition-all duration-150`}>
-            {
-                timeIdx != 0 && cellEvent.get('upContinue') ? null : 
-                (
-                    cellEvent.get('moveType') ? 
-                    <div className='flex flex-col w-full h-fit pr-2'>
-                        <p className="text-xs font-semibold underline truncate text-gray-900 mb-px">{cellEvent.get('title')}: {cellEvent.get('elapsedTime')} min</p>
-                        <p className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
-                            {formatTime(cellEvent.get('start').getHours())}:{formatTime(cellEvent.get('start').getMinutes())} - {formatTime(cellEvent.get('end').getHours())}:{formatTime(cellEvent.get('end').getMinutes())}
-                        </p>
-                    </div> : 
-                    <div className='flex flex-col w-full h-fit'>
-                        <p className="text-xs font-normal truncate text-gray-900 mb-px">{cellEvent.get('title')}</p>
-                        <p className={`text-xs font-semibold ${cellEvent.get('textCSS')}`}>
-                            {formatTime(cellEvent.get('start').getHours())}:{formatTime(cellEvent.get('start').getMinutes())} - {formatTime(cellEvent.get('end').getHours())}:{formatTime(cellEvent.get('end').getMinutes())}
-                        </p>
-                    </div>
-                )
-            }
-        </div>
-    )
+const findMaxEventsForEachCell = (cells, times, index) => {
+    let maxEventsInCell = new Array(times.length).fill(1);
+    for (let j = 0; j < cells[index].length; j++) 
+        maxEventsInCell[j] = Math.max(maxEventsInCell[j], cells[index][j].length);
+    return maxEventsInCell;
 }
 
-const CalendarDay = ({ index, days, times, cells }) => {
-    const todayDate = new Date(new Date().toDateString());
-    let dayCSS = days[index].getTime() == todayDate.getTime() ? 'text-indigo-600' : 'text-gray-900';
-
-    let maxEventsInCell = new Array(times.length).fill(0);
-
-    // Calendar Event Colors
+const setCellCSS = (cells, index) => {
     const eventColors = ['border-yellow-600 bg-yellow-50', 'border-green-600 bg-green-50', 'border-purple-600 bg-purple-50', 'border-blue-600 bg-blue-50'];
     const titleColors = ['text-yellow-600', 'text-green-600', 'text-purple-600', 'text-blue-600'];
     const hoverColors = ['hover:bg-yellow-100', 'hover:bg-green-100', 'hover:bg-purple-100', 'hover:bg-blue-100'];
     const activeColors = ['active:bg-yellow-200', 'active:bg-green-200', 'active:bg-purple-200', 'active:bg-blue-200'];
 
     for (let j = 0; j < cells[index].length; j++) {
-        maxEventsInCell[j] = Math.max(maxEventsInCell[j], cells[index][j].length);
         for (let k = 0; k < cells[index][j].length; k++) {
             if (cells[index][j][k].get('moveType')) {
                 cells[index][j][k].set('boxCSS', 'border-red-500 bg-red-50');
@@ -72,24 +41,25 @@ const CalendarDay = ({ index, days, times, cells }) => {
             cells[index][j][k].set('activeCSS', activeColors[cells[index][j][k].get('index') % activeColors.length]);
         }
     }
+}
 
-    
-    // Cell Height
-    for (let i = 0; i < maxEventsInCell.length; i++) {
-        maxEventsInCell[i] = Math.max(1, maxEventsInCell[i]);
-    }
+const CalendarDay = ({ index, days, times, cells }) => {
+    const todayDate = new Date(new Date().toDateString());
+    let dayCSS = days[index].getTime() == todayDate.getTime() ? 'text-indigo-600' : 'text-gray-900';
+
+    let maxEventsInCell = findMaxEventsForEachCell(cells, times, index);
+    setCellCSS(cells, index);
+
     const cellHeights = ['lg:h-12', 'lg:h-24', 'lg:h-36', 'lg:h-48', 'lg:h-60', 'lg:h-72'];
     const altCellHeights = ['h-16', 'h-28', 'h-40', 'h-56', 'h-64', 'h-80'];
 
     // Modals
     const [showEventModal, setShowEventModal] = useState(false);
     const [eventDetails, setEventDetails] = useState(null);
-
     const expandEvent = (chosenEvent) => {
         setEventDetails(chosenEvent);
         setShowEventModal(true);
     }
-
     const closeEvent = () => {
         setEventDetails(null);
         setShowEventModal(false);
@@ -97,12 +67,10 @@ const CalendarDay = ({ index, days, times, cells }) => {
 
     const [showMoveModal, setShowMoveModal] = useState(false);
     const [moveDetails, setMoveDetails] = useState(null);
-
     const expandMove = (chosenMove) => {
         setMoveDetails(chosenMove);
         setShowMoveModal(true);
     }
-
     const closeMove = () => {
         setMoveDetails(null);
         setShowMoveModal(false);
@@ -126,7 +94,7 @@ const CalendarDay = ({ index, days, times, cells }) => {
                     {times.map((item, timeIdx) => (
                         <div key={`cell-${timeIdx}`} className={`${altCellHeights[maxEventsInCell[timeIdx] - 1]} ${cellHeights[maxEventsInCell[timeIdx] - 1]} px-0.5 border-gray-200`}>
                             {cells[index][timeIdx].map((cellEvent, eventIdx) => (
-                                <CellContent key={`cell-${index}-${eventIdx}`} cellEvent={cellEvent} timeIdx={timeIdx} expandEvent={expandEvent} expandMove={expandMove} />
+                                <DayCellContent key={`cell-${index}-${eventIdx}`} cellEvent={cellEvent} timeIdx={timeIdx} expandEvent={expandEvent} expandMove={expandMove}>{console.log(cellEvent)}</DayCellContent>
                             ))}
                         </div>
                     ))}
