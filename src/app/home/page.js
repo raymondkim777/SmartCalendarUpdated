@@ -1,6 +1,6 @@
 "use client"
 
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import CalendarHeader from './calendarheader';
 import { getUserInfo } from '../lib/userinfo';
