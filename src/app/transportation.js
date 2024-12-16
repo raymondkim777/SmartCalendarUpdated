@@ -1,0 +1,7 @@
+const WALK_INDEX = 0;
+const CAR_INDEX = 1;
+const SUB_INDEX = 2;
+const RAIL_INDEX = 3;
+const BUS_INDEX = 4;
+
+export { WALK_INDEX, CAR_INDEX, SUB_INDEX, RAIL_INDEX, BUS_INDEX };
