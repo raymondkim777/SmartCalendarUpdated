@@ -8,6 +8,9 @@ async function getRouteData(start, end, arrival_time, mode="transit") {
 
     let url = `https://maps.googleapis.com/maps/api/directions/json?origin=${start}&destination=${end}&mode=${mode}&key=${apiKey}&arrival_time=${arrivalTimeInt}`;
     let data = await fetch(url);
+    if (!data.ok) {
+        throw new Error(`HTTP Error: ${data.status}`)
+    }
     let routeData = await data.json();
     console.log(routeData);
     return routeData;
@@ -17,6 +20,9 @@ async function getPlaceName(coordinates) {
     let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.lat},${coordinates.lng}&extra_computations=ADDRESS_DESCRIPTORS&key=${apiKey}`;
     console.log(url);
     let data = await fetch(url);
+    if (!data.ok) {
+        throw new Error(`HTTP Error: ${data.status}`)
+    }
     let placeData = await data.json();
     console.log(placeData);
     return placeData.address_descriptor.landmarks[0].display_name.text;
@@ -26,6 +32,9 @@ async function getCoordinates(roughAddress) {
     let addressURL = `${encodeURI(roughAddress)}`
     let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${addressURL}&key=${apiKey}`
     let data = await fetch(url);
+    if (!data.ok) {
+        throw new Error(`HTTP Error: ${data.status}`)
+    }
     let coordData = await data.json();
     console.log(coordData);
     return coordData.results[0].geometry.location;
@@ -84,7 +93,7 @@ export default async function Home() {
                     ['type', WALK_INDEX],
                     ['name', 'Walk'],
                     ['locations', j == 0 ? eventsData[i].get('location') : steps[j - 1].transit_details.arrival_stop.name],
-                    ['locatione', 'endLocation'],  // change next iteration. backup: await getPlaceName(steps[j].end_location)
+                    ['locatione', await getPlaceName(steps[j].end_location)],  // change next iteration, setting this just in case
                     ['coords', steps[j].start_location],
                     ['coorde', steps[j].end_location],
                     ['polyline', steps[j].polyline.points],
