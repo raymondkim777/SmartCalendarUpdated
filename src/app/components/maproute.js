@@ -21,47 +21,32 @@ const GoogleMapRoute = ({ directions, bounds, start, end }) => {
             const { Polyline } = await loader.importLibrary('maps');
             const { LatLngBounds } = await loader.importLibrary('core');
 
-            console.log(bounds);
-            // const boundsObject = {
-            //     north: bounds.northeast.lat,
-            //     south: bounds.southwest.lat,
-            //     west: bounds.southwest.lng,
-            //     east: bounds.northeast.lng,
-            // };
-            // console.log(boundsObject);
-
             // map options
             const mapOptions = {
                 mapId: 'DETAIL_MAP_VIEW',
-                disableDefaultUI: true,
-                gestureHandling: 'none',
-                // restriction: {
-                //     latLngBounds: boundsObject,
-                //     strictBounds: true,
-                // },
+                disableDefaultUI: false,
             };
 
             // setup map
             const map = new Map(mapRef.current, mapOptions);
-            // map.fitBounds(new LatLngBounds(bounds.southwest, bounds.northeast));
 
             // put up marker
             const markerStart = new AdvancedMarkerElement({
                 map: map, 
                 position: start,
                 title: "From",
-            })
+            });
             const markerEnd = new AdvancedMarkerElement({
                 map: map, 
                 position: end,
                 title: "To",
-            })
+            });
 
             // draw polyline
             const pathPoints = polyline.decode(directions);
             const pathCoordinates = [];
 
-            let boundsObject = new LatLngBounds();
+            const boundsObject = new LatLngBounds();
 
             for (let i = 0; i < pathPoints.length; i++) {
                 let coordinates = {lat: pathPoints[i][0], lng: pathPoints[i][1]};
@@ -76,7 +61,7 @@ const GoogleMapRoute = ({ directions, bounds, start, end }) => {
                 strokeColor: "#FF0000", 
                 strokeOpacity: 1.0, 
                 strokeWeight: 4,
-            })
+            });
             path.setMap(map);
         }
 
@@ -84,7 +69,7 @@ const GoogleMapRoute = ({ directions, bounds, start, end }) => {
     }, [directions]);
 
     return (
-        <div className='w-full h-full overflow-hidden' ref={mapRef} />
+        <div className='w-full h-36 lg:h-44 xl:h-72' ref={mapRef} />
     )
 }
 

@@ -22,8 +22,7 @@ const GoogleMap = ({ coordinates }) => {
                 center: coordinates, 
                 zoom: 17, 
                 mapId: 'DETAIL_MAP_VIEW',
-                disableDefaultUI: true,
-                gestureHandling: 'none',
+                disableDefaultUI: false,
             }
 
             // setup map
@@ -33,7 +32,7 @@ const GoogleMap = ({ coordinates }) => {
             const marker = new AdvancedMarkerElement({
                 map: map, 
                 position: coordinates,
-            })
+            });
         }
 
         initMap();
