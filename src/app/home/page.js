@@ -22,28 +22,42 @@ async function getPlaceName(coordinates) {
     return placeData.address_descriptor.landmarks[0].display_name.text;
 }
 
+async function getCoordinates(roughAddress) {
+    let addressURL = `${encodeURI(roughAddress)}`
+    let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${addressURL}&key=${apiKey}`
+    let data = await fetch(url);
+    let coordData = await data.json();
+    return coordData.results[0].geometry.location;
+}
+
 export default async function Home() {
     // events array is in locale time
     const eventsData = [ 
         new Map([
             ['moveType', false],
-            ['start', new Date('Dec 14, 2024 10:00:00')],
-            ['end', new Date('Dec 14, 2024 11:00:00')],
+            ['start', new Date('Dec 16, 2024 10:00:00')],
+            ['end', new Date('Dec 16, 2024 11:00:00')],
             ['title', 'Daily Standup Meeting'],
             ['location', 'Hudson-Bergen Light Rail HQ'],
             ['description', 'Some Description'],
         ]),
         new Map([
             ['moveType', false],
-            ['start', new Date('Dec 14, 2024 12:00:00')],
-            ['end', new Date('Dec 14, 2024 13:30:00')],
+            ['start', new Date('Dec 16, 2024 12:00:00')],
+            ['end', new Date('Dec 16, 2024 13:30:00')],
             ['title', 'Breakfast with Friend'],
             ['location', 'Woolworth Bldg'],
             ['description', 'Some Description'],
         ]),
     ];
 
-    const moveRoutes2 = [];  // each item is list of transportation methods b/w two events
+    // add coordinates to eventsData elements
+    for (let i = 0; i < eventsData.length; i++) {
+        eventsData[i].set('coordinate', await getCoordinates(eventsData[i].get('location')));
+        console.log(eventsData[i].get('coordinate'));
+    }
+
+    const moveRoutes = [];  // each item is list of transportation methods b/w two events
 
     for (let i = 0; i < eventsData.length - 1; i++) {
         let routeData = await getRouteData(
@@ -68,13 +82,14 @@ export default async function Home() {
                     ['end', nextTime],
                     ['type', WALK_INDEX],
                     ['name', 'Walk'],
-                    ['locations', await getPlaceName(steps[j].start_location)],
-                    ['locatione', await getPlaceName(steps[j].end_location)],
+                    ['locations', j == 0 ? eventsData[i].get('location') : steps[j - 1].transit_details.arrival_stop.name],
+                    ['locatione', await getPlaceName(steps[j].end_location)],  // change next iteration, setting this just in case
                     ['coords', steps[j].start_location],
                     ['coorde', steps[j].end_location],
+                    ['polyline', steps[j].polyline.points],
+                    ['bounds', routeData.routes[0].bounds],
                     ['description', `About ${steps[j].duration.text}, ${steps[j].distance.text}`],
                 ]);
-                console.log(tempMap);
             } else if (steps[j].travel_mode === "TRANSIT") {
                 curTime = new Date(new Date(steps[j].transit_details.departure_time.value * 1000).toLocaleString('en-US', options));
                 nextTime = new Date(new Date(steps[j].transit_details.arrival_time.value * 1000).toLocaleString('en-US', options));
@@ -104,67 +119,21 @@ export default async function Home() {
                     ['locatione', steps[j].transit_details.arrival_stop.name],
                     ['coords', steps[j].start_location],
                     ['coorde', steps[j].end_location],
+                    ['polyline', steps[j].polyline.points],
+                    ['bounds', routeData.routes[0].bounds],
                     ['description', steps[j].html_instructions],
                 ]);
+                route[j - 1].set('locatione', steps[j].transit_details.departure_stop.name);
             } else {
                 throw new Error("Travel Mode is Invalid");
             }
             curTime = nextTime;
             route.push(tempMap);
         }
-        moveRoutes2.push(route);
+        moveRoutes.push(route);
     }
     
-    const moveRoutes = [  // each item is list of transportation methods b/w two events
-        [
-            new Map([
-                ['start', new Date('Dec 14, 2024 11:05:00')],
-                ['end', new Date('Dec 14, 2024 11:14:00')],
-                ['type', WALK_INDEX],
-                ['name', 'Walk'],
-                ['locations', 'Hudson-Bergen Light Rail HQ'],
-                ['locatione', 'Pacific Ave at Communipaw Ave'],
-                ['description', 'About 9 min, 0.4 mi'],
-            ]),
-            new Map([
-                ['start', new Date('Dec 14, 2024 11:14:00')],
-                ['end', new Date('Dec 14, 2024 11:22:00')],
-                ['type', RAIL_INDEX],
-                ['name', '1 Jersey City Exchange PI via River Terminal'],
-                ['locations', 'Pacific Ave at Communipaw Ave'],
-                ['locatione', 'C Columbus Drive at Hudon St'],
-                ['description', 'Service run by Nj Transit Bus'],
-            ]),
-            new Map([
-                ['start', new Date('Dec 14, 2024 11:22:00')],
-                ['end', new Date('Dec 14, 2024 11:23:00')],
-                ['type', WALK_INDEX],
-                ['name', 'Walk'],
-                ['locations', 'C Columbus Drive at Hudon St'],
-                ['locatione', 'Exchange Place'],
-                ['description', 'About 1 min'],
-            ]),
-            new Map([
-                ['start', new Date('Dec 14, 2024 11:40:00')],
-                ['end', new Date('Dec 14, 2024 11:45:00')],
-                ['type', SUB_INDEX],
-                ['name', 'World Trade Center'],
-                ['locations', 'Exchange Place'],
-                ['locatione', 'World Trade Center'],
-                ['description', 'Service run by Port Authority Trans-Hudson Corporation'],
-            ]),
-            new Map([
-                ['start', new Date('Dec 14, 2024 11:45:00')],
-                ['end', new Date('Dec 14, 2024 11:49:00')],
-                ['type', WALK_INDEX],
-                ['name', 'Walk'],
-                ['locations', 'World Trade Center'],
-                ['locatione', 'Woolworth Bldg'],
-                ['description', 'About 4 min, 0.2 mi'],
-            ]),
-        ]
-    ];
     return (
-        <PageComponent eventsData={eventsData} routeData={moveRoutes2} />
+        <PageComponent eventsData={eventsData} routeData={moveRoutes} />
     )
 }

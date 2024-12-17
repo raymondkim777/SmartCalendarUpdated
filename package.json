@@ -11,9 +11,12 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@googlemaps/js-api-loader": "github:googlemaps/js-api-loader",
     "@mui/material": "^6.1.10",
+    "@types/google.maps": "^3.58.1",
     "@vercel/postgres": "^0.10.0",
     "axios": "^1.7.9",
+    "google-polyline": "^1.0.3",
     "next": "15.0.4",
     "react": "^19.0.0",
     "react-calendar": "^5.1.0",

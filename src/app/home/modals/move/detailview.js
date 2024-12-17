@@ -1,7 +1,8 @@
+import GoogleMapRoute from "@/app/components/maproute";
 import { formatDate } from "@/app/timeformat";
 
 const DetailView = ({ selectedEvent, setShowDetails }) => (
-    <div className="flex h-full overflow-y-auto p-4">
+    <div className="flex w-full h-full overflow-y-auto p-4">
         <div className='flex flex-col w-full h-fit items-center justify-start space-y-4'>
             <div className='flex w-full h-fit items-center justify-center'>
                 <h1 className="text-lg text-center line-clamp-2 leading-6 text-gray-600 font-semibold">{selectedEvent.get('name')}</h1>
@@ -37,7 +38,14 @@ const DetailView = ({ selectedEvent, setShowDetails }) => (
             }
             {/* Location */}
             <div className='flex flex-col w-full h-fit items-center justify-start space-y-4'>
-                <div className='w-full h-36 lg:h-44 xl:h-72 bg-gray-200 rounded-lg'></div>
+                <div className='w-full h-36 lg:h-44 xl:h-72 overflow-hidden bg-gray-200 rounded-lg'>
+                    <GoogleMapRoute
+                    directions={selectedEvent.get('polyline')} 
+                    bounds={selectedEvent.get('bounds')}
+                    start={selectedEvent.get('coords')}
+                    end={selectedEvent.get('coorde')}
+                    />
+                </div>
             </div>
             <div onClick={()=>setShowDetails(false)} className="shrink-0 flex w-32 h-10 items-center justify-center rounded-lg text-gray-600 font-normal bg-gray-200 hover:bg-gray-300 hover:cursor-pointer active:bg-gray-400 transition-all duration-150">Close</div>
         </div>

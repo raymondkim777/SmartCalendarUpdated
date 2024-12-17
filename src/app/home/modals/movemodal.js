@@ -63,7 +63,8 @@ const MoveModal = ({ closeMove, moveDetails }) => {
                     typeof(selectedEvent) == "string" ? 
                     <div className="flex flex-col w-full items-center justify-center p-4 space-y-4">
                         <h1 className="text-lg text-center line-clamp-1 leading-6 text-gray-600 font-semibold">{selectedEvent}</h1>
-                        <div className='w-full h-60 lg:h-80 xl:h-96 bg-gray-200 rounded-lg'></div>
+                        <div className='w-full h-60 lg:h-80 xl:h-96 bg-gray-200 rounded-lg'>
+                        </div>
                         <div onClick={()=>setShowDetails(false)} className="flex w-32 h-10 items-center justify-center rounded-lg text-gray-600 font-normal bg-gray-200 hover:bg-gray-300 hover:cursor-pointer active:bg-gray-400 transition-all duration-150">Close</div>
                     </div>: 
                     <DetailView selectedEvent={selectedEvent} setShowDetails={setShowDetails} />

@@ -1,3 +1,4 @@
+import GoogleMap from "@/app/components/map";
 import { formatDate } from "@/app/timeformat";
 
 const EventModal = ({ closeEvent, eventDetails }) => (
@@ -35,8 +36,8 @@ const EventModal = ({ closeEvent, eventDetails }) => (
                     <span className='text-base leading-6 text-gray-600 font-normal'>Location: </span>
                     <span className='text-base text-wrap leading-6 text-gray-600 font-normal'>{eventDetails.get('location')} </span>
                 </div>
-                <div className='w-full h-64 bg-gray-200 rounded-lg'>
-                        
+                <div className='w-full h-64 overflow-hidden bg-gray-200 rounded-lg'>
+                    <GoogleMap coordinates={eventDetails.get('coordinate')} />
                 </div>
             </div>
         </div>
