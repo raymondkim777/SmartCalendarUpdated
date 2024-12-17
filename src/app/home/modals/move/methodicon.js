@@ -1,4 +1,4 @@
-import { WALK_INDEX, CAR_INDEX, SUB_INDEX, RAIL_INDEX, BUS_INDEX } from '../../../transportation'
+import { WALK_INDEX, CAR_INDEX, RAIL_INDEX, SUB_INDEX, TRAIN_INDEX, TRAM_INDEX, BUS_INDEX } from '../../../transportation'
 
 const MethodIcon = ({ index }) => {
     const size = 20;

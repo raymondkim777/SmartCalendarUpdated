@@ -8,9 +8,11 @@ const PlaceCard = ({ showModal, place, description, type }) => (
             <LineDiagram type={type} />
         </div>
         <div onClick={()=>showModal(place)} className="flex grow h-8 items-center justify-center px-10 rounded-lg hover:bg-gray-200 hover:cursor-pointer  active:bg-gray-300 transition-all duration-150">
-            <span className="w-full py-1 text-base line-clamp-1 text-center leading-5 text-gray-600 font-semibold border-t border-b border-gray-400">
-                {place}
-            </span>
+            <div className="w-full py-1 border-t border-b border-gray-400">
+                <span className="text-base line-clamp-1 text-center leading-5 text-gray-600 font-semibold">
+                    {place}
+                </span>
+            </div>
         </div>
     </div>
 )

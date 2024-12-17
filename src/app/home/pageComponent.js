@@ -9,7 +9,7 @@ import Header from "../header";
 import CalendarWeek from './calendarweek';
 import CalendarDay from './calendarday';
 
-import { WALK_INDEX, CAR_INDEX, SUB_INDEX, RAIL_INDEX, BUS_INDEX } from '../transportation';
+import { WALK_INDEX, CAR_INDEX, RAIL_INDEX, SUB_INDEX, TRAIN_INDEX, TRAM_INDEX, BUS_INDEX } from '../transportation';
 
 const PageComponent = ({ eventsData, routeData }) => {
     // Calendar CSS
@@ -114,68 +114,18 @@ const PageComponent = ({ eventsData, routeData }) => {
         eventsData[i].set('index', i);
 
     // Transportation Events
-    // moveEvent: { moveType, start, end, type, name, locations, locatione, description }
-    const moveRoutes = [  // each item is list of transportation methods b/w two events
-        [
-            new Map([
-                ['start', new Date('Dec 11, 2024 11:05:00')],
-                ['end', new Date('Dec 11, 2024 11:14:00')],
-                ['type', WALK_INDEX],
-                ['name', 'Walk'],
-                ['locations', 'Hudson-Bergen Light Rail HQ'],
-                ['locatione', 'Pacific Ave at Communipaw Ave'],
-                ['description', 'About 9 min, 0.4 mi'],
-            ]),
-            new Map([
-                ['start', new Date('Dec 11, 2024 11:14:00')],
-                ['end', new Date('Dec 11, 2024 11:22:00')],
-                ['type', RAIL_INDEX],
-                ['name', '1 Jersey City Exchange PI via River Terminal'],
-                ['locations', 'Pacific Ave at Communipaw Ave'],
-                ['locatione', 'C Columbus Drive at Hudon St'],
-                ['description', 'Service run by Nj Transit Bus'],
-            ]),
-            new Map([
-                ['start', new Date('Dec 11, 2024 11:22:00')],
-                ['end', new Date('Dec 11, 2024 11:23:00')],
-                ['type', WALK_INDEX],
-                ['name', 'Walk'],
-                ['locations', 'C Columbus Drive at Hudon St'],
-                ['locatione', 'Exchange Place'],
-                ['description', 'About 1 min'],
-            ]),
-            new Map([
-                ['start', new Date('Dec 11, 2024 11:40:00')],
-                ['end', new Date('Dec 11, 2024 11:45:00')],
-                ['type', SUB_INDEX],
-                ['name', 'World Trade Center'],
-                ['locations', 'Exchange Place'],
-                ['locatione', 'World Trade Center'],
-                ['description', 'Service run by Port Authority Trans-Hudson Corporation'],
-            ]),
-            new Map([
-                ['start', new Date('Dec 11, 2024 11:45:00')],
-                ['end', new Date('Dec 11, 2024 11:49:00')],
-                ['type', WALK_INDEX],
-                ['name', 'Walk'],
-                ['locations', 'World Trade Center'],
-                ['locatione', 'Woolworth Bldg'],
-                ['description', 'About 4 min, 0.2 mi'],
-            ]),
-        ]
-    ];
     const moveEvents = []
-    for (let i = 0; i < moveRoutes.length; i++) {
-        let startTime = moveRoutes[i][0].get('start');
-        let endTime = moveRoutes[i][moveRoutes[i].length - 1].get('end');
-        let elapsedTime = (endTime - startTime) / (1000 * 60)  //  minutes
+    for (let i = 0; i < routeData.length; i++) {
+        let startTime = routeData[i][0].get('start');
+        let endTime = routeData[i][routeData[i].length - 1].get('end');
+        let elapsedTime = Math.trunc((endTime - startTime) / (1000 * 60));  //  minutes
         let tempMap = new Map([
             ['moveType', true],
             ['start', startTime],
             ['end', endTime],
             ['title', 'Travel Time'],
             ['elapsedTime', elapsedTime],
-            ['route', moveRoutes[i]],
+            ['route', routeData[i]],
         ]);
         moveEvents.push(tempMap);
     }
@@ -209,7 +159,7 @@ const PageComponent = ({ eventsData, routeData }) => {
                 let curCellTime = new Date(new Date(days[curDayIdx]).setHours(times[timeIdx]));
 
                 let startTime = allEvents[allEventIdx].get('start');
-                let endTime = allEvents[allEventIdx].get('end')
+                let endTime = allEvents[allEventIdx].get('end');
 
                 if (startTime < curCellTime) {
                     let cellEvent = new Map(allEvents[allEventIdx]);
