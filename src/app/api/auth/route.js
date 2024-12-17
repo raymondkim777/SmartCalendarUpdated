@@ -20,7 +20,6 @@ async function saveUserTokens(email, accessToken, refreshToken, tokenExpiry) {
                 UPDATE user_info
                 SET 
                     access_token = ${accessToken},
-                    token_expiry = ${tokenExpiry},
                     notification = false
                 WHERE email = ${email}
                 RETURNING *;
@@ -88,16 +87,12 @@ export async function GET(req) {
     );
 
     const response = NextResponse.redirect('http://localhost:3000');
-  
-    // Set the cookie
-    response.cookies.set({
-      name: 'user_email',
-      value: email,
-      path: '/',
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      sameSite: 'strict',
-    });
+
+    // Set session token in cookies
+    response.headers.set(
+      'Set-Cookie',
+      `session_token=${tokens.access_token}; Secure; Path=/; Max-Age=3600`
+    );
   
     console.log('Tokens saved for user:', email);
   

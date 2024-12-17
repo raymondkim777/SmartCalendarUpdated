@@ -31,17 +31,19 @@ const Home = () => {
             try {
                 
 
-                const cookies = new Cookies();
+                const getCookie = (name) => {
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; ${name}=`);
+                    if (parts.length === 2) return parts.pop().split(';').shift();
+                    return null;
+                  }
 
-                // Get the cookie value
-                const email = cookies.get('user_email');
-                console.log('User Email:', email);
-
-                
-                if (!email) {
-                    console.log('Email cookie not found. Skipping fetch.');
-                    return; // Exit if no email cookie is set
+                const accessToken = getCookie('session_token');
+                if (!accessToken) {
+                console.log('Access token cookie not found.');
+                return;
                 }
+
                 const response = await fetch('/api/calendar');
                 if (!response.ok) {
                     throw new Error(`HTTP Error: ${response.status}`);
