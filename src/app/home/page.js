@@ -27,6 +27,7 @@ async function getCoordinates(roughAddress) {
     let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${addressURL}&key=${apiKey}`
     let data = await fetch(url);
     let coordData = await data.json();
+    console.log(coordData);
     return coordData.results[0].geometry.location;
 }
 
@@ -83,7 +84,7 @@ export default async function Home() {
                     ['type', WALK_INDEX],
                     ['name', 'Walk'],
                     ['locations', j == 0 ? eventsData[i].get('location') : steps[j - 1].transit_details.arrival_stop.name],
-                    ['locatione', await getPlaceName(steps[j].end_location)],  // change next iteration, setting this just in case
+                    ['locatione', 'endLocation'],  // change next iteration. backup: await getPlaceName(steps[j].end_location)
                     ['coords', steps[j].start_location],
                     ['coorde', steps[j].end_location],
                     ['polyline', steps[j].polyline.points],
