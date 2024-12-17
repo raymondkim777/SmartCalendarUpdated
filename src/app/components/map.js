@@ -23,6 +23,7 @@ const GoogleMap = ({ coordinates }) => {
                 zoom: 17, 
                 mapId: 'DETAIL_MAP_VIEW',
                 disableDefaultUI: true,
+                gestureHandling: 'none',
             }
 
             // setup map

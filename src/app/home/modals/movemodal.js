@@ -20,7 +20,7 @@ const MoveModal = ({ closeMove, moveDetails }) => {
     } 
     
     return(
-        <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute ${widthCSS[Number(showDetails)]} object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50 transition-all duration-300`}>
+        <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute ${widthCSS[Number(showDetails)]} object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50 transition-all duration-300 overflow-hidden`}>
             <div className='flex flex-row w-full h-10 items-center justify-between pl-4 pr-2 space-x-3'>
                 <h1 className="text-lg text-nowrap truncate leading-6 text-gray-600 font-semibold">{moveDetails.get('title')}: {moveDetails.get('elapsedTime')} min</h1>
                 <div onClick={closeMove} className='flex items-center justify-center w-9 h-9 rounded-full hover:cursor-pointer hover:bg-gray-200 active:bg-gray-300 transition-all duration-300'>
