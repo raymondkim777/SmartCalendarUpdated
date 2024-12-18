@@ -144,7 +144,6 @@ const PageComponent = ({ eventsData, routeData }) => {
     // Filling cells array
     let allEventIdx = 0;
     for (let curDayIdx = 0; curDayIdx < dayCnt; curDayIdx++) {
-
         for (let timeIdx = 0; timeIdx < times.length; timeIdx++) {
             while (true) {
                 // if no events left, break

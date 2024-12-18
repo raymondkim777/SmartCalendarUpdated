@@ -45,7 +45,7 @@ async function connectToCalendar() {
             console.error('Access token cookie not found.');
             return null;
         }
-        console.log('Access token cookie found.');
+        // console.log('Access token cookie found.');
     
         // Fetch user tokens from the database using the access token
         const { rows } = await sql`
@@ -79,11 +79,10 @@ async function connectToCalendar() {
                 await sql`
                 UPDATE user_info
                 SET access_token = ${refreshedTokens.credentials.access_token},
-                    refresh_token = ${refreshedTokens.credentials.refresh_token || refresh_token},
                     token_expiry = ${new Date(refreshedTokens.credentials.expiry_date).toISOString()}
                 WHERE access_token = ${accessToken}
                 `;
-                console.log('Access token refreshed and updated in the database.');
+                // console.log('Access token refreshed and updated in the database.');
             }
         } catch (refreshError) {
             console.error('Error refreshing access token:', refreshError.message);
@@ -206,7 +205,8 @@ export default async function Home() {
     // init user
     const user = await fetchUser();
     // console.log(user);
-    const eventsData = await fetchEvents();
+    let eventsData = []
+    if (user) eventsData = await fetchEvents();
     // const eventsData = [
     //     new Map([
     //         ['moveType', false],
@@ -226,7 +226,7 @@ export default async function Home() {
     //     ]),
     // ];
 
-    console.log('eventsData: ', eventsData);
+    // console.log('eventsData: ', eventsData);
 
     // add coordinates to eventsData elements
     for (let i = 0; i < eventsData.length; i++) {
@@ -237,21 +237,19 @@ export default async function Home() {
     const moveRoutes = [];  // each item is list of transportation methods b/w two events
 
     for (let i = 0; i < eventsData.length - 1; i++) {
-        console.log("events: ", eventsData[i].get('location'), "to ", eventsData[i + 1].get('location'))
-        if (i > 0 && eventsData[i].get('start') - eventsData[i - 1].get('end') >= 1000 * 60 * 60 * 6)
+        // console.log("events: ", eventsData[i].get('location'), "to ", eventsData[i + 1].get('location'))
+        if (eventsData[i + 1].get('start') - eventsData[i].get('end') >= 1000 * 60 * 60 * 6)
+            continue;
+        if (!eventsData[i + 1].get('location'))
             continue;
         if (!eventsData[i].get('location'))
             continue;
-        if (i > 0 && !eventsData[i - 1].get('location'))
-            continue;
 
-        console.log("not skipped")
         let routeData = await getRouteData(
             eventsData[i].get('location'),
             eventsData[i + 1].get('location'),
             eventsData[i + 1].get('start')
         );
-        console.log('routeData: ', routeData);
         if (routeData.status === 'ZERO_RESULTS') continue;
         const route = [];
         const steps = routeData.routes[0].legs[0].steps;
