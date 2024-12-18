@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { sql } from '@vercel/postgres';
 
 import Header from "../header";
 import PageComponent from "./pageComponent";
@@ -8,33 +9,30 @@ const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
 async function fetchUser() {
     // console.log("in fetchUser, document.cookie is ", document.cookie)
-    let cookieStore = await cookies();
-    console.log("in fetchUser, document.cookie is ", cookieStore.get('session_token'))
-    try {
-        const res = await fetch('http://localhost:3000/api/auth/session'); // API route to get session info
-        console.log("res is: ", res);
-        if (res.ok) {
-            const data = await res.json();
-            console.log("data is ok, return data as ", data);
-            return data.user;
-        }
-        else {
-            console.log("data wasn't fetched");
-        }
-    } catch (error) {
-        console.error('Failed to fetch user session:', error);
+    const cookieStore = await cookies();
+    // console.log("in fetchUser, document.cookie is ", cookieStore.get('session_token'))
+    const sessionToken = cookieStore.get('session_token')?.value;
+    if (!sessionToken) {
+        // console.log("no session token");
+        return null;
     }
-    return null;
-}
+    // console.log("session token found");
 
-const handleLogout = async () => {
-    try {
-        await fetch('http://localhost:3000/api/auth/logout', { method: 'POST' });
-        router.push('/home'); // Redirect to home page
-    } catch (error) {
-        console.error('Failed to logout:', error);
+    // Query the database for the user associated with the session token
+    const { rows } = await sql`SELECT email, name, picture, notification FROM user_info WHERE access_token = ${sessionToken} LIMIT 1`;
+    if (rows.length === 0) {
+        // console.log("database empty");
+        return null;
     }
-};
+    // console.log("database entry found");
+    const user = { 
+        email: rows[0].email, 
+        name: rows[0].name,
+        picture: rows[0].picture, 
+        notification: rows[0].notification,
+    };
+    return user;
+}
 
 async function getRouteData(start, end, arrival_time, mode="transit") {
     const arrivalTimeInt = Math.trunc(arrival_time / 1000);
@@ -187,7 +185,6 @@ export default async function Home() {
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
             <Header
             user={user}
-            // handleLogout={handleLogout}
             />
             <PageComponent eventsData={eventsData} routeData={moveRoutes} />
         </div>
