@@ -4,14 +4,12 @@ import { createContext, useState } from 'react';
 export const LoginContext = createContext();
 export const LoginProvider = ({ children }) => {
     const [loginStatus, setLoginStatus] = useState(false); 
-    const [userEmail, setUserEmail] = useState(null);
-    const [userID, setUserID] = useState('');
+    const [currentUser, setCurrentUser] = useState(null);
 
     return (
         <LoginContext.Provider value={{ 
             loginStatus, setLoginStatus,
-            userEmail, setUserEmail, 
-            userID, setUserID,
+            currentUser, setCurrentUser, 
         }}>
             {children}
         </LoginContext.Provider>

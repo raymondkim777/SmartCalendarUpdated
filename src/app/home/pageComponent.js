@@ -3,13 +3,9 @@
 import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import CalendarHeader from './calendarheader';
-import { getUserInfo } from '../lib/userinfo';
 
-import Header from "../header";
 import CalendarWeek from './calendarweek';
 import CalendarDay from './calendarday';
-
-import { WALK_INDEX, CAR_INDEX, RAIL_INDEX, SUB_INDEX, TRAIN_INDEX, TRAM_INDEX, BUS_INDEX } from '../transportation';
 
 const PageComponent = ({ eventsData, routeData }) => {
     // Calendar CSS
@@ -226,10 +222,9 @@ const PageComponent = ({ eventsData, routeData }) => {
     }
 
     return (
-        <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
-        <Header />
+        <div className='flex w-full h-full overflow-y-auto no-scrollbar'>
         {/* Calendar */}
-        <main className="flex flex-col w-full h-full items-center pt-5 overflow-y-auto no-scrollbar">
+        <main className="flex flex-col w-full h-fit items-center pt-5">
         <section className="bg-stone-50 w-full max-w-7xl">
             <div className="w-full mx-auto px-8">
                 {/* Buttons */}

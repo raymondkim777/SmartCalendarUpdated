@@ -1,7 +1,30 @@
+import Header from "../header";
 import PageComponent from "./pageComponent";
 import { WALK_INDEX, CAR_INDEX, RAIL_INDEX, SUB_INDEX, TRAIN_INDEX, TRAM_INDEX, BUS_INDEX } from '../transportation';
 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+
+async function fetchUser() {
+    try {
+        const res = await fetch('http://localhost:3000/api/auth/session'); // API route to get session info
+        if (res.ok) {
+            const data = await res.json();
+            return data.user;
+        } 
+    } catch (error) {
+        console.error('Failed to fetch user session:', error);
+    }
+    return null;
+}
+
+const handleLogout = async () => {
+    try {
+        await fetch('http://localhost:3000/api/auth/logout', { method: 'POST' });
+        router.push('/home'); // Redirect to home page
+    } catch (error) {
+        console.error('Failed to logout:', error);
+    }
+};
 
 async function getRouteData(start, end, arrival_time, mode="transit") {
     const arrivalTimeInt = Math.trunc(arrival_time / 1000);
@@ -41,6 +64,10 @@ async function getCoordinates(roughAddress) {
 }
 
 export default async function Home() {
+    // init user
+    const user = await fetchUser();
+    console.log(user);
+
     // events array is in locale time
     const eventsData = [ 
         new Map([
@@ -144,6 +171,12 @@ export default async function Home() {
     }
     
     return (
-        <PageComponent eventsData={eventsData} routeData={moveRoutes} />
+        <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
+            <Header 
+            user={user}
+            // handleLogout={handleLogout}
+            />
+            <PageComponent eventsData={eventsData} routeData={moveRoutes} />
+        </div>
     )
 }
