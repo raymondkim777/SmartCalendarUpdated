@@ -1,4 +1,3 @@
-
 import { google } from 'googleapis';
 import { sql } from '@vercel/postgres';
 import { cookies } from 'next/headers';

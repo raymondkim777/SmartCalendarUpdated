@@ -1,3 +1,4 @@
+import { google } from 'googleapis';
 import { cookies } from "next/headers";
 import { sql } from '@vercel/postgres';
 
@@ -34,6 +35,132 @@ async function fetchUser() {
     return user;
 }
 
+async function connectToCalendar() {
+    try {
+        // Retrieve the access_token from cookies
+        const cookieStore = await cookies();
+        const accessToken = cookieStore.get('session_token')?.value;
+
+        if (!accessToken) {
+            console.error('Access token cookie not found.');
+            return null;
+        }
+        console.log('Access token cookie found.');
+    
+        // Fetch user tokens from the database using the access token
+        const { rows } = await sql`
+            SELECT access_token, refresh_token, token_expiry
+            FROM user_info
+            WHERE access_token = ${accessToken}
+        `;
+        if (rows.length === 0) return null;
+    
+        const { access_token, refresh_token, token_expiry } = rows[0];
+    
+        const auth = new google.auth.OAuth2(
+            process.env.CLIENT_ID,
+            process.env.CLIENT_SECRET,
+            process.env.REDIRECT_URI
+        );
+    
+        // Set the retrieved tokens
+        auth.setCredentials({
+            access_token,
+            refresh_token,
+        });
+    
+        // Refresh the access token if it has expired
+        try {
+            if (new Date() > new Date(token_expiry)) {
+                const refreshedTokens = await auth.refreshAccessToken();
+                auth.setCredentials(refreshedTokens.credentials);
+        
+                // Update the tokens in the database
+                await sql`
+                UPDATE user_info
+                SET access_token = ${refreshedTokens.credentials.access_token},
+                    refresh_token = ${refreshedTokens.credentials.refresh_token || refresh_token},
+                    token_expiry = ${new Date(refreshedTokens.credentials.expiry_date).toISOString()}
+                WHERE access_token = ${accessToken}
+                `;
+                console.log('Access token refreshed and updated in the database.');
+            }
+        } catch (refreshError) {
+            console.error('Error refreshing access token:', refreshError.message);
+            return null;
+        }
+    
+        const calendar = google.calendar({ version: 'v3', auth });
+        
+        const oneMonthBefore = new Date();
+        oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
+        const oneMonthLater = new Date();
+        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+    
+        const response = await calendar.events.list({
+            calendarId: 'primary', // Fetch from the primary calendar
+            timeMin: oneMonthBefore.toISOString(), // Start from now
+            timeMax: oneMonthLater.toISOString(), // Up to one year from now
+            maxResults: 100, // Adjust the number of results if needed
+            singleEvents: true,
+            orderBy: 'startTime',
+        });
+    
+        return response.data.items;
+    } 
+    catch (error) {
+        console.error('API Route Error:', error.message);
+        return null; 
+    }
+}
+
+async function fetchEvents() { 
+    try {
+        // const getCookie = (name) => {
+        //     const value = `; ${document.cookie}`;
+        //     const parts = value.split(`; ${name}=`);
+        //     if (parts.length === 2) return parts.pop().split(';').shift();
+        //     return null;
+        // }
+
+        // const accessToken = getCookie('session_token');
+        // if (!accessToken) {
+        //     console.log('Access token cookie not found.');
+        //     return;
+        // }
+
+        const data = await connectToCalendar();
+        if (!data) {
+            return [];
+        }
+
+        // Transform events into the desired Map format
+        const transformedEvents = data.map((event) => {
+            const startDate = new Date(event.start.dateTime || event.start.date);
+            const endDate = new Date(event.end.dateTime || event.end.date);
+            const options = { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+            const formattedStartDate = startDate.toLocaleString('en-US', options);
+            const formattedEndDate = endDate.toLocaleString('en-US', options);
+
+            return new Map([
+                ['moveType', false],
+                ['start', new Date(formattedStartDate)], 
+                ['end', new Date(formattedEndDate)],
+                ['title', event.summary || null],
+                ['location', event.location || null],
+                ['description', event.description || null],
+            ]);
+        });
+
+        // setEvents(data); // For rendering original events
+        // setProcessedEvents(transformedEvents); // For custom Map-based events
+        return transformedEvents;
+    } catch (err) {
+        console.error('Fetch Events Error:', err.message);
+        setError(err.message);
+    }
+}
+
 async function getRouteData(start, end, arrival_time, mode="transit") {
     const arrivalTimeInt = Math.trunc(arrival_time / 1000);
 
@@ -60,6 +187,8 @@ async function getPlaceName(coordinates) {
 }
 
 async function getCoordinates(roughAddress) {
+    if (!roughAddress) return null;
+
     let addressURL = `${encodeURI(roughAddress)}`
     let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${addressURL}&key=${apiKey}`
     let data = await fetch(url);
@@ -67,37 +196,37 @@ async function getCoordinates(roughAddress) {
         throw new Error(`HTTP Error: ${data.status}`)
     }
     let coordData = await data.json();
-    // console.log(coordData);
     return coordData.results[0].geometry.location;
 }
 
 export default async function Home() {
     // console.log("in home, document.cookie is ", document.cookie)
     let cookieStore = await cookies();
-    console.log("in home, document.cookie is ", cookieStore.get('session_token'))
+    // console.log("in home, document.cookie is ", cookieStore.get('session_token'))
     // init user
     const user = await fetchUser();
-    console.log(user);
+    // console.log(user);
+    const eventsData = await fetchEvents();
+    // const eventsData = [
+    //     new Map([
+    //         ['moveType', false],
+    //         ['start', new Date('Dec 16, 2024 10:00:00')],
+    //         ['end', new Date('Dec 16, 2024 11:00:00')],
+    //         ['title', 'Daily Standup Meeting'],
+    //         ['location', 'Hudson-Bergen Light Rail HQ'],
+    //         ['description', 'Some Description'],
+    //     ]),
+    //     new Map([
+    //         ['moveType', false],
+    //         ['start', new Date('Dec 16, 2024 12:00:00')],
+    //         ['end', new Date('Dec 16, 2024 13:30:00')],
+    //         ['title', 'Breakfast with Friend'],
+    //         ['location', 'Woolworth Bldg'],
+    //         ['description', 'Some Description'],
+    //     ]),
+    // ];
 
-    // events array is in locale time
-    const eventsData = [
-        new Map([
-            ['moveType', false],
-            ['start', new Date('Dec 16, 2024 10:00:00')],
-            ['end', new Date('Dec 16, 2024 11:00:00')],
-            ['title', 'Daily Standup Meeting'],
-            ['location', 'Hudson-Bergen Light Rail HQ'],
-            ['description', 'Some Description'],
-        ]),
-        new Map([
-            ['moveType', false],
-            ['start', new Date('Dec 16, 2024 12:00:00')],
-            ['end', new Date('Dec 16, 2024 13:30:00')],
-            ['title', 'Breakfast with Friend'],
-            ['location', 'Woolworth Bldg'],
-            ['description', 'Some Description'],
-        ]),
-    ];
+    console.log('eventsData: ', eventsData);
 
     // add coordinates to eventsData elements
     for (let i = 0; i < eventsData.length; i++) {
@@ -108,12 +237,22 @@ export default async function Home() {
     const moveRoutes = [];  // each item is list of transportation methods b/w two events
 
     for (let i = 0; i < eventsData.length - 1; i++) {
+        console.log("events: ", eventsData[i].get('location'), "to ", eventsData[i + 1].get('location'))
+        if (i > 0 && eventsData[i].get('start') - eventsData[i - 1].get('end') >= 1000 * 60 * 60 * 6)
+            continue;
+        if (!eventsData[i].get('location'))
+            continue;
+        if (i > 0 && !eventsData[i - 1].get('location'))
+            continue;
+
+        console.log("not skipped")
         let routeData = await getRouteData(
             eventsData[i].get('location'),
             eventsData[i + 1].get('location'),
             eventsData[i + 1].get('start')
         );
-
+        console.log('routeData: ', routeData);
+        if (routeData.status === 'ZERO_RESULTS') continue;
         const route = [];
         const steps = routeData.routes[0].legs[0].steps;
 
@@ -171,7 +310,8 @@ export default async function Home() {
                     ['bounds', routeData.routes[0].bounds],
                     ['description', steps[j].html_instructions],
                 ]);
-                route[j - 1].set('locatione', steps[j].transit_details.departure_stop.name);
+                if (j > 0 && route[j - 1].get('type') == WALK_INDEX)
+                    route[j - 1].set('locatione', steps[j].transit_details.departure_stop.name);
             } else {
                 throw new Error("Travel Mode is Invalid");
             }
