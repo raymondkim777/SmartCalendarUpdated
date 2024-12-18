@@ -5,12 +5,13 @@ import { WALK_INDEX, CAR_INDEX, RAIL_INDEX, SUB_INDEX, TRAIN_INDEX, TRAM_INDEX, 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
 async function fetchUser() {
+    console.log("in fetchUser, document.cookie is ", document.cookie)
     try {
         const res = await fetch('http://localhost:3000/api/auth/session'); // API route to get session info
         if (res.ok) {
             const data = await res.json();
             return data.user;
-        } 
+        }
     } catch (error) {
         console.error('Failed to fetch user session:', error);
     }
@@ -64,12 +65,13 @@ async function getCoordinates(roughAddress) {
 }
 
 export default async function Home() {
+    console.log("in home, document.cookie is ", document.cookie)
     // init user
     const user = await fetchUser();
     console.log(user);
 
     // events array is in locale time
-    const eventsData = [ 
+    const eventsData = [
         new Map([
             ['moveType', false],
             ['start', new Date('Dec 16, 2024 10:00:00')],
@@ -98,8 +100,8 @@ export default async function Home() {
 
     for (let i = 0; i < eventsData.length - 1; i++) {
         let routeData = await getRouteData(
-            eventsData[i].get('location'), 
-            eventsData[i + 1].get('location'), 
+            eventsData[i].get('location'),
+            eventsData[i + 1].get('location'),
             eventsData[i + 1].get('start')
         );
 
@@ -130,22 +132,22 @@ export default async function Home() {
             } else if (steps[j].travel_mode === "TRANSIT") {
                 curTime = new Date(new Date(steps[j].transit_details.departure_time.value * 1000).toLocaleString('en-US', options));
                 nextTime = new Date(new Date(steps[j].transit_details.arrival_time.value * 1000).toLocaleString('en-US', options));
-                
+
                 let tType = steps[j].transit_details.line.vehicle.type;
-                let tIdx = 
-                tType === 'BUS' ? BUS_INDEX : 
-                tType === 'CABLE_CAR' ? BUS_INDEX : 
-                tType === 'COMMUTER_TRAIN' ? TRAIN_INDEX : 
-                tType === 'HEAVY_RAIL' ? RAIL_INDEX : 
-                tType === 'HIGH_SPEED_TRAIN' ? TRAIN_INDEX : 
-                tType === 'INTERCITY_BUS' ? BUS_INDEX : 
-                tType === 'LONG_DISTANCE_TRAIN' ? BUS_INDEX : 
-                tType === 'METRO_RAIL' ? RAIL_INDEX : 
-                tType === 'MONORAIL' ? RAIL_INDEX : 
-                tType === 'RAIL' ? RAIL_INDEX : 
-                tType === 'SUBWAY' ? SUB_INDEX : 
-                tType === 'TRAM' ? TRAM_INDEX : 
-                BUS_INDEX;  // default to bus icon  
+                let tIdx =
+                tType === 'BUS' ? BUS_INDEX :
+                tType === 'CABLE_CAR' ? BUS_INDEX :
+                tType === 'COMMUTER_TRAIN' ? TRAIN_INDEX :
+                tType === 'HEAVY_RAIL' ? RAIL_INDEX :
+                tType === 'HIGH_SPEED_TRAIN' ? TRAIN_INDEX :
+                tType === 'INTERCITY_BUS' ? BUS_INDEX :
+                tType === 'LONG_DISTANCE_TRAIN' ? BUS_INDEX :
+                tType === 'METRO_RAIL' ? RAIL_INDEX :
+                tType === 'MONORAIL' ? RAIL_INDEX :
+                tType === 'RAIL' ? RAIL_INDEX :
+                tType === 'SUBWAY' ? SUB_INDEX :
+                tType === 'TRAM' ? TRAM_INDEX :
+                BUS_INDEX;  // default to bus icon
 
                 tempMap = new Map([
                     ['start', curTime],
@@ -169,10 +171,10 @@ export default async function Home() {
         }
         moveRoutes.push(route);
     }
-    
+
     return (
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
-            <Header 
+            <Header
             user={user}
             // handleLogout={handleLogout}
             />

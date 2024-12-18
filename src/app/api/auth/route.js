@@ -25,7 +25,7 @@ async function saveUserTokens(email, accessToken, refreshToken, tokenExpiry) {
                 RETURNING *;
             `;
 
-      
+
       console.log('User tokens updated successfully.');
     } else {
       // Insert new user
@@ -93,9 +93,11 @@ export async function GET(req) {
       'Set-Cookie',
       `session_token=${tokens.access_token}; Secure; Path=/; Max-Age=3600`
     );
-  
+
     console.log('Tokens saved for user:', email);
-  
+
+    console.log("we should see after this api endpoint is called, whether we have cookies set on the FE!")
+
     return response;
   } catch (error) {
     console.error('Error during OAuth process:', error);

@@ -5,6 +5,7 @@ export async function GET() {
     try {
         // Await the cookies() call
         const cookieStore = await cookies();
+        console.log("in /session, cookieStore is ", cookieStore);
         const sessionToken = cookieStore.get('session_token')?.value;
 
         if (!sessionToken) {
