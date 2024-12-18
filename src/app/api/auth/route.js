@@ -86,7 +86,7 @@ export async function GET(req) {
       tokens.expiry_date
     );
 
-    const response = NextResponse.redirect('http://localhost:3000');
+    const response = NextResponse.redirect('http://localhost:3000/home');
 
     // Set session token in cookies
     response.headers.set(

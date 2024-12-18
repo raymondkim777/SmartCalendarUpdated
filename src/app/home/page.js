@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+
 import Header from "../header";
 import PageComponent from "./pageComponent";
 import { WALK_INDEX, CAR_INDEX, RAIL_INDEX, SUB_INDEX, TRAIN_INDEX, TRAM_INDEX, BUS_INDEX } from '../transportation';
@@ -5,12 +7,19 @@ import { WALK_INDEX, CAR_INDEX, RAIL_INDEX, SUB_INDEX, TRAIN_INDEX, TRAM_INDEX, 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
 async function fetchUser() {
-    console.log("in fetchUser, document.cookie is ", document.cookie)
+    // console.log("in fetchUser, document.cookie is ", document.cookie)
+    let cookieStore = await cookies();
+    console.log("in fetchUser, document.cookie is ", cookieStore.get('session_token'))
     try {
         const res = await fetch('http://localhost:3000/api/auth/session'); // API route to get session info
+        console.log("res is: ", res);
         if (res.ok) {
             const data = await res.json();
+            console.log("data is ok, return data as ", data);
             return data.user;
+        }
+        else {
+            console.log("data wasn't fetched");
         }
     } catch (error) {
         console.error('Failed to fetch user session:', error);
@@ -36,19 +45,19 @@ async function getRouteData(start, end, arrival_time, mode="transit") {
         throw new Error(`HTTP Error: ${data.status}`)
     }
     let routeData = await data.json();
-    console.log(routeData);
+    // console.log(routeData);
     return routeData;
 }
 
 async function getPlaceName(coordinates) {
     let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.lat},${coordinates.lng}&extra_computations=ADDRESS_DESCRIPTORS&key=${apiKey}`;
-    console.log(url);
+    // console.log(url);
     let data = await fetch(url);
     if (!data.ok) {
         throw new Error(`HTTP Error: ${data.status}`)
     }
     let placeData = await data.json();
-    console.log(placeData);
+    // console.log(placeData);
     return placeData.address_descriptor.landmarks[0].display_name.text;
 }
 
@@ -60,12 +69,14 @@ async function getCoordinates(roughAddress) {
         throw new Error(`HTTP Error: ${data.status}`)
     }
     let coordData = await data.json();
-    console.log(coordData);
+    // console.log(coordData);
     return coordData.results[0].geometry.location;
 }
 
 export default async function Home() {
-    console.log("in home, document.cookie is ", document.cookie)
+    // console.log("in home, document.cookie is ", document.cookie)
+    let cookieStore = await cookies();
+    console.log("in home, document.cookie is ", cookieStore.get('session_token'))
     // init user
     const user = await fetchUser();
     console.log(user);
@@ -93,7 +104,7 @@ export default async function Home() {
     // add coordinates to eventsData elements
     for (let i = 0; i < eventsData.length; i++) {
         eventsData[i].set('coordinate', await getCoordinates(eventsData[i].get('location')));
-        console.log(eventsData[i].get('coordinate'));
+        // console.log(eventsData[i].get('coordinate'));
     }
 
     const moveRoutes = [];  // each item is list of transportation methods b/w two events
