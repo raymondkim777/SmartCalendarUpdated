@@ -53,6 +53,7 @@ export async function GET(req) {
     );
 
     try {
+        console.log("gonna get tokens, starting try block")
         const { tokens } = await oauth2Client.getToken(code);
         oauth2Client.setCredentials(tokens);
 
@@ -61,6 +62,8 @@ export async function GET(req) {
             auth: oauth2Client,
             version: 'v2',
         });
+
+        console.log("about to get user info")
 
         const userInfo = await oauth2.userinfo.get();
         const email = userInfo.data.email;
@@ -71,6 +74,8 @@ export async function GET(req) {
             throw new Error('Failed to retrieve user email from Google.');
         }
 
+        console.log("retrieved user email", email);
+
         // Save tokens to database
         await saveUserTokens(
             { email, name, picture }, 
@@ -79,13 +84,18 @@ export async function GET(req) {
             tokens.expiry_date
         );
 
+        console.log("saved user tokens")
+
         const response = NextResponse.redirect('http://localhost:3000/home');
+        console.log("formed redirect response")
 
         // Set session token in cookies
         response.headers.set(
             'Set-Cookie',
             `session_token=${tokens.access_token}; Secure; Path=/; Max-Age=3600`
         );
+
+        console.log("returning response")
 
         return response;
     } 
