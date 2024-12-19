@@ -14,7 +14,6 @@ async function saveUserTokens(userInfo, accessToken, refreshToken, tokenExpiry) 
 
         if (rows.length > 0) {
             // Update existing user
-
             await sql`
                 UPDATE user_info
                 SET 
@@ -24,7 +23,6 @@ async function saveUserTokens(userInfo, accessToken, refreshToken, tokenExpiry) 
                 RETURNING *;
             `;
 
-            // console.log('User tokens updated successfully.');
         } else {
             // Insert new user
             await sql`
@@ -32,7 +30,6 @@ async function saveUserTokens(userInfo, accessToken, refreshToken, tokenExpiry) 
                 VALUES (${name}, ${email}, ${picture}, ${accessToken}, ${refreshToken}, ${tokenExpiry}, false)
                 RETURNING *;
             `;
-            // console.log('New user tokens saved successfully.');
         }
     } 
     catch (error) {
@@ -66,7 +63,6 @@ export async function GET(req) {
         });
 
         const userInfo = await oauth2.userinfo.get();
-        // console.log('userInfo is: ', userInfo);
         const email = userInfo.data.email;
         const name = userInfo.data.name
         const picture = userInfo.data.picture;
@@ -74,11 +70,6 @@ export async function GET(req) {
         if (!email) {
             throw new Error('Failed to retrieve user email from Google.');
         }
-        // console.log('email', email);
-        // console.log('Access Token:', tokens.access_token);
-        // console.log('Refresh Token:', tokens.refresh_token);
-        // console.log('Expiry Date:', tokens.expiry_date);
-
 
         // Save tokens to database
         await saveUserTokens(
@@ -95,8 +86,6 @@ export async function GET(req) {
             'Set-Cookie',
             `session_token=${tokens.access_token}; Secure; Path=/; Max-Age=3600`
         );
-
-        // console.log('Tokens saved for user:', email);
 
         return response;
     } 
