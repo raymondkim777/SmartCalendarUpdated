@@ -11,7 +11,7 @@ const Header = ({ user }) => {
 
     // useEffect for login
     useEffect(() => {
-        console.log(user);
+        // console.log(user);
         setCurrentUser(user);
         setLoginStatus(user != null);
     }, [user]);

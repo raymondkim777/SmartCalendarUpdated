@@ -35,103 +35,14 @@ async function fetchUser() {
     return user;
 }
 
-async function connectToCalendar() {
-    try {
-        // Retrieve the access_token from cookies
-        const cookieStore = await cookies();
-        const accessToken = cookieStore.get('session_token')?.value;
-
-        if (!accessToken) {
-            console.error('Access token cookie not found.');
-            return null;
-        }
-        // console.log('Access token cookie found.');
-    
-        // Fetch user tokens from the database using the access token
-        const { rows } = await sql`
-            SELECT access_token, refresh_token, token_expiry
-            FROM user_info
-            WHERE access_token = ${accessToken}
-        `;
-        if (rows.length === 0) return null;
-    
-        const { access_token, refresh_token, token_expiry } = rows[0];
-    
-        const auth = new google.auth.OAuth2(
-            process.env.CLIENT_ID,
-            process.env.CLIENT_SECRET,
-            process.env.REDIRECT_URI
-        );
-    
-        // Set the retrieved tokens
-        auth.setCredentials({
-            access_token,
-            refresh_token,
-        });
-    
-        // Refresh the access token if it has expired
-        try {
-            if (new Date() > new Date(token_expiry)) {
-                const refreshedTokens = await auth.refreshAccessToken();
-                auth.setCredentials(refreshedTokens.credentials);
-        
-                // Update the tokens in the database
-                await sql`
-                UPDATE user_info
-                SET access_token = ${refreshedTokens.credentials.access_token},
-                    token_expiry = ${new Date(refreshedTokens.credentials.expiry_date).toISOString()}
-                WHERE access_token = ${accessToken}
-                `;
-                // console.log('Access token refreshed and updated in the database.');
-            }
-        } catch (refreshError) {
-            console.error('Error refreshing access token:', refreshError.message);
-            return null;
-        }
-    
-        const calendar = google.calendar({ version: 'v3', auth });
-        
-        const oneMonthBefore = new Date();
-        oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
-        const oneMonthLater = new Date();
-        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
-    
-        const response = await calendar.events.list({
-            calendarId: 'primary', // Fetch from the primary calendar
-            timeMin: oneMonthBefore.toISOString(), // Start from now
-            timeMax: oneMonthLater.toISOString(), // Up to one year from now
-            maxResults: 100, // Adjust the number of results if needed
-            singleEvents: true,
-            orderBy: 'startTime',
-        });
-    
-        return response.data.items;
-    } 
-    catch (error) {
-        console.error('API Route Error:', error.message);
-        return null; 
-    }
-}
-
 async function fetchEvents() { 
     try {
-        // const getCookie = (name) => {
-        //     const value = `; ${document.cookie}`;
-        //     const parts = value.split(`; ${name}=`);
-        //     if (parts.length === 2) return parts.pop().split(';').shift();
-        //     return null;
-        // }
-
-        // const accessToken = getCookie('session_token');
-        // if (!accessToken) {
-        //     console.log('Access token cookie not found.');
-        //     return;
-        // }
-
         const data = await connectToCalendar();
         if (!data) {
+            // console.log("could not retrieve events from calendar");
             return [];
         }
+        // console.log("retrieved events from calendar");
 
         // Transform events into the desired Map format
         const transformedEvents = data.map((event) => {
@@ -157,6 +68,97 @@ async function fetchEvents() {
     } catch (err) {
         console.error('Fetch Events Error:', err.message);
         setError(err.message);
+    }
+}
+
+async function connectToCalendar() {
+    try {
+        const auth = new google.auth.OAuth2(
+            process.env.CLIENT_ID,
+            process.env.CLIENT_SECRET,
+            process.env.REDIRECT_URI
+        );
+        if (!(await fetchTokens(auth)))  {
+            // console.log("could not fetch tokens");
+            return null;
+        }
+        // console.log("fetched tokens");
+
+        const calendar = google.calendar({ version: 'v3', auth });
+        
+        const oneMonthBefore = new Date();
+        oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
+        const oneMonthLater = new Date();
+        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+    
+        const response = await calendar.events.list({
+            calendarId: 'primary', // Fetch from the primary calendar
+            timeMin: oneMonthBefore.toISOString(), // Start from now
+            timeMax: oneMonthLater.toISOString(), // Up to one year from now
+            maxResults: 100, // Adjust the number of results if needed
+            singleEvents: true,
+            orderBy: 'startTime',
+        });
+    
+        return response.data.items;
+    } 
+    catch (error) {
+        console.error('API Route Error:', error.message);
+        return null; 
+    }
+}
+
+async function fetchTokens(auth) {
+    // Retrieve the access_token from cookies
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('session_token')?.value;
+
+    if (!accessToken) {
+        console.error('Access token cookie not found.');
+        return false;
+    }
+    // console.log('Access token cookie found.');
+
+    // Fetch user tokens from the database using the access token
+    const { rows } = await sql`
+        SELECT access_token, refresh_token, token_expiry
+        FROM user_info
+        WHERE access_token = ${accessToken}
+    `;
+    if (rows.length === 0) return false;
+
+    const { access_token, refresh_token, token_expiry } = rows[0];
+
+    // Set the retrieved tokens
+    auth.setCredentials({
+        access_token,
+        refresh_token,
+    });
+
+    // Refresh the access token if it has expired
+    if (new Date() > new Date(token_expiry)) {
+        if (!(await refreshAccessToken(auth, accessToken))) return false;
+    }
+    return true;
+}
+
+async function refreshAccessToken(auth, accessToken) {
+    try {
+        const refreshedTokens = await auth.refreshAccessToken();
+        auth.setCredentials(refreshedTokens.credentials);
+
+        // Update the tokens in the database
+        await sql`
+        UPDATE user_info
+        SET access_token = ${refreshedTokens.credentials.access_token},
+            token_expiry = ${new Date(refreshedTokens.credentials.expiry_date).toISOString()}
+        WHERE access_token = ${accessToken}
+        `;
+        // console.log('Access token refreshed and updated in the database.');
+        return true;
+    } catch (refreshError) {
+        console.error('Error refreshing access token:', refreshError.message);
+        return false;
     }
 }
 
@@ -199,32 +201,14 @@ async function getCoordinates(roughAddress) {
 }
 
 export default async function Home() {
-    // console.log("in home, document.cookie is ", document.cookie)
-    let cookieStore = await cookies();
+    // let cookieStore = await cookies();
     // console.log("in home, document.cookie is ", cookieStore.get('session_token'))
+    
     // init user
     const user = await fetchUser();
     // console.log(user);
     let eventsData = []
     if (user) eventsData = await fetchEvents();
-    // const eventsData = [
-    //     new Map([
-    //         ['moveType', false],
-    //         ['start', new Date('Dec 16, 2024 10:00:00')],
-    //         ['end', new Date('Dec 16, 2024 11:00:00')],
-    //         ['title', 'Daily Standup Meeting'],
-    //         ['location', 'Hudson-Bergen Light Rail HQ'],
-    //         ['description', 'Some Description'],
-    //     ]),
-    //     new Map([
-    //         ['moveType', false],
-    //         ['start', new Date('Dec 16, 2024 12:00:00')],
-    //         ['end', new Date('Dec 16, 2024 13:30:00')],
-    //         ['title', 'Breakfast with Friend'],
-    //         ['location', 'Woolworth Bldg'],
-    //         ['description', 'Some Description'],
-    //     ]),
-    // ];
 
     // console.log('eventsData: ', eventsData);
 
@@ -237,7 +221,7 @@ export default async function Home() {
     const moveRoutes = [];  // each item is list of transportation methods b/w two events
 
     for (let i = 0; i < eventsData.length - 1; i++) {
-        // console.log("events: ", eventsData[i].get('location'), "to ", eventsData[i + 1].get('location'))
+        console.log("events: ", eventsData[i].get('location'), "to ", eventsData[i + 1].get('location'))
         if (eventsData[i + 1].get('start') - eventsData[i].get('end') >= 1000 * 60 * 60 * 6)
             continue;
         if (!eventsData[i + 1].get('location'))
@@ -250,6 +234,7 @@ export default async function Home() {
             eventsData[i + 1].get('location'),
             eventsData[i + 1].get('start')
         );
+        console.log("routeData: ", routeData);
         if (routeData.status === 'ZERO_RESULTS') continue;
         const route = [];
         const steps = routeData.routes[0].legs[0].steps;
