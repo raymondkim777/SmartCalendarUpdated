@@ -38,6 +38,7 @@ async function saveUserTokens(userInfo, accessToken, refreshToken, tokenExpiry) 
     }
 }
 
+
 export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const code = searchParams.get('code');
@@ -52,11 +53,19 @@ export async function GET(req) {
         process.env.REDIRECT_URI
     );
 
+    console.log("instantiated oauth client with", 
+        process.env.CLIENT_ID,
+        process.env.CLIENT_SECRET,
+        process.env.REDIRECT_URI
+    );
+
     try {
-        console.log("gonna get tokens, starting try block")
+        console.log("gonna get tokens, starting try block, getting code", code);
         const { tokens } = await oauth2Client.getToken(code);
+        console.log("setting tokens", tokens)
         oauth2Client.setCredentials(tokens);
 
+        console.log("calling google.oauth2 instantiation")
         // Extract email from Google's API
         const oauth2 = google.oauth2({
             auth: oauth2Client,
@@ -86,7 +95,7 @@ export async function GET(req) {
 
         console.log("saved user tokens")
 
-        const response = NextResponse.redirect('http://localhost:3000/home');
+        const response = NextResponse.redirect(process.env.NEXTAUTH_URL);
         console.log("formed redirect response")
 
         // Set session token in cookies
