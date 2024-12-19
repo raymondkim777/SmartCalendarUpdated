@@ -7,6 +7,14 @@ const DetailView = ({ selectedEvent, setShowDetails }) => (
             <div className='flex w-full h-fit items-center justify-center'>
                 <h1 className="text-lg text-center line-clamp-2 leading-6 text-gray-600 font-semibold">{selectedEvent.get('name')}</h1>
             </div>
+            {/* Description */}
+            {
+                selectedEvent.get('description') != '' && 
+                <div className='flex flex-row w-full h-fit items-start justify-center space-x-4 px-2'>
+                    <span className='text-center text-base leading-6 line-clamp-3 text-gray-500'
+                    dangerouslySetInnerHTML={{__html: selectedEvent.get('description')}}></span>
+                </div>
+            }
             {/* Times */}
             <div className='flex flex-row w-full h-12 items-center justify-start space-x-4 px-2'>
                 <div className='flex flex-col w-fit h-fit items-start justify-center'>
@@ -29,14 +37,7 @@ const DetailView = ({ selectedEvent, setShowDetails }) => (
                     <span className='text-base leading-6 line-clamp-1 text-gray-600 font-normal'>{selectedEvent.get('locatione')}</span>
                 </div>
             </div>
-            {
-                selectedEvent.get('description') != '' && 
-                <div className='flex flex-row w-full h-fit items-start justify-start space-x-4 px-2'>
-                    <span className='text-base leading-6 text-gray-600 font-normal'>Description: </span>
-                    <span className='text-base leading-6 line-clamp-3 text-gray-600 font-normal'>{selectedEvent.get('description')} </span>
-                </div>
-            }
-            {/* Location */}
+            {/* MapRoute */}
             <div className='flex flex-col w-full h-fit items-center justify-start space-y-4'>
                 <div className='w-full h-36 lg:h-44 xl:h-72 overflow-hidden bg-gray-200 rounded-lg'>
                     <GoogleMapRoute

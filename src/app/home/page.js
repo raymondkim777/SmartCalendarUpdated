@@ -162,10 +162,23 @@ async function refreshAccessToken(auth, accessToken) {
     }
 }
 
-async function getRouteData(start, end, arrival_time, mode="transit") {
+async function getShortestRoute(startLoc, endLoc, arrival_time) {
     const arrivalTimeInt = Math.trunc(arrival_time / 1000);
 
-    let url = `https://maps.googleapis.com/maps/api/directions/json?origin=${start}&destination=${end}&mode=${mode}&key=${apiKey}&arrival_time=${arrivalTimeInt}`;
+    let routeData = await getRouteData(startLoc, endLoc, arrivalTimeInt, "transit");
+    if (!(routeData.status === 'ZERO_RESULTS')) return {routeType: 'transit', routeData: routeData};
+
+    routeData = await getRouteData(startLoc, endLoc, arrivalTimeInt, "driving");
+    if (!(routeData.status === 'ZERO_RESULTS')) return {routeType: 'driving', routeData: routeData};
+
+    routeData = await getRouteData(startLoc, endLoc, arrivalTimeInt, "walking");
+    if (!(routeData.status === 'ZERO_RESULTS')) return {routeType: 'walking', routeData: routeData};
+
+    return null;
+}
+
+async function getRouteData(startLoc, endLoc, arrivalTimeInt, mode="transit") {
+    let url = `https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}&mode=${mode}&key=${apiKey}&arrival_time=${arrivalTimeInt}`;
     let data = await fetch(url);
     if (!data.ok) {
         throw new Error(`HTTP Error: ${data.status}`)
@@ -174,6 +187,7 @@ async function getRouteData(start, end, arrival_time, mode="transit") {
     // console.log(routeData);
     return routeData;
 }
+
 
 async function getPlaceName(coordinates) {
     let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.lat},${coordinates.lng}&extra_computations=ADDRESS_DESCRIPTORS&key=${apiKey}`;
@@ -221,7 +235,7 @@ export default async function Home() {
     const moveRoutes = [];  // each item is list of transportation methods b/w two events
 
     for (let i = 0; i < eventsData.length - 1; i++) {
-        console.log("events: ", eventsData[i].get('location'), "to ", eventsData[i + 1].get('location'))
+        // console.log("events: ", eventsData[i].get('location'), "to ", eventsData[i + 1].get('location'))
         if (eventsData[i + 1].get('start') - eventsData[i].get('end') >= 1000 * 60 * 60 * 6)
             continue;
         if (!eventsData[i + 1].get('location'))
@@ -229,56 +243,46 @@ export default async function Home() {
         if (!eventsData[i].get('location'))
             continue;
 
-        let routeData = await getRouteData(
+        let routeDataObj = await getShortestRoute(
             eventsData[i].get('location'),
             eventsData[i + 1].get('location'),
             eventsData[i + 1].get('start')
         );
-        console.log("routeData: ", routeData);
-        if (routeData.status === 'ZERO_RESULTS') continue;
+        if (!routeDataObj) continue;
+        // console.log("routeData: ", routeDataObj.routeData);
+        const { routeType, routeData } = routeDataObj;
+
         const route = [];
         const steps = routeData.routes[0].legs[0].steps;
 
         const options = { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-        let curTime = new Date(new Date(routeData.routes[0].legs[0].departure_time.value * 1000).toLocaleString('en-US', options));
+        
+        let curTime = new Date(new Date(eventsData[i + 1].get('start') - routeData.routes[0].legs[0].duration.value * 1000).toLocaleString('en-US', options));
+        if (routeType === 'transit') 
+            curTime = new Date(new Date(routeData.routes[0].legs[0].departure_time.value * 1000).toLocaleString('en-US', options));
 
         for (let j = 0; j < steps.length; j++) {
             let tempMap = null;
             let nextTime = null;
-            if (steps[j].travel_mode === "WALKING") {
-                nextTime = new Date(curTime.getTime() + steps[j].duration.value * 1000);
-                tempMap = new Map([
-                    ['start', curTime],
-                    ['end', nextTime],
-                    ['type', WALK_INDEX],
-                    ['name', 'Walk'],
-                    ['locations', j == 0 ? eventsData[i].get('location') : steps[j - 1].transit_details.arrival_stop.name],
-                    ['locatione', await getPlaceName(steps[j].end_location)],  // change next iteration, setting this just in case
-                    ['coords', steps[j].start_location],
-                    ['coorde', steps[j].end_location],
-                    ['polyline', steps[j].polyline.points],
-                    ['bounds', routeData.routes[0].bounds],
-                    ['description', `About ${steps[j].duration.text}, ${steps[j].distance.text}`],
-                ]);
-            } else if (steps[j].travel_mode === "TRANSIT") {
+            if (steps[j].travel_mode === "TRANSIT") {
                 curTime = new Date(new Date(steps[j].transit_details.departure_time.value * 1000).toLocaleString('en-US', options));
                 nextTime = new Date(new Date(steps[j].transit_details.arrival_time.value * 1000).toLocaleString('en-US', options));
 
                 let tType = steps[j].transit_details.line.vehicle.type;
                 let tIdx =
-                tType === 'BUS' ? BUS_INDEX :
-                tType === 'CABLE_CAR' ? BUS_INDEX :
-                tType === 'COMMUTER_TRAIN' ? TRAIN_INDEX :
-                tType === 'HEAVY_RAIL' ? RAIL_INDEX :
-                tType === 'HIGH_SPEED_TRAIN' ? TRAIN_INDEX :
-                tType === 'INTERCITY_BUS' ? BUS_INDEX :
-                tType === 'LONG_DISTANCE_TRAIN' ? BUS_INDEX :
-                tType === 'METRO_RAIL' ? RAIL_INDEX :
-                tType === 'MONORAIL' ? RAIL_INDEX :
-                tType === 'RAIL' ? RAIL_INDEX :
-                tType === 'SUBWAY' ? SUB_INDEX :
-                tType === 'TRAM' ? TRAM_INDEX :
-                BUS_INDEX;  // default to bus icon
+                    tType === 'BUS' ? BUS_INDEX :
+                    tType === 'CABLE_CAR' ? BUS_INDEX :
+                    tType === 'COMMUTER_TRAIN' ? TRAIN_INDEX :
+                    tType === 'HEAVY_RAIL' ? RAIL_INDEX :
+                    tType === 'HIGH_SPEED_TRAIN' ? TRAIN_INDEX :
+                    tType === 'INTERCITY_BUS' ? BUS_INDEX :
+                    tType === 'LONG_DISTANCE_TRAIN' ? BUS_INDEX :
+                    tType === 'METRO_RAIL' ? RAIL_INDEX :
+                    tType === 'MONORAIL' ? RAIL_INDEX :
+                    tType === 'RAIL' ? RAIL_INDEX :
+                    tType === 'SUBWAY' ? SUB_INDEX :
+                    tType === 'TRAM' ? TRAM_INDEX :
+                    BUS_INDEX;  // default to bus icon
 
                 tempMap = new Map([
                     ['start', curTime],
@@ -293,8 +297,34 @@ export default async function Home() {
                     ['bounds', routeData.routes[0].bounds],
                     ['description', steps[j].html_instructions],
                 ]);
+                // adjust previous walk step end location to station name
                 if (j > 0 && route[j - 1].get('type') == WALK_INDEX)
                     route[j - 1].set('locatione', steps[j].transit_details.departure_stop.name);
+            } else if (steps[j].travel_mode === "WALKING" || steps[j].travel_mode === "DRIVING") {
+                // console.log("current step: ", steps[j]);
+                nextTime = new Date(curTime.getTime() + steps[j].duration.value * 1000);
+
+                let locations = await getPlaceName(steps[j].start_location);
+                if (routeType === 'transit') 
+                    locations = j == 0 ? eventsData[i].get('location') : steps[j - 1].transit_details.arrival_stop.name;
+                
+                let description = `About ${steps[j].duration.text}, ${steps[j].distance.text}`;
+                if (steps[j].travel_mode === "DRIVING")
+                    description = steps[j].html_instructions;  //.replace(/<\/?[^>]+(>|$)/g, "");
+
+                tempMap = new Map([
+                    ['start', curTime],
+                    ['end', nextTime],
+                    ['type', steps[j].travel_mode === "WALKING" ? WALK_INDEX : CAR_INDEX],
+                    ['name', steps[j].travel_mode === "WALKING" ? 'Walk' : 'Drive'],
+                    ['locations', locations],
+                    ['locatione', await getPlaceName(steps[j].end_location)],  // change next iteration if next step is transit
+                    ['coords', steps[j].start_location],
+                    ['coorde', steps[j].end_location],
+                    ['polyline', steps[j].polyline.points],
+                    ['bounds', routeData.routes[0].bounds],
+                    ['description', description],
+                ]);
             } else {
                 throw new Error("Travel Mode is Invalid");
             }
