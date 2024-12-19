@@ -165,16 +165,26 @@ async function refreshAccessToken(auth, accessToken) {
 async function getShortestRoute(startLoc, endLoc, arrival_time) {
     const arrivalTimeInt = Math.trunc(arrival_time / 1000);
 
-    let routeData = await getRouteData(startLoc, endLoc, arrivalTimeInt, "transit");
-    if (!(routeData.status === 'ZERO_RESULTS')) return {routeType: 'transit', routeData: routeData};
+    let routeDataTransit = await getRouteData(startLoc, endLoc, arrivalTimeInt, "transit");
+    if (!(routeDataTransit.status === 'ZERO_RESULTS')) return {routeType: 'transit', routeData: routeDataTransit};
 
-    routeData = await getRouteData(startLoc, endLoc, arrivalTimeInt, "driving");
-    if (!(routeData.status === 'ZERO_RESULTS')) return {routeType: 'driving', routeData: routeData};
+    let routeDataDriving = await getRouteData(startLoc, endLoc, arrivalTimeInt, "driving");
+    let routeDataWalking = await getRouteData(startLoc, endLoc, arrivalTimeInt, "walking");
 
-    routeData = await getRouteData(startLoc, endLoc, arrivalTimeInt, "walking");
-    if (!(routeData.status === 'ZERO_RESULTS')) return {routeType: 'walking', routeData: routeData};
+    if (routeDataDriving.status === 'ZERO_RESULTS') {
+        if (!(routeDataWalking.status === 'ZERO_RESULTS')) return {routeType: 'walking', routeData: routeDataWalking};
+        return null;
+    }
+    if (routeDataWalking.status === 'ZERO_RESULTS') return {routeType: 'driving', routeData: routeDataDriving};
+    // if both walking & driving are available
 
-    return null;
+    // without this i have to spend 14 hours walking to an airport
+    if (routeDataWalking.routes[0].legs[0].distance.value > 1000)
+        return {routeType: 'driving', routeData: routeDataDriving};
+    
+    if (routeDataWalking.routes[0].legs[0].distance.value < routeDataDriving.routes[0].legs[0].distance.value)
+        return {routeType: 'walking', routeData: routeDataWalking};
+    return {routeType: 'driving', routeData: routeDataDriving};
 }
 
 async function getRouteData(startLoc, endLoc, arrivalTimeInt, mode="transit") {
@@ -198,7 +208,11 @@ async function getPlaceName(coordinates) {
     }
     let placeData = await data.json();
     // console.log(placeData);
-    return placeData.address_descriptor.landmarks[0].display_name.text;
+    if (placeData.address_descriptor.landmarks.length != 0)
+        return placeData.address_descriptor.landmarks[0].display_name.text;
+    else if (placeData.address_descriptor.areas.length != 0)
+        return placeData.address_descriptor.areas[0].display_name.text;
+    return "Couldn't Find Name";
 }
 
 async function getCoordinates(roughAddress) {
@@ -249,7 +263,7 @@ export default async function Home() {
             eventsData[i + 1].get('start')
         );
         if (!routeDataObj) continue;
-        // console.log("routeData: ", routeDataObj.routeData);
+        console.log("routeData: ", routeDataObj.routeData);
         const { routeType, routeData } = routeDataObj;
 
         const route = [];
