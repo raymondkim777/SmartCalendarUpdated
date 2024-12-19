@@ -166,16 +166,16 @@ async function getShortestRoute(startLoc, endLoc, arrival_time) {
     const arrivalTimeInt = Math.trunc(arrival_time / 1000);
 
     let routeDataTransit = await getRouteData(startLoc, endLoc, arrivalTimeInt, "transit");
-    if (!(routeDataTransit.status === 'ZERO_RESULTS')) return {routeType: 'transit', routeData: routeDataTransit};
+    if (!(routeDataTransit.status != 'OK')) return {routeType: 'transit', routeData: routeDataTransit};
 
     let routeDataDriving = await getRouteData(startLoc, endLoc, arrivalTimeInt, "driving");
     let routeDataWalking = await getRouteData(startLoc, endLoc, arrivalTimeInt, "walking");
 
-    if (routeDataDriving.status === 'ZERO_RESULTS') {
-        if (!(routeDataWalking.status === 'ZERO_RESULTS')) return {routeType: 'walking', routeData: routeDataWalking};
+    if (routeDataDriving.status != 'OK') {
+        if (!(routeDataWalking.status != 'OK')) return {routeType: 'walking', routeData: routeDataWalking};
         return null;
     }
-    if (routeDataWalking.status === 'ZERO_RESULTS') return {routeType: 'driving', routeData: routeDataDriving};
+    if (routeDataWalking.status != 'OK') return {routeType: 'driving', routeData: routeDataDriving};
     // if both walking & driving are available
 
     // without this i have to spend 14 hours walking to an airport
@@ -225,6 +225,8 @@ async function getCoordinates(roughAddress) {
         throw new Error(`HTTP Error: ${data.status}`)
     }
     let coordData = await data.json();
+    if (coordData.status === 'ZERO_RESULTS')
+        return null;
     return coordData.results[0].geometry.location;
 }
 

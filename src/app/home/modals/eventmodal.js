@@ -24,10 +24,10 @@ const EventModal = ({ closeEvent, eventDetails }) => (
                 </div>
             </div>
             {
-                eventDetails.get('description') != '' && 
+                eventDetails.get('description') && eventDetails.get('description') != '' && 
                 <div className='flex flex-row w-full h-fit items-center justify-start space-x-4 px-2'>
                     <span className='text-base leading-6 text-gray-600 font-normal'>Description: </span>
-                    <span className='text-base leading-6 text-gray-600 font-normal'>{eventDetails.get('description')} </span>
+                    <span className='text-base leading-6 line-clamp-3 text-gray-600 font-normal'>{eventDetails.get('description')} </span>
                 </div>
             }
             {/* Location */}
@@ -36,9 +36,12 @@ const EventModal = ({ closeEvent, eventDetails }) => (
                     <span className='text-base leading-6 text-gray-600 font-normal'>Location: </span>
                     <span className='text-base text-wrap leading-6 text-gray-600 font-normal'>{eventDetails.get('location')} </span>
                 </div>
-                <div className='w-full h-64 overflow-hidden bg-gray-200 rounded-lg'>
-                    <GoogleMap coordinates={eventDetails.get('coordinate')} />
-                </div>
+                {
+                    eventDetails.get('coordinate') && 
+                    <div className='w-full h-64 overflow-hidden bg-gray-200 rounded-lg'>
+                        <GoogleMap coordinates={eventDetails.get('coordinate')} />
+                    </div>
+                }
             </div>
         </div>
     </div>
