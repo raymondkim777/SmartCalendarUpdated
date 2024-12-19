@@ -27,7 +27,8 @@ export async function GET() {
             status: 200,
             headers: { 'Content-Type': 'text/html' },
         });
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Error adding user:', error.message);
 
         // HTML error response

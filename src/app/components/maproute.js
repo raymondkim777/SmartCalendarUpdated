@@ -23,7 +23,7 @@ const GoogleMapRoute = ({ directions, bounds, start, end }) => {
 
             // map options
             const mapOptions = {
-                mapId: 'DETAIL_MAP_VIEW',
+                mapId: 'DETAIL_ROUTE_VIEW',
                 disableDefaultUI: false,
             };
 

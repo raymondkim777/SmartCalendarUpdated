@@ -15,7 +15,8 @@ export async function GET(req) {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Error fetching user information:', error);
         return new Response(
             JSON.stringify({ error: 'Failed to fetch user information.' }),

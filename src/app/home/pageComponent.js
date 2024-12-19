@@ -99,7 +99,6 @@ const PageComponent = ({ eventsData, routeData }) => {
     }
     
     // Calendar Events
-    // event: { moveType, startFull, date, start, end, title, location }
     eventsData.sort(function(a, b) {
         if (a.get('start') < b.get('start')) return -1;
         if (a.get('start') > b.get('start')) return 1;
@@ -189,7 +188,7 @@ const PageComponent = ({ eventsData, routeData }) => {
         }
     }
 
-    // React Calendar Setup
+    // React Calendar (Month) Setup
     const circleColors = ['bg-yellow-600', 'bg-green-600', 'bg-purple-600', 'bg-blue-600'];
 
     function tileContent({ date, view }) {

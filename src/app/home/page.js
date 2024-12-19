@@ -19,6 +19,7 @@ export default async function Home() {
     const moveRoutes = [];  // each item is list of transportation methods b/w two events
 
     for (let idx = 0; idx < eventsData.length - 1; idx++) {
+        // skip if locations invalid or if travel b/w two events is impossible
         if (eventsData[idx + 1].get('start') - eventsData[idx].get('end') >= 1000 * 60 * 60 * EVENT_BW_TIME)
             continue;
         if (!eventsData[idx + 1].get('location'))
@@ -31,6 +32,8 @@ export default async function Home() {
             eventsData[idx + 1].get('location'),
             eventsData[idx + 1].get('start')
         );
+
+        // if API can't compute route
         if (!routeDataObj) continue;
 
         // check if computed route fits within time
@@ -39,15 +42,14 @@ export default async function Home() {
         if (startTime < eventsData[idx].get('end'))
             continue;
 
+        // format computed route
         const route = await createMoveRoutes(eventsData, idx, routeDataObj);
         moveRoutes.push(route);
     }
 
     return (
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
-            <Header
-            user={user}
-            />
+            <Header user={user} />
             <PageComponent eventsData={eventsData} routeData={moveRoutes} />
         </div>
     )
