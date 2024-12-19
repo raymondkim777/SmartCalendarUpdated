@@ -31,18 +31,21 @@ const EventModal = ({ closeEvent, eventDetails }) => (
                 </div>
             }
             {/* Location */}
-            <div className='flex flex-col w-full h-fit items-center justify-start space-y-4'>
-                <div className='flex flex-row w-full h-fit items-center justify-start space-x-4 px-2'>
-                    <span className='text-base leading-6 text-gray-600 font-normal'>Location: </span>
-                    <span className='text-base text-wrap leading-6 text-gray-600 font-normal'>{eventDetails.get('location')} </span>
-                </div>
-                {
-                    eventDetails.get('coordinate') && 
-                    <div className='w-full h-64 overflow-hidden bg-gray-200 rounded-lg'>
-                        <GoogleMap coordinates={eventDetails.get('coordinate')} />
+            {
+                eventDetails.get('location') && eventDetails.get('location') != '' && 
+                <div className='flex flex-col w-full h-fit items-center justify-start space-y-4'>
+                    <div className='flex flex-row w-full h-fit items-center justify-start space-x-4 px-2'>
+                        <span className='text-base leading-6 text-gray-600 font-normal'>Location: </span>
+                        <span className='text-base text-wrap leading-6 text-gray-600 font-normal'>{eventDetails.get('location')} </span>
                     </div>
-                }
-            </div>
+                    {
+                        eventDetails.get('coordinate') && 
+                        <div className='w-full h-64 overflow-hidden bg-gray-200 rounded-lg'>
+                            <GoogleMap coordinates={eventDetails.get('coordinate')} />
+                        </div>
+                    }
+                </div>
+            }
         </div>
     </div>
 )
