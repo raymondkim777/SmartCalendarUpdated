@@ -9,13 +9,15 @@ const TransportationCard = ({ showModal, move }) => (
             </div>
             <LineDiagram type={'line'} />
         </div>
-        <div onClick={()=>showModal(move)} className="flex flex-col grow h-16 max-h-20 items-center justify-center px-4 rounded-lg hover:bg-gray-200 hover:cursor-pointer active:bg-gray-300 transition-all duration-150">
-            <span className="w-full text-base line-clamp-2 text-center leading-6 text-gray-600 font-normal">
-                {move.get('name')}
-            </span>
-            <span className="w-full text-sm line-clamp-2 text-center leading-4 text-gray-400 font-normal">
-                {move.get('description')}
-            </span>
+        <div className='flex grow h-16 max-h-20 items-center justify-center px-10'>
+            <div onClick={()=>showModal(move)} className="flex flex-col grow h-16 max-h-20 items-center justify-center rounded-lg hover:bg-gray-200 hover:cursor-pointer active:bg-gray-300 transition-all duration-150">
+                <span className="w-full text-base line-clamp-2 text-center leading-6 text-gray-600 font-normal">
+                    {move.get('name')}
+                </span>
+                <span className="w-full text-sm line-clamp-2 text-center leading-4 text-gray-400 font-normal"
+                dangerouslySetInnerHTML={{__html: move.get('description')}}>
+                </span>
+            </div>
         </div>
     </div>
 )

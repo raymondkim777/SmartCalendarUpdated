@@ -1,29 +1,51 @@
 'use client'
 
-import { useContext, useState } from 'react';
-import { SettingsContext } from '../contexts/SettingsContext';
-import { Toggle } from 'rsuite';
-import 'rsuite/Toggle/styles/index.css';
+import { useContext, useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from "../header";
+import { Toggle } from 'rsuite';
+import 'rsuite/Toggle/styles/index.css';
+import { LoginContext } from '../contexts/LoginContext';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const Settings = () => {
+    const { currentUser } = useContext(LoginContext);
     const { notifEnabled, setNotifEnabled } = useContext(SettingsContext);
-    const [ localNotifEnabled, setLocalNotifEnabled ] = useState(notifEnabled);
-    const [ showSaveMsg, setShowSaveMsg ] = useState(false);
-    
-    const toggleNotif = () => {
-        setLocalNotifEnabled(()=>!localNotifEnabled);
-    } 
+    const [localNotifEnabled, setLocalNotifEnabled] = useState(notifEnabled);
+    const [showSaveMsg, setShowSaveMsg] = useState(false);
 
-    const saveSettings = () => {
-        setNotifEnabled(localNotifEnabled);
-        setShowSaveMsg(true);
-    }
+    // Sync localNotifEnabled with notifEnabled from context
+    useEffect(() => {
+        setLocalNotifEnabled(notifEnabled);
+    }, [notifEnabled]);
+
+    const toggleNotif = () => {
+        setLocalNotifEnabled((prev) => !prev);
+    };
+
+    const saveSettings = async () => {
+        setNotifEnabled(localNotifEnabled); // Update context state
+        try {
+            const response = await fetch('/api/updatesettings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ notifEnabled: localNotifEnabled }),
+            });
+    
+            if (response.ok) {
+                setShowSaveMsg(true); // Display success message
+            } 
+        } catch (error) {
+            console.error('Error saving settings:', error);
+        }
+    };
+    
 
     return(
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
-        <Header />
+        <Header user={currentUser} />
         {/* Calendar */}
         <main className="flex flex-col w-full h-full items-center pt-5 overflow-y-auto">
         <section className="bg-stone-50 w-full max-w-7xl">

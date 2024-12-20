@@ -1,7 +1,8 @@
+import GoogleMap from "@/app/components/map";
 import { formatDate } from "@/app/timeformat";
 
 const EventModal = ({ closeEvent, eventDetails }) => (
-    <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute w-96 lg:w-[32rem] xl:w-[36rem] object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50`}>
+    <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute w-96 lg:w-[32rem] xl:w-[36rem] object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50 overflow-hidden`}>
         <div className='flex flex-row w-full h-10 items-center justify-between pl-4 pr-2 space-x-3'>
             <h1 className="text-lg text-nowrap truncate leading-6 text-gray-600 font-semibold">{eventDetails.get('title')}</h1>
             <div onClick={closeEvent} className='flex items-center justify-center w-9 h-9 rounded-full hover:cursor-pointer hover:bg-gray-200 active:bg-gray-300 transition-all duration-300'>
@@ -23,22 +24,28 @@ const EventModal = ({ closeEvent, eventDetails }) => (
                 </div>
             </div>
             {
-                eventDetails.get('description') != '' && 
+                eventDetails.get('description') && eventDetails.get('description') != '' && 
                 <div className='flex flex-row w-full h-fit items-center justify-start space-x-4 px-2'>
                     <span className='text-base leading-6 text-gray-600 font-normal'>Description: </span>
-                    <span className='text-base leading-6 text-gray-600 font-normal'>{eventDetails.get('description')} </span>
+                    <span className='text-base leading-6 line-clamp-3 text-gray-600 font-normal'>{eventDetails.get('description')} </span>
                 </div>
             }
             {/* Location */}
-            <div className='flex flex-col w-full h-fit items-center justify-start space-y-4'>
-                <div className='flex flex-row w-full h-fit items-center justify-start space-x-4 px-2'>
-                    <span className='text-base leading-6 text-gray-600 font-normal'>Location: </span>
-                    <span className='text-base text-wrap leading-6 text-gray-600 font-normal'>{eventDetails.get('location')} </span>
+            {
+                eventDetails.get('location') && eventDetails.get('location') != '' && 
+                <div className='flex flex-col w-full h-fit items-center justify-start space-y-4'>
+                    <div className='flex flex-row w-full h-fit items-center justify-start space-x-4 px-2'>
+                        <span className='text-base leading-6 text-gray-600 font-normal'>Location: </span>
+                        <span className='text-base text-wrap leading-6 text-gray-600 font-normal'>{eventDetails.get('location')} </span>
+                    </div>
+                    {
+                        eventDetails.get('coordinate') && 
+                        <div className='w-full h-64 overflow-hidden bg-gray-200 rounded-lg'>
+                            <GoogleMap coordinates={eventDetails.get('coordinate')} />
+                        </div>
+                    }
                 </div>
-                <div className='w-full h-64 bg-gray-200 rounded-lg'>
-                        
-                </div>
-            </div>
+            }
         </div>
     </div>
 )

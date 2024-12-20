@@ -20,7 +20,7 @@ const MoveModal = ({ closeMove, moveDetails }) => {
     } 
     
     return(
-        <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute ${widthCSS[Number(showDetails)]} object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50 transition-all duration-300`}>
+        <div style={{top: '50%', left: '50%', transform: 'translate(-50%, -43%)'}} className={`flex flex-col items-center z-10 absolute ${widthCSS[Number(showDetails)]} object-center top-60 h-fit mr-2 pt-1 rounded-lg border border-neutral-400 bg-stone-50 transition-all duration-300 overflow-hidden`}>
             <div className='flex flex-row w-full h-10 items-center justify-between pl-4 pr-2 space-x-3'>
                 <h1 className="text-lg text-nowrap truncate leading-6 text-gray-600 font-semibold">{moveDetails.get('title')}: {moveDetails.get('elapsedTime')} min</h1>
                 <div onClick={closeMove} className='flex items-center justify-center w-9 h-9 rounded-full hover:cursor-pointer hover:bg-gray-200 active:bg-gray-300 transition-all duration-300'>
@@ -63,7 +63,8 @@ const MoveModal = ({ closeMove, moveDetails }) => {
                     typeof(selectedEvent) == "string" ? 
                     <div className="flex flex-col w-full items-center justify-center p-4 space-y-4">
                         <h1 className="text-lg text-center line-clamp-1 leading-6 text-gray-600 font-semibold">{selectedEvent}</h1>
-                        <div className='w-full h-60 lg:h-80 xl:h-96 bg-gray-200 rounded-lg'></div>
+                        <div className='w-full h-60 lg:h-80 xl:h-96 bg-gray-200 rounded-lg'>
+                        </div>
                         <div onClick={()=>setShowDetails(false)} className="flex w-32 h-10 items-center justify-center rounded-lg text-gray-600 font-normal bg-gray-200 hover:bg-gray-300 hover:cursor-pointer active:bg-gray-400 transition-all duration-150">Close</div>
                     </div>: 
                     <DetailView selectedEvent={selectedEvent} setShowDetails={setShowDetails} />
