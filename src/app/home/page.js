@@ -47,6 +47,40 @@ export default async function Home() {
         moveRoutes.push(route);
     }
 
+     // Convert moveRoutes containing Map objects to plain objects
+     const convertedRoutes = moveRoutes.map((routeList) =>
+     routeList.map((route) =>
+     route instanceof Map ? Object.fromEntries(route) : route
+     )
+     );
+    // Pass the converted routes to the API
+    if (convertedRoutes.length > 0 && user.notification === true) {
+        try {
+        const baseUrl = `http://localhost:3000`;
+        const apiUrl = `${baseUrl}/api/sendemail`;
+    
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ routes: convertedRoutes, user: user.email }), // Include user email
+        });
+    
+        if (response.ok) {
+            const result = await response.json();
+            console.log('API response:', result);
+        } else {
+            console.error('Failed to send routes to the API:', await response.text());
+        }
+        } catch (error) {
+        console.error('Error calling the API:', error);
+        }
+    } else {
+        console.log('Email notification not sent: user.notification is false or no routes provided.');
+    }
+            
+
     return (
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
             <Header user={user} />

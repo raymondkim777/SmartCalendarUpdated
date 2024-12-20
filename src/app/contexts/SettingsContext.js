@@ -1,28 +1,37 @@
-"use client"
+"use client";
 
-import { createContext, useState, useContext, useEffect } from 'react';
-// import { sql } from '@vercel/postgres';
+import { createContext, useState, useEffect, useContext } from 'react';
+import { sql } from '@vercel/postgres';
 import { LoginContext } from './LoginContext';
 
 export const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
     const { currentUser } = useContext(LoginContext);
-    const [notifEnabled, setNotifEnabled] = useState(false); 
+    const [notifEnabled, setNotifEnabled] = useState(false);
 
-    // useEffect(() => {
-    //     async function updateSettingsDB() {
-    //         if (!currentUser) return;
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const response = await fetch('/api/getsettings', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setNotifEnabled(data.notifEnabled); // Update state with saved value
+                }
+            } catch (error) {
+                console.error('Error fetching settings:', error);
+            }
+        };
 
-    //         console.log("updated settings in db")
-    //         await sql`
-    //         UPDATE user_info
-    //         SET notifications = ${notifEnabled}
-    //         WHERE email = ${currentUser.email}
-    //         `;
-    //     }
-    //     // updateSettingsDB();
-    // }, [notifEnabled])
+        if (currentUser) {
+            fetchSettings(); // Fetch saved settings when user logs in
+        }
+    }, [currentUser]);
 
     return (
         <SettingsContext.Provider value={{ notifEnabled, setNotifEnabled }}>

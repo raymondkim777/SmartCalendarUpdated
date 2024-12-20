@@ -11,17 +11,37 @@ import { SettingsContext } from '../contexts/SettingsContext';
 const Settings = () => {
     const { currentUser } = useContext(LoginContext);
     const { notifEnabled, setNotifEnabled } = useContext(SettingsContext);
-    const [ localNotifEnabled, setLocalNotifEnabled ] = useState(notifEnabled);
-    const [ showSaveMsg, setShowSaveMsg ] = useState(false);
-    
-    const toggleNotif = () => {
-        setLocalNotifEnabled(()=>!localNotifEnabled);
-    } 
+    const [localNotifEnabled, setLocalNotifEnabled] = useState(notifEnabled);
+    const [showSaveMsg, setShowSaveMsg] = useState(false);
 
-    const saveSettings = () => {
-        setNotifEnabled(localNotifEnabled);
-        setShowSaveMsg(true);
-    }
+    // Sync localNotifEnabled with notifEnabled from context
+    useEffect(() => {
+        setLocalNotifEnabled(notifEnabled);
+    }, [notifEnabled]);
+
+    const toggleNotif = () => {
+        setLocalNotifEnabled((prev) => !prev);
+    };
+
+    const saveSettings = async () => {
+        setNotifEnabled(localNotifEnabled); // Update context state
+        try {
+            const response = await fetch('/api/updatesettings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ notifEnabled: localNotifEnabled }),
+            });
+    
+            if (response.ok) {
+                setShowSaveMsg(true); // Display success message
+            } 
+        } catch (error) {
+            console.error('Error saving settings:', error);
+        }
+    };
+    
 
     return(
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
