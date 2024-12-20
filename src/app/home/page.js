@@ -56,7 +56,7 @@ export default async function Home() {
     // Pass the converted routes to the API
     if (convertedRoutes.length > 0 && user.notification === true) {
         try {
-        const baseUrl = `http://localhost:3000`;
+        const baseUrl = `https://smart-calendar-lyart.vercel.app`;
         const apiUrl = `${baseUrl}/api/sendemail`;
     
         const response = await fetch(apiUrl, {
