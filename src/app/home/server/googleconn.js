@@ -55,14 +55,14 @@ async function fetchEvents() {
 
 async function connectToCalendar() {
     try {
-        const auth = new google.auth.OAuth2(
+        const auth = await new google.auth.OAuth2(
             process.env.CLIENT_ID,
             process.env.CLIENT_SECRET,
             process.env.REDIRECT_URI
         );
         if (!(await fetchTokens(auth))) return null;
 
-        const calendar = google.calendar({ version: 'v3', auth });
+        const calendar = await google.calendar({ version: 'v3', auth });
         
         const beforeTime = new Date();
         beforeTime.setMonth(beforeTime.getMonth() - MONTH_TIME);

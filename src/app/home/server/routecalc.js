@@ -43,9 +43,6 @@ async function getPlaceName(coordinates) {
     let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.lat},${coordinates.lng}&extra_computations=ADDRESS_DESCRIPTORS&key=${API_KEY}`;
     
     let data = await fetch(url);
-    if (!data.ok) {
-        throw new Error(`HTTP Error: ${data.status}`)
-    }
     let placeData = await data.json();
     
     if (placeData.address_descriptor.landmarks.length != 0)
@@ -54,15 +51,12 @@ async function getPlaceName(coordinates) {
         return placeData.address_descriptor.areas[0].display_name.text;
 
     // search specific address
-    url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.lat},${coordinates.lng}&key=${API_KEY}`;
-    data = await fetch(url);
-    if (!data.ok) {
-        throw new Error(`HTTP Error: ${data.status}`)
-    }
-    placeData = await data.json();
+    let new_url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.lat},${coordinates.lng}&key=${API_KEY}`;
+    let new_data = await fetch(new_url);
+    let addressData = await new_data.json();
 
-    if (placeData.status == "OK" && placeData.results.length != 0) {
-        let split_str = placeData.results[0].formatted_address.split(", ");
+    if (addressData.status == "OK" && addressData.results.length != 0) {
+        let split_str = addressData.results[0].formatted_address.split(", ");
         let split_substr = split_str[0].split(" ");
 
         // true if not number
@@ -100,9 +94,12 @@ async function createMoveRoutes(eventsData, idx, routeDataObj) {
     if (routeType === 'transit') 
         curTime = new Date(new Date(routeData.routes[0].legs[0].departure_time.value * 1000).toLocaleString('en-US', options));
 
+    console.log('before step iteration')
+
     for (let j = 0; j < steps.length; j++) {
         let tempMap = null;
         let nextTime = null;
+        console.log('during step iteration :', j)
 
         if (steps[j].travel_mode === "TRANSIT") {
             curTime = new Date(new Date(steps[j].transit_details.departure_time.value * 1000).toLocaleString('en-US', options));
@@ -171,6 +168,7 @@ async function createMoveRoutes(eventsData, idx, routeDataObj) {
             throw new Error("Travel Mode is Invalid");
         }
         curTime = nextTime;
+        console.log('finished creating map for step')
         route.push(tempMap);
     }
     return route;

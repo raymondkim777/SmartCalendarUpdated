@@ -2,20 +2,24 @@ import { fetchUser, fetchEvents } from './server/googleconn';
 import { getShortestRoute, getCoordinates, createMoveRoutes } from './server/routecalc';
 import Header from "../header";
 import PageComponent from "./pageComponent";
+import { useMemo } from 'react';
 
 const EVENT_BW_TIME = 6;  // hours
 
-export default async function Home() {
-    const user = await fetchUser();
-
+async function getEvents(user) {
     let eventsData = []
     if (user) eventsData = await fetchEvents();
+    console.log("after fetchevents")
 
     // add coordinates to eventsData elements
     for (let i = 0; i < eventsData.length; i++) {
         eventsData[i].set('coordinate', await getCoordinates(eventsData[i].get('location')));
     }
+    console.log("after getcoordinates")
+    return eventsData;
+}
 
+async function computeRoutes(eventsData) {
     const moveRoutes = [];  // each item is list of transportation methods b/w two events
 
     for (let idx = 0; idx < eventsData.length - 1; idx++) {
@@ -32,6 +36,7 @@ export default async function Home() {
             eventsData[idx + 1].get('location'),
             eventsData[idx + 1].get('start')
         );
+        console.log('after getshortestroute')
 
         // if API can't compute route
         if (!routeDataObj) continue;
@@ -45,7 +50,21 @@ export default async function Home() {
         // format computed route
         const route = await createMoveRoutes(eventsData, idx, routeDataObj);
         moveRoutes.push(route);
+
+        console.log('after createmoveroutes')
     }
+
+    console.log("about to render")
+    return moveRoutes;
+}
+
+export default async function Home() {
+    console.log("before fetchuser")
+    const user = await useMemo(async () => await fetchUser());
+    console.log("after fetchuser")
+
+    const eventsData = await useMemo(async () => await getEvents(user), [user]);
+    const moveRoutes = await useMemo(async () => await computeRoutes(eventsData), [eventsData]);
 
     return (
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>
