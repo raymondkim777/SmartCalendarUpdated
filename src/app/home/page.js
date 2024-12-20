@@ -6,20 +6,15 @@ import PageComponent from "./pageComponent";
 const EVENT_BW_TIME = 6;  // hours
 
 export default async function Home() {
-    console.log("before fetchuser")
     const user = await fetchUser();
-    console.log("after fetchuser")
 
     let eventsData = []
     if (user) eventsData = await fetchEvents();
-    console.log("after fetchevents")
 
     // add coordinates to eventsData elements
     for (let i = 0; i < eventsData.length; i++) {
         eventsData[i].set('coordinate', await getCoordinates(eventsData[i].get('location')));
     }
-
-    console.log("after getcoordinates")
 
     const moveRoutes = [];  // each item is list of transportation methods b/w two events
 
@@ -37,7 +32,6 @@ export default async function Home() {
             eventsData[idx + 1].get('location'),
             eventsData[idx + 1].get('start')
         );
-        console.log('after getshortestroute')
 
         // if API can't compute route
         if (!routeDataObj) continue;
@@ -51,11 +45,7 @@ export default async function Home() {
         // format computed route
         const route = await createMoveRoutes(eventsData, idx, routeDataObj);
         moveRoutes.push(route);
-
-        console.log('after createmoveroutes')
     }
-
-    console.log("about to render")
 
     return (
         <div className='flex flex-col w-full h-screen overflow-hidden bg-stone-50 font-[family-name:var(--font-geist-sans)] font-semibold'>

@@ -94,12 +94,9 @@ async function createMoveRoutes(eventsData, idx, routeDataObj) {
     if (routeType === 'transit') 
         curTime = new Date(new Date(routeData.routes[0].legs[0].departure_time.value * 1000).toLocaleString('en-US', options));
 
-    console.log('before step iteration')
-
     for (let j = 0; j < steps.length; j++) {
         let tempMap = null;
         let nextTime = null;
-        console.log('during step iteration :', j)
 
         if (steps[j].travel_mode === "TRANSIT") {
             curTime = new Date(new Date(steps[j].transit_details.departure_time.value * 1000).toLocaleString('en-US', options));
@@ -168,7 +165,6 @@ async function createMoveRoutes(eventsData, idx, routeDataObj) {
             throw new Error("Travel Mode is Invalid");
         }
         curTime = nextTime;
-        console.log('finished creating map for step')
         route.push(tempMap);
     }
     return route;
