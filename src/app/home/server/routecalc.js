@@ -89,13 +89,12 @@ async function createMoveRoutes(eventsData, idx, routeDataObj) {
     const route = [];
     const steps = routeData.routes[0].legs[0].steps;
     const options = { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-    console.log("before computing route");
+
     let curTime = new Date(new Date(eventsData[idx + 1].get('start') - routeData.routes[0].legs[0].duration.value * 1000).toLocaleString('en-US', options));
     if (routeType === 'transit' && routeData.routes[0].legs[0].departure_time?.value) 
         curTime = new Date(new Date(routeData.routes[0].legs[0].departure_time.value * 1000).toLocaleString('en-US', options));
 
 
-    console.log("before computing route 2");
     for (let j = 0; j < steps.length; j++) {
         let tempMap = null;
         let nextTime = null;
@@ -103,7 +102,6 @@ async function createMoveRoutes(eventsData, idx, routeDataObj) {
         if (steps[j].travel_mode === "TRANSIT") {
             curTime = new Date(new Date(steps[j].transit_details.departure_time.value * 1000).toLocaleString('en-US', options));
             nextTime = new Date(new Date(steps[j].transit_details.arrival_time.value * 1000).toLocaleString('en-US', options));
-            console.log("step is transit");
             let tType = steps[j].transit_details.line.vehicle.type;
             let tIdx =
                 tType === 'BUS' ? BUS_INDEX :
@@ -139,8 +137,6 @@ async function createMoveRoutes(eventsData, idx, routeDataObj) {
                 route[j - 1].set('locatione', steps[j].transit_details.departure_stop.name);
         } 
         else if (steps[j].travel_mode === "WALKING" || steps[j].travel_mode === "DRIVING") {
-            // console.log("current step: ", steps[j]);
-            console.log("step is not transit");
             nextTime = new Date(curTime.getTime() + steps[j].duration.value * 1000);
 
             let locations = await getPlaceName(steps[j].start_location);
