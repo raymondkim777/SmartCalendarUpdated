@@ -86,12 +86,13 @@ async function getCoordinates(roughAddress) {
 
 async function createMoveRoutes(eventsData, idx, routeDataObj) {
     const { routeType, routeData } = routeDataObj;
+    console.log("routeData: ", routeData);
     const route = [];
     const steps = routeData.routes[0].legs[0].steps;
     const options = { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
     
     let curTime = new Date(new Date(eventsData[idx + 1].get('start') - routeData.routes[0].legs[0].duration.value * 1000).toLocaleString('en-US', options));
-    if (routeType === 'transit') 
+    if (routeType === 'transit' && routeData.routes[0].legs[0].departure_time?.value) 
         curTime = new Date(new Date(routeData.routes[0].legs[0].departure_time.value * 1000).toLocaleString('en-US', options));
 
     for (let j = 0; j < steps.length; j++) {
