@@ -34,8 +34,9 @@ export async function POST(request) {
       
           if (firstEntry.start && !isNaN(new Date(firstEntry.start).getTime())) {
             const startTime = new Date(firstEntry.start);
-            const emailSendTime = Date.now();
-            const delay = 2
+            const emailSendTime = new Date(startTime.getTime() - 5 * 60 * 1000); // 8 minutes before start time
+            const delay = emailSendTime.getTime() - Date.now();
+      
             console.error('Calculated delay (ms):', delay);
       
             if (delay > 0) {
