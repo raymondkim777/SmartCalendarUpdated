@@ -86,7 +86,6 @@ async function getCoordinates(roughAddress) {
 
 async function createMoveRoutes(eventsData, idx, routeDataObj) {
     const { routeType, routeData } = routeDataObj;
-    console.log("routeData: ", routeData);
     const route = [];
     const steps = routeData.routes[0].legs[0].steps;
     const options = { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
