@@ -53,7 +53,25 @@ async function getPlaceName(coordinates) {
     else if (placeData.address_descriptor.areas.length != 0)
         return placeData.address_descriptor.areas[0].display_name.text;
 
-    return "Couldn't Find Name";
+    // search specific address
+    url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.lat},${coordinates.lng}&key=${API_KEY}`;
+    data = await fetch(url);
+    if (!data.ok) {
+        throw new Error(`HTTP Error: ${data.status}`)
+    }
+    placeData = await data.json();
+
+    if (placeData.status == "OK" && placeData.results.length != 0) {
+        let split_str = placeData.results[0].formatted_address.split(", ");
+        let split_substr = split_str[0].split(" ");
+
+        // true if not number
+        if (isNaN(split_substr[0]))
+            return split_str[0];
+
+        return split_str[0].substring(split_substr[0].length + 1);
+    }
+    return "N/A";
 }
 
 async function getCoordinates(roughAddress) {

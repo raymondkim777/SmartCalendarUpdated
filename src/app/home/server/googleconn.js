@@ -2,6 +2,8 @@ import { google } from 'googleapis';
 import { cookies } from "next/headers";
 import { sql } from '@vercel/postgres';
 
+const MONTH_TIME = 3;
+
 async function fetchUser() {
     const cookieStore = await cookies();
     const sessionToken = cookieStore.get('session_token')?.value;
@@ -62,15 +64,15 @@ async function connectToCalendar() {
 
         const calendar = google.calendar({ version: 'v3', auth });
         
-        const oneMonthBefore = new Date();
-        oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
-        const oneMonthLater = new Date();
-        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+        const beforeTime = new Date();
+        beforeTime.setMonth(beforeTime.getMonth() - MONTH_TIME);
+        const afterTime = new Date();
+        afterTime.setMonth(afterTime.getMonth() + MONTH_TIME);
     
         const response = await calendar.events.list({
             calendarId: 'primary', // Fetch from the primary calendar
-            timeMin: oneMonthBefore.toISOString(), 
-            timeMax: oneMonthLater.toISOString(), 
+            timeMin: beforeTime.toISOString(), 
+            timeMax: afterTime.toISOString(), 
             maxResults: 100, // Adjust the number of results if needed
             singleEvents: true,
             orderBy: 'startTime',
