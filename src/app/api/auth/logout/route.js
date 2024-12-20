@@ -11,7 +11,7 @@ export async function POST(request) {
         const cookieHeader = await deleteCookie();
 
         // Create a response with the Set-Cookie header
-        const response = NextResponse.json({ message: 'Logout successful' }, { status: 200 });
+        const response = NextResponse.redirect(process.env.NEXTAUTH_URL);
         response.headers.set('Set-Cookie', cookieHeader);
 
         return response;
