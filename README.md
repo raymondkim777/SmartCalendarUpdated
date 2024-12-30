@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Smart Calendar That Computes Shortest Routes Between Events Using Public Transport
 
-## Getting Started
+This website functions as a calendar widget that connects to a user's Google account and fetches events from their Google Calendar. It displays the fetched events in an easily navigable calendar UI, and the user can click each event for a popup view showing event duration and a location display. The calendar also computes the shortest route between two adjacent events. If a timely route exists, it is displayed between the two calendar events as a special event, which the user can click to show a popup detailing specific steps of the route. Each step can be clicked to expand a detailed view displaying the route on an interactive maps view. 
 
-First, run the development server:
+## Periods of Development  
+- 12/9/2024 ~ 12/19/2024
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Development Environment  
+- React + TailwindCSS
+- NextJS
+- PostgreSQL
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Core Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Vercel Deployment and Neon PostgreSQL Database
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The website was deployed on a public domain through Vercel. A Neon database was also set up and conneted to the GitHub repository through Vercel. Neon was selected as it offered reasonable usage for free, and also utilized PostgreSQL, a popular database language we felt was important to learn and familiarize with. 
 
-## Learn More
+### Google OAuth ([DataBase.py](DataBase.py))  
 
-To learn more about Next.js, take a look at the following resources:
+Connecting to a user's Google account and fetching account information was done via Google OAuth2.0, which either returns a pre-existing non-expired access token, or generates an access token and refresh token if expired/nonavailable. The access token is fed back into OAuth2.0 to fetch user information such as email, name, and profile picture, and all user information and access (and refresh, if available) tokens are stored in the database. 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Calendar Event Fetching ([DataBase.py](DataBase.py), [ArticleDatabase.db](ArticleDatabase.db])) 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Route Computation ([System.py](System.py))  
 
-## Deploy on Vercel
+#### Google Directions API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Google Geocoding API
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### Google Maps API
+
+
+### Calendar UI
+
+#### Route PopUps
+
+#### PopUp Detailed View
+
