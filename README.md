@@ -33,7 +33,7 @@ Connecting to a user's Google account and fetching account information was done 
 
 Reading adjacent calendar events and computing valid routes was done via the Google Maps API Platform, which contains both a Directions API and a Geocoding API. 
 
-#### Google Directions API
+#### Google Directions API ([Documentation](https://developers.google.com/maps/documentation/directions))
 
 The Directions API was used to compute valid routes between an origin and destination. If two adjacent events both contained location data, the location strings were fed into the origin/destination parameters to receive a JSON object containing route data. The object contains a `route` list containing different routes in descending optimal order, with each route containing a `steps` list denoting each intermediary step of the route. 
 
@@ -43,7 +43,7 @@ Directions API also has an `arrival_time` parameter to specify the latest arriva
 
 One minor note is the JSON structure of `transit` route data, as it contains additional information. Transit routes generally consist of alternating transit and walking steps, where the user has to walk from one station to another. The transit steps have specific departure and arrival times and clearly defined durations, which were used to more accurately compute the total travel time. Transit steps also contain specific departure and arrival stop names, as well as headsigns (the specific name of the bus/subway/train) and vehicle type. 
 
-#### Google Geocoding API
+#### Google Geocoding API ([Documentation](https://developers.google.com/maps/documentation/geocoding))
 
 The Directions API returns the locations of each step of its route in latitude/longitude coordinates. Thus in order to display each route step in our UI, we feed the coordinates into the Geocoding API to turn them into readable location strings. 
 
