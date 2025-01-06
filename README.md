@@ -53,7 +53,7 @@ Thus an optional parameter `extra_computations` was used to return address descr
 
 One note is regarding transit stops. As mentioned before, transit steps contain the specific station names for the departure and arrival stops, which were used in place of the Geocoding API results for clarity. 
 
-#### Google Maps API 
+#### Google Maps API ([Documentation](https://developers.google.com/maps))
 
 The default Google Maps API platform supplies the tools necessary to implement an interactive Google Maps widget into the website. This tool was used within the popup menus and detailed views to show either the event location (for events) or display the actual route (for route steps). 
 
