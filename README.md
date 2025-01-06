@@ -21,7 +21,8 @@ The website was deployed on a public domain through Vercel. A Neon database was 
 Connecting to a user's Google account and fetching account information was done via Google OAuth2.0, which either returns a pre-existing non-expired access token, or generates an access token and refresh token if expired/nonavailable. The access token is fed back into OAuth2.0 to fetch user information such as email, name, and profile picture, and all user information and access (and refresh, if available) tokens are stored in the database. 
 
 ### Calendar Event Fetching ([DataBase.py](DataBase.py), [ArticleDatabase.db](ArticleDatabase.db])) 
-![flowchart](https://github.com/user-attachments/assets/09b0e7b1-c522-4e78-a6b8-74befec688c0)
+![flowchart1](https://github.com/user-attachments/assets/25454ca7-1a85-4bc9-ac40-031477b79515)
+
 
 ### Route Computation ([System.py](System.py))  
 
