@@ -44,6 +44,7 @@ Clicking each event will show a popup view
 
 The website automatically calculates the fastest route between two adjacent events for the user (this process will be explained below), and displays them on the calendar UI. 
 MENTION RED TRAVEL EVENTS HERE
+![Uploading image.png…]()
 
 #### PopUp Detailed View
 
