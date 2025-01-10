@@ -30,7 +30,7 @@ The month view was created through the React Calendar module and heavy custom st
 
 The group and day views are similar, and both were created manually. The horizontal lines are flexible, allowing for up to 6 events to fit within each cell. Events can also span multiple cells, or even multiple days. Overlapping events are not supported - the website assumes only one event will be active at a time. This makes sense, as a user cannot attend two separate events simultaneously. 
 
-(IMAGE)
+![image](https://github.com/user-attachments/assets/df3d66af-d6c2-4fa2-96db-3a3a432c158d)
 
 #### Navigation
 
