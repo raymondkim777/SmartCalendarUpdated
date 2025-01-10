@@ -50,10 +50,13 @@ The website automatically calculates the fastest route between two adjacent even
 
 Clicking on each travel event opens up a popup view detailing each step of the travel route. A timeline on the left shows how long each step takes, and vehicle icons indicate the type of travel. To the right, each step contains the location the user needs to travel from and to, as well as details on the travel mode and route. 
 
+![image](https://github.com/user-attachments/assets/64f31e2b-87f0-4b7a-88ab-fcb2c6cf1c88)
+
 #### PopUp Detailed View
 
 Clicking the travel steps on the right of the timeline expands the popup to include a new view, fully explaining the travel step. Alongside the start and stop location names and a description of the travel mode, an interactive Google Maps widget is also included, specifying the start and end locations as well as the actual route. 
 
+![image](https://github.com/user-attachments/assets/ab7cfa6b-c379-48b9-a443-4fff696bff5a)
 
 ### Google OAuth User Info & Calendar Event Fetching
 
