@@ -18,7 +18,31 @@ The website was deployed on a public domain through Vercel. A Neon database was 
 
 ### Calendar UI
 
+The website was created with React and TailwindCSS. As user interactivity was required for most pages, the project includes heavy use of NextJS client components. In particular, server components fetched all necessary information from APIs, after which client components were called as children to render the UI. 
+
+The main homepage is an interactive calendar with day, week, and month views. 
+
+(IMAGE)
+
+The month view was created through the React Calendar module and heavy custom styling. Custom tile components were used to adhere to the website theme, with the current day highlighted in purple and weekends in red. Events for each day show up as colored dots within the cell, matching the colors of the events themselves. 
+
+(IMAGE)
+
+The group and day views are similar, and both were created manually. The horizontal lines are flexible, allowing for up to 6 events to fit within each cell. Events can also span multiple cells, or even multiple days. Overlapping events are not supported - the website assumes only one event will be active at a time. This makes sense, as a user cannot attend two separate events simultaneously. 
+
+(IMAGE)
+
+#### Navigation
+
+The user can navigate between the different views either via dedicated buttons, or by clicking specific days on the calendar itself. For instance, a user can click a specific day in the month calendar to switch to a week view containing that day. 
+
+(IMAGE)
+
+Further pressing a day within the week view switches to a day view. Users can also go forward or backwards, or reset the calendar back to the current day. In line with fluid user interactivity, almost all elements of the calendar are pressable, indicated by color transitions upon cursor hovering. 
+
 #### Route PopUps
+
+MENTION RED TRAVEL EVENTS HERE
 
 #### PopUp Detailed View
 
