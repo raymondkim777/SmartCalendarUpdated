@@ -40,7 +40,9 @@ Further pressing a day within the week view switches to a day view. Users can al
 
 Clicking each event will show a popup view with more event details, such as start and end times, descriptions, and location. An interactive Google Maps widget is also included (if a location is available) specifying the event location via a red marker. 
 
-![image](https://github.com/user-attachments/assets/dfbd8491-40a6-4120-a64d-5ea1d0c06358)
+<p align='center'>
+    <img src='https://github.com/user-attachments/assets/dfbd8491-40a6-4120-a64d-5ea1d0c06358)'/>
+</p>
 
 #### Route PopUps
 
