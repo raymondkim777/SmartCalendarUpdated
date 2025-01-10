@@ -52,7 +52,9 @@ The website automatically calculates the fastest route between two adjacent even
 
 Clicking on each travel event opens up a popup view detailing each step of the travel route. A timeline on the left shows how long each step takes, and vehicle icons indicate the type of travel. To the right, each step contains the location the user needs to travel from and to, as well as details on the travel mode and route. 
 
-![image](https://github.com/user-attachments/assets/64f31e2b-87f0-4b7a-88ab-fcb2c6cf1c88)
+<p align="center">
+    <img src="[https://github.com/user-attachments/assets/dfbd8491-40a6-4120-a64d-5ea1d0c06358](https://github.com/user-attachments/assets/64f31e2b-87f0-4b7a-88ab-fcb2c6cf1c88)" width="500"/>
+</p>
 
 #### PopUp Detailed View
 
