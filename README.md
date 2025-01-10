@@ -22,7 +22,7 @@ The website was created with React and TailwindCSS. As user interactivity was re
 
 The main homepage is an interactive calendar with day, week, and month views. 
 
-(IMAGE)
+![image](https://github.com/user-attachments/assets/c9d16177-0f4c-48b5-9e3e-79577f174526)
 
 The month view was created through the React Calendar module and heavy custom styling. Custom tile components were used to adhere to the website theme, with the current day highlighted in purple and weekends in red. Events for each day show up as colored dots within the cell, matching the colors of the events themselves. 
 
