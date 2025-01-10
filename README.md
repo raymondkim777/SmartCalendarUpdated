@@ -41,7 +41,8 @@ Further pressing a day within the week view switches to a day view. Users can al
 #### Route PopUps
 
 MENTION RED TRAVEL EVENTS HERE
-![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/dfbd8491-40a6-4120-a64d-5ea1d0c06358)
+
 
 #### PopUp Detailed View
 
