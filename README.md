@@ -38,13 +38,15 @@ Further pressing a day within the week view switches to a day view. Users can al
 
 #### Event PopUps
 
-Clicking each event will show a popup view 
+Clicking each event will show a popup view with more event details, such as start and end times, descriptions, and location. An interactive Google Maps widget is also included (if a location is available) specifying the event location via a red marker. 
+
+![image](https://github.com/user-attachments/assets/dfbd8491-40a6-4120-a64d-5ea1d0c06358)
 
 #### Route PopUps
 
-The website automatically calculates the fastest route between two adjacent events for the user (this process will be explained below), and displays them on the calendar UI. 
-MENTION RED TRAVEL EVENTS HERE
-![image](https://github.com/user-attachments/assets/dfbd8491-40a6-4120-a64d-5ea1d0c06358)
+The website automatically calculates the fastest route between two adjacent events for the user (this process will be explained below), and displays the travel route on the calendar UI as a red-colored travel event. 
+
+
 
 
 #### PopUp Detailed View
