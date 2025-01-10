@@ -26,7 +26,7 @@ The main homepage is an interactive calendar with day, week, and month views.
 
 The month view was created through the React Calendar module and heavy custom styling. Custom tile components were used to adhere to the website theme, with the current day highlighted in purple and weekends in red. Events for each day show up as colored dots within the cell, matching the colors of the events themselves. 
 
-(IMAGE)
+![image](https://github.com/user-attachments/assets/a0c379df-0773-45ed-95cc-3eccb7e13f58)
 
 The group and day views are similar, and both were created manually. The horizontal lines are flexible, allowing for up to 6 events to fit within each cell. Events can also span multiple cells, or even multiple days. Overlapping events are not supported - the website assumes only one event will be active at a time. This makes sense, as a user cannot attend two separate events simultaneously. 
 
