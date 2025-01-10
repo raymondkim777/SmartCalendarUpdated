@@ -44,12 +44,15 @@ Clicking each event will show a popup view with more event details, such as star
 
 #### Route PopUps
 
-The website automatically calculates the fastest route between two adjacent events for the user (this process will be explained below), and displays the travel route on the calendar UI as a red-colored travel event. 
+The website automatically calculates the fastest route between two adjacent events for the user and displays the travel route on the calendar UI as a separate red-colored event (henceforth referred to as a 'travel event'). The travel event displays the travel duration as its title, and appears in between two events to indicate the amount of time the user should spend in transit. 
 
 ![image](https://github.com/user-attachments/assets/cb6c31fe-b8d2-492b-9cd8-508049afc185)
 
+Clicking on each travel event opens up a popup view detailing each step of the travel route. A timeline on the left shows how long each step takes, and vehicle icons indicate the type of travel. To the right, each step contains the location the user needs to travel from and to, as well as details on the travel mode and route. 
 
 #### PopUp Detailed View
+
+Clicking the travel steps on the right of the timeline expands the popup to include a new view, fully explaining the travel step. Alongside the start and stop location names and a description of the travel mode, an interactive Google Maps widget is also included, specifying the start and end locations as well as the actual route. 
 
 
 ### Google OAuth User Info & Calendar Event Fetching
