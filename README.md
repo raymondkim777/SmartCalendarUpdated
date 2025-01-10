@@ -20,7 +20,7 @@ The website was deployed on a public domain through Vercel. A Neon database was 
 
 The website was created with React and TailwindCSS. As user interactivity was required for most pages, the project includes heavy use of NextJS client components. In particular, server components fetched all necessary information from APIs, after which client components were called as children to render the UI. 
 
-The main homepage is an interactive calendar with day, week, and month views. 
+The main homepage is an interactive calendar with day, group, and month views. 
 
 ![image](https://github.com/user-attachments/assets/c9d16177-0f4c-48b5-9e3e-79577f174526)
 
@@ -28,13 +28,11 @@ The month view was created through the React Calendar module and heavy custom st
 
 ![image](https://github.com/user-attachments/assets/a0c379df-0773-45ed-95cc-3eccb7e13f58)
 
-The group and day views are similar, and both were created manually. The horizontal lines are flexible, allowing for up to 6 events to fit within each cell. Events can also span multiple cells, or even multiple days. Overlapping events are not supported - the website assumes only one event will be active at a time. This makes sense, as a user cannot attend two separate events simultaneously. 
-
-![image](https://github.com/user-attachments/assets/df3d66af-d6c2-4fa2-96db-3a3a432c158d)
+The group and day views are similar (the gropu day is shown above), and both were created manually. The horizontal lines are flexible, allowing for up to 6 events to fit within each cell. Events can also span multiple cells, or even multiple days. Overlapping events are not supported - the website assumes only one event will be active at a time. This makes sense, as a user cannot attend two separate events simultaneously. 
 
 #### Navigation
 
-The user can navigate between the different views either via dedicated buttons, or by clicking specific days on the calendar itself. For instance, a user can click a specific day in the month calendar to switch to a week view containing that day. 
+The user can navigate between the different views either via dedicated buttons, or by clicking specific days on the calendar itself. For instance, a user can click a specific day in the month calendar to switch to a group view containing that day. 
 
 (IMAGE)
 
