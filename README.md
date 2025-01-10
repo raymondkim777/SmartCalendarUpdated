@@ -34,12 +34,15 @@ The group and day views are similar (first image), and both were created manuall
 
 The user can navigate between the different views either via dedicated buttons, or by clicking specific days on the calendar itself. For instance, a user can click a specific day in the month calendar to switch to a group view containing that day. 
 
-(IMAGE)
-
 Further pressing a day within the week view switches to a day view. Users can also go forward or backwards, or reset the calendar back to the current day. In line with fluid user interactivity, almost all elements of the calendar are pressable, indicated by color transitions upon cursor hovering. 
+
+#### Event PopUps
+
+Clicking each event will show a popup view 
 
 #### Route PopUps
 
+The website automatically calculates the fastest route between two adjacent events for the user (this process will be explained below), and displays them on the calendar UI. 
 MENTION RED TRAVEL EVENTS HERE
 
 #### PopUp Detailed View
