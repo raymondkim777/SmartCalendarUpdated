@@ -46,7 +46,7 @@ Clicking each event will show a popup view with more event details, such as star
 
 The website automatically calculates the fastest route between two adjacent events for the user (this process will be explained below), and displays the travel route on the calendar UI as a red-colored travel event. 
 
-
+![image](https://github.com/user-attachments/assets/cb6c31fe-b8d2-492b-9cd8-508049afc185)
 
 
 #### PopUp Detailed View
