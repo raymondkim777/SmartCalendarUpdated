@@ -51,7 +51,8 @@ MENTION RED TRAVEL EVENTS HERE
 
 Connecting to a user's Google account and fetching account information was done via Google OAuth2.0, which either returns a pre-existing non-expired access token, or generates an access token and refresh token if expired/nonavailable. The access token is fed back into OAuth2.0 to fetch user information such as email, name, and profile picture, and all user information and access (and refresh, if available) tokens are stored in the database. 
 
-![flowchart1](https://github.com/user-attachments/assets/25454ca7-1a85-4bc9-ac40-031477b79515)
+![flowchart1](https://github.com/user-attachments/assets/9ebc65be-7f73-4254-86ed-4d8eb987a971)
+
 
 ### Route Computation
 
@@ -71,13 +72,13 @@ One minor note is the JSON structure of `transit` route data, as it contains add
 
 The Directions API returns the locations of each step of its route in latitude/longitude coordinates. Thus in order to display each route step in our UI, we feed the coordinates into the Geocoding API to turn them into readable location strings. 
 
-The Geocoding API returns the raw address of the location by default. Though accurate, this is not very applicable from a usability standpoint; it is easier for a user to go to the station near the "World Trade Center" than to go to "285 Fulton Street Manhattan, New York", though both denote the same location. Raw addresses also do not line up with transit station naming conventions; the aforementioned station would be aptly named and thus known as the "World Trade Center" station. 
+The Geocoding API returns the raw address of the location by default. Though accurate, this is not very applicable from a usability standpoint; it is easier for a user to go to the station near the "World Trade Center" than "285 Fulton Street Manhattan, New York", though both denote the same location. Raw addresses also do not line up with transit station naming conventions; the aforementioned station would be aptly named and thus known as the "World Trade Center" station. 
 
 Thus an optional parameter `extra_computations` was used to return address descriptors instead of address components. Address descriptors are additional information that help describe a location, provided as either landmarks or areas. Landmarks refer to specific buildings or monuments of note (ex. World Trade Center), whereas areas refer to the most notable container (ex. Carleton College). Landmarks were used if available, and areas if not. If no suitable landmark/areas were found, a truncated version of the raw address was used instead. 
 
 One note is regarding transit stops. As mentioned before, transit steps contain the specific station names for the departure and arrival stops, which were used in place of the Geocoding API results for clarity. 
 
-#### Google Maps API 
+#### Google Maps API ([Documentation](https://developers.google.com/maps))
 
 The default Google Maps API platform supplies the tools necessary to implement an interactive Google Maps widget into the website. This tool was used within the popup menus and detailed views to show either the event location (for events) or display the actual route (for route steps). 
 
