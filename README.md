@@ -28,7 +28,7 @@ The month view was created through the React Calendar module and heavy custom st
 
 ![image](https://github.com/user-attachments/assets/a0c379df-0773-45ed-95cc-3eccb7e13f58)
 
-The group and day views are similar (the gropu day is shown above), and both were created manually. The horizontal lines are flexible, allowing for up to 6 events to fit within each cell. Events can also span multiple cells, or even multiple days. Overlapping events are not supported - the website assumes only one event will be active at a time. This makes sense, as a user cannot attend two separate events simultaneously. 
+The group and day views are similar (first image), and both were created manually. The horizontal lines are flexible, allowing for up to 6 events to fit within each cell. Events can also span multiple cells, or even multiple days. Overlapping events are not supported - the website assumes only one event will be active at a time. This makes sense, as a user cannot attend two separate events simultaneously. 
 
 #### Navigation
 
